@@ -62,7 +62,8 @@ export function Start() {
 export function Join() {
   const nav = useNavigate();
   const { mode, joinLeague } = useGame();
-  const code = decodeURIComponent(location.pathname.split('/').pop() ?? '').toUpperCase();
+  const raw = (location.pathname.split('/').pop() ?? '').toUpperCase();
+  const code = /^[A-Z0-9]{4,8}$/.test(raw) ? raw : '';
   const [err, setErr] = useState('');
   const go = () => {
     if (mode === 'new') { useGame.getState().startSample(); }
@@ -74,8 +75,8 @@ export function Join() {
       <div className="max-w-[420px] w-full text-center">
         <Wordmark />
         <h1 className="display text-[44px] mt-8 leading-[0.9]">You've been invited to a league</h1>
-        <p className="mt-3 text-graphite">Code <span className="font-mono font-semibold text-ink">{code}</span>. One tap and you're in.</p>
-        <Button size="lg" className="w-full mt-8" onClick={go}>Join league</Button>
+        <p className="mt-3 text-graphite">{code ? <>Code <span className="font-mono font-semibold text-ink">{code}</span>. One tap and you're in.</> : "This invite link looks broken. Ask whoever sent it for the league code."}</p>
+        <Button size="lg" className="w-full mt-8" onClick={go} disabled={!code}>Join league</Button>
         {err && <p role="alert" className="mt-4 text-stamp-deep">{err}</p>}
       </div>
     </div>
