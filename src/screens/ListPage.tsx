@@ -8,6 +8,9 @@ import { fmtDate, fmtDeadline } from '../lib/format';
 import { Monogram } from '../components/Monogram';
 import { PageTitle, PosTag } from '../components/bits';
 import { Button } from '../components/Button';
+import { StampCard } from '../components/StampCard';
+import { LevelBar } from '../components/Level';
+import { stampsFor, STAMP_INFO, type StampKind } from '../game/stamps';
 
 export function ListPage() {
   const { picks, swaps, release } = useGame();
@@ -57,6 +60,19 @@ export function ListPage() {
           </li>
         ))}
       </ul>
+
+      <section id="stamps" className="mt-12">
+        <h2 className="display text-[36px] lg:text-[44px]">Stamp book</h2>
+        <p className="text-graphite mt-1">Every stamp is proof of a call you made. They're yours even if you swap the player out.</p>
+        {(() => { const st = stampsFor(picks); const have = new Set(st.map((s) => s.kind)); const missing = (Object.keys(STAMP_INFO) as StampKind[]).filter((k) => !have.has(k)); return (
+          <div className="mt-5 grid lg:grid-cols-[320px_1fr] gap-6 items-start">
+            <div className="bg-card rounded-[16px] shadow-md p-5"><LevelBar stamps={st} /></div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-5 justify-items-center sm:justify-items-start">
+              {st.map((s) => <StampCard key={s.id} stamp={s} />)}
+              {missing.map((k) => <div key={k} className="grid gap-1.5 w-[140px]"><StampCard kind={k} locked /><p className="text-[13px] text-graphite leading-snug">{STAMP_INFO[k].rule}</p></div>)}
+            </div>
+          </div>); })()}
+      </section>
     </div>
   );
 }

@@ -59,10 +59,12 @@
 @keyframes stamp-in { 0% { opacity: 0; transform: scale(1.25); } 100% { opacity: 1; transform: scale(1); } }
 .anim-print { animation: print-in 700ms var(--ease-out-soft) both; }
 .anim-fade { animation: fade-up 220ms var(--ease-out-soft) both; }
-.anim-stamp { animation: stamp-in 260ms var(--ease-out-soft) 500ms both; }
+.anim-stamp { animation: stamp-in 260ms var(--ease-out-soft) 1300ms both; }
+.anim-stage-1 { animation: fade-up 260ms var(--ease-out-soft) 550ms both; }
+.anim-stage-2 { animation: fade-up 260ms var(--ease-out-soft) 900ms both; }
 
 @media (prefers-reduced-motion: reduce) {
-  .anim-print, .anim-stamp { animation: fade-up 200ms ease both; }
+  .anim-print, .anim-stamp, .anim-stage-1, .anim-stage-2 { animation: fade-up 200ms ease both; }
   .press:active { transform: none; }
   * { scroll-behavior: auto !important; }
 }
@@ -74,3 +76,9 @@
 @media (prefers-reduced-motion: reduce) { .sheet[data-state='open'] { animation: fade-up 180ms ease both; } }
 .overlay[data-state='open'] { animation: overlay-in 200ms ease both; }
 @keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* postage-stamp perforation: holes only in the white border ring */
+.stamp-perf {
+  -webkit-mask: linear-gradient(#000 0 0) content-box, radial-gradient(circle 3.5px, #0000 96%, #000 100%) -5px -5px / 10px 10px round;
+  mask: linear-gradient(#000 0 0) content-box, radial-gradient(circle 3.5px, #0000 96%, #000 100%) -5px -5px / 10px 10px round;
+}

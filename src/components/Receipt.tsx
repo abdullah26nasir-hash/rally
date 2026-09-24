@@ -6,10 +6,10 @@ import { fmtStamp } from '../lib/format';
 import { LAST_COMPLETE_GW, SEASON } from '../data/season';
 import { cn } from '../lib/cn';
 
-interface Props { pick: Pick; scoutName: string; animate?: boolean; className?: string; }
+interface Props { pick: Pick; scoutName: string; animate?: boolean; className?: string; showPoints?: boolean; showEarly?: boolean; }
 
 /** The Scout Receipt - Rally's signature element and share card. */
-export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick, scoutName, animate, className }, ref) {
+export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick, scoutName, animate, className, showPoints = true, showEarly = true }, ref) {
   const p = playerById.get(pick.playerId)!;
   const club = clubOf(p);
   const now = ownershipNow(p);
@@ -29,14 +29,16 @@ export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick
           <div className="text-[11px] text-graphite uppercase tracking-wide">Scouting receipt · {SEASON}</div>
           <Dash />
           <div className="text-[11px] uppercase tracking-wide text-graphite">Scouted</div>
-          <div className="display text-[40px] leading-[0.95] mt-1" style={{ fontFamily: 'var(--font-display)' }}>{p.name.toUpperCase()}</div>
-          <div className="mt-1.5">{p.role} · {club.name} · Age {p.age}</div>
+          <div className={cn('display text-[40px] leading-[0.95] mt-1', animate && 'anim-stage-1')} style={{ fontFamily: 'var(--font-display)' }}>{p.name.toUpperCase()}</div>
+          <div className={cn('mt-1.5', animate && 'anim-stage-1')}>{p.role} · {club.name} · Age {p.age}</div>
           <Dash />
+          <div className={cn(animate && 'anim-stage-2')}>
           <Line k="Scouted by" v={'@' + scoutName} />
           <Line k="Had him when you did" v={fmtPct(pick.ownershipAtPick)} />
           <Line k="Have him now" v={fmtPct(now)} strong />
-          <Line k="Early call" v={fmtMult(pick.multiplier)} />
-          <Line k="Your points from him" v={pending ? 'From GW' + pick.gwFrom : String(pts)} />
+          {showEarly && <Line k="Early call" v={fmtMult(pick.multiplier)} />}
+          {showPoints && <Line k="Your points from him" v={pending ? 'From GW' + pick.gwFrom : String(pts)} />}
+          </div>
           <Dash />
           {!pending && growth >= 2 ? (
             <p className="text-[13px]"><span className="hl font-semibold">{Math.round(growth)}× more scouts</span> have him now than when you called it.</p>
@@ -51,7 +53,7 @@ export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick
               <div className="display text-[22px]" style={{ fontFamily: 'var(--font-display)' }}>{stamp.time}</div>
             </div></div>
           </div>
-          <div className="mt-4 text-center text-[10px] text-graphite tracking-wide">FREE GAME · NO MONEY INVOLVED</div>
+          <div className="mt-4 text-center text-[10px] text-graphite tracking-wide">FREE TO PLAY · BRAGGING RIGHTS ONLY</div>
         </div>
       </div>
     </div>

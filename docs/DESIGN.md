@@ -38,6 +38,16 @@ Mobile first: single column, bottom tab bar (This week, Scout, Squad, Leagues), 
 ## Motion
 Only where it gives feedback or orientation. Ease-out cubic-bezier(.23,1,.32,1) for entering, 150-250ms; sheets 300ms with iOS drawer curve. Receipt print-in on reveal (rare moment, delight allowed). No animation on tab switches or frequent actions. prefers-reduced-motion: fades only.
 
+## Brand (distinct from the other apps in the family)
+Rally is a scout's notebook, not a sportsbook and not a fantasy dashboard. Everything in the brand is a physical thing a scout would keep: a till receipt, a postage stamp, a biro, a highlighter, a rubber date stamp.
+- Name treatment: RALLY set in Big Shoulders Display 800, tight tracking, always uppercase, followed by a short highlighter swipe. Never outlined, never in a gradient.
+- Mark: a perforated postage stamp in biro blue with a paper R and a tilted highlighter stroke through its foot. Used for the favicon, app icon and share cards.
+- Palette names: Biro (#2A3FE0) for action, Highlighter (#E8FF59) for the one thing that matters on a screen, Rubber-stamp red (#E5402B) only for dated proof (timestamps, "scouted" stamps, live tag), Ink and Graphite for text, Receipt paper (#F7F8F5) as the ground. Club colours belong to players and stamps only.
+- Type roles: Big Shoulders for headlines and numbers, Spline Sans Mono for anything printed on a receipt (dates, stats, codes), Instrument Sans for reading.
+- Voice: a knowing mate on the terraces. Short, dry, specific. Brags on your behalf with evidence ("27x more scouts have him now"). Never hype words, never exclamation marks, never money words.
+- Signature moments: the receipt printing out, the rubber stamp landing, a new stamp dropping into the book, the scout level ticking up.
+- Keep out: dark-mode neon, betting-slip green, trophies-and-confetti, glassy gradients, stock footballer photos.
+
 ## Copy
 Plain, specific, football-literate. Controls say what they do ("Scout him", "Swap out", "Create league"). No money words anywhere: no invest, stake, return, price, buy. Picks are "scouted", your five is "your list", the multiplier is "early call".
 

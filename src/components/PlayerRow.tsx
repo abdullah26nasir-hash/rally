@@ -2,10 +2,9 @@ import { Link } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import type { Player } from '../data/types';
 import { clubOf, ownershipNow, ownershipAt } from '../data/pool';
-import { formLast3, fmtPct } from '../game/scoring';
+import { formLast3, fmtPct, earlyCallFor, fmtMult } from '../game/scoring';
 import { LAST_COMPLETE_GW } from '../data/season';
 import { Monogram } from './Monogram';
-import { Sparkline } from './Sparkline';
 import { Delta, PosTag } from './bits';
 
 export function PlayerRow({ player, inList }: { player: Player; inList?: boolean }) {
@@ -25,8 +24,9 @@ export function PlayerRow({ player, inList }: { player: Player; inList?: boolean
           <div className="flex items-center gap-2 text-[14px] text-graphite min-w-0">
             <PosTag pos={player.position} /><span className="truncate">{club.name} · {player.age}</span>
           </div>
+          {!inList && earlyCallFor(now) > 1 && <div className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-biro-wash px-2 py-0.5 text-[12px] font-semibold text-biro">{fmtMult(earlyCallFor(now))} if you scout now</div>}
         </div>
-        <div className="hidden sm:block text-biro"><Sparkline values={player.weeks.map((w) => w.points)} label={`Points per gameweek: ${player.weeks.map((w) => w.points).join(', ')}`} /></div>
+        <div className="hidden sm:block"><Last5 values={player.weeks.slice(-5).map((w) => w.points)} /></div>
         <div className="hidden sm:block text-right">
           <div className="display text-[24px] num">{form}</div>
           <div className="text-[12px] text-graphite">last 3 GWs</div>
@@ -37,5 +37,14 @@ export function PlayerRow({ player, inList }: { player: Player; inList?: boolean
         </div>
       </Link>
     </li>
+  );
+}
+
+function Last5({ values }: { values: number[] }) {
+  const max = 15;
+  return (
+    <span className="flex items-end gap-[3px] h-7" role="img" aria-label={`Last 5 gameweeks: ${values.join(', ')} points`}>
+      {values.map((v, i) => <span key={i} className={v >= 10 ? 'w-2 rounded-[2px] bg-ink' : 'w-2 rounded-[2px] bg-biro'} style={{ height: `${Math.max(8, Math.min(1, v / max) * 100)}%`, opacity: v === 0 ? 0.25 : 1 }} />)}
+    </span>
   );
 }

@@ -10,7 +10,7 @@ import { PLAYERS, playerById, ownershipNow } from '../data/pool';
 
 export function Welcome() {
   const nav = useNavigate();
-  const { startOwn, startSample } = useGame();
+  const { startSample } = useGame();
   const heroPick = sampleList().reduce((best, pk) => (ownershipNow(playerById.get(pk.playerId)!) / pk.ownershipAtPick > ownershipNow(playerById.get(best.playerId)!) / best.ownershipAtPick ? pk : best));
 
   return (
@@ -20,23 +20,23 @@ export function Welcome() {
         <button onClick={() => nav('/how')} className="text-[15px] font-medium text-graphite hover:text-ink min-h-11 px-2">How scoring works</button>
       </header>
 
-      <section className="max-w-[1180px] mx-auto px-5 sm:px-8 pt-6 sm:pt-12 pb-16 grid lg:grid-cols-[1.15fr_1fr] gap-12 lg:gap-8 items-center">
+      <section className="max-w-[1180px] mx-auto px-5 sm:px-8 pt-6 sm:pt-12 pb-16 grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] gap-12 lg:gap-8 items-center">
         <div>
           <Eyebrow className="mb-5">Free scouting game · U21 football</Eyebrow>
-          <h1 className="display text-[64px] sm:text-[88px] lg:text-[112px] leading-[0.86]">
+          <h1 className="display text-[54px] min-[360px]:text-[64px] sm:text-[88px] lg:text-[112px] leading-[0.86]">
             Call them<br />before they<br /><span className="hl">blow up.</span>
           </h1>
           <p className="mt-6 text-[18px] sm:text-[20px] max-w-[34ch] text-ink/80">
             Pick five young footballers. Score from what they do on the pitch. When one breaks out, you've got the timestamped receipt.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
-            <Button size="lg" onClick={() => { startOwn(); nav('/scout'); }}>Pick my five</Button>
+            <Button size="lg" onClick={() => nav('/start')}>Pick my five</Button>
             <Button size="lg" variant="secondary" onClick={() => { startSample(); nav('/'); }}>Try a sample season</Button>
           </div>
-          <p className="mt-4 text-[14px] text-graphite">No sign-up. No money, ever. Takes about five minutes a week.</p>
+          <p className="mt-4 text-[14px] text-graphite">No sign-up needed to try it. About five minutes a week.</p>
         </div>
         <div className="lg:pl-6">
-          <Receipt pick={heroPick} scoutName="you" animate />
+          <div className="lg:scale-[1.1] lg:-rotate-2 lg:origin-center lg:py-6"><Receipt pick={heroPick} scoutName="you" animate /></div>
           <p className="mt-5 text-center text-[13px] text-graphite font-mono">Straight from the sample season</p>
         </div>
       </section>
@@ -58,6 +58,20 @@ export function Welcome() {
             ))}
           </ol>
         </div>
+      </section>
+
+      <section className="max-w-[1180px] mx-auto px-5 sm:px-8 py-16 lg:py-20">
+        <h2 className="display text-[40px] sm:text-[52px] max-w-[18ch]">Five minutes on a Saturday morning.</h2>
+        <p className="mt-3 text-[18px] text-ink/80 max-w-[46ch]">Check your slip, make your one swap, collect your stamps. These are real screens from the sample season.</p>
+        <ul tabIndex={0} aria-label="App screens" className="focus-visible:outline-2 focus-visible:outline-biro mt-10 -mx-5 px-5 sm:mx-0 sm:px-0 flex sm:grid sm:grid-cols-3 gap-5 lg:gap-8 overflow-x-auto sm:overflow-visible no-scrollbar snap-x snap-mandatory scroll-px-5 pt-2 pb-8 -mb-6">
+          {[['week', 'This week', 'Your gameweek slip and how far clear you are of your mates.'], ['scout', 'Scout', 'Who is breaking out, who nobody has found yet.'], ['stamps', 'Stamp book', 'A stamp for every call that comes good. Your scout level rises with them.']].map(([k, t, d]) => (
+            <li key={k} className="snap-start shrink-0 w-[70vw] max-w-[300px] sm:w-auto sm:max-w-none">
+              <div className="rounded-[28px] bg-ink p-2 shadow-md"><img src={`/screens/${k}.webp`} alt={`${t} screen from the sample season`} width={390} height={844} className="block w-full h-auto rounded-[21px]" /></div>
+              <h3 className="display text-[26px] mt-4">{t}</h3>
+              <p className="mt-1 text-ink/80">{d}</p>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="max-w-[1180px] mx-auto px-5 sm:px-8 py-16 lg:py-20 grid lg:grid-cols-2 gap-10 items-start">
@@ -83,7 +97,7 @@ export function Welcome() {
 
       <footer className="max-w-[1180px] mx-auto px-5 sm:px-8 pb-12 text-[14px] text-graphite border-t border-rule pt-6 flex flex-col sm:flex-row gap-2 justify-between">
         <span>Preview season: every player, club and result here is fictional.</span>
-        <span>Rally is a free game. There is nothing to buy.</span>
+        <span>Rally is free to play, all season.</span>
       </footer>
     </div>
   );

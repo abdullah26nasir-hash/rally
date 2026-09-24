@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
 import { PLAYERS, clubOf, ownershipNow, ownershipAt } from '../data/pool';
 import { formLast3 } from '../game/scoring';
@@ -21,9 +22,11 @@ const POSITIONS: Array<'All' | Position> = ['All', 'GK', 'DEF', 'MID', 'FWD'];
 
 export function Scout() {
   const { picks, swaps } = useGame();
+  const [params] = useSearchParams();
+  const first = params.get('first') === '1' && picks.length === 0;
   const [q, setQ] = useState('');
   const [pos, setPos] = useState<'All' | Position>('All');
-  const [sort, setSort] = useState<SortId>('rising');
+  const [sort, setSort] = useState<SortId>(first ? 'gems' : 'rising');
   const onList = new Set(picks.map((p) => p.playerId));
   const locked = isLocked(picks);
   const left = swapsLeft(picks, swaps);
@@ -49,6 +52,12 @@ export function Scout() {
         {PLAYERS.length} under-21s across three divisions. Tap a player to see his weeks and your early call if you scout him now.
       </PageTitle>
 
+      {first && (
+        <div className="mb-4 rounded-[14px] bg-ink text-white p-4 flex gap-3 items-start anim-fade" role="note">
+          <span className="display text-[28px] leading-none text-highlighter">1</span>
+          <p className="text-[15px]">Start with <b>Hidden gems</b>: in-form players almost nobody has yet. Tap one to see his weeks, then scout him.</p>
+        </div>
+      )}
       <div className="sticky top-14 lg:top-0 z-20 -mx-4 sm:-mx-6 lg:mx-0 px-4 sm:px-6 lg:px-0 py-3 bg-paper/90 backdrop-blur-md">
         <label className="relative block">
           <span className="sr-only">Search players or clubs</span>
@@ -71,7 +80,7 @@ export function Scout() {
       <p className="mt-3 text-[14px] text-graphite">{SORTS.find((s) => s.id === sort)!.hint}</p>
 
       <div className="hidden sm:grid grid-cols-[44px_1fr_80px_72px_96px] gap-4 px-4 mt-4 text-[12px] font-mono uppercase tracking-wide text-graphite">
-        <span /><span>Player</span><span>Weeks</span><span className="text-right">Form</span><span className="text-right">Scouts</span>
+        <span /><span>Player</span><span>Last 5</span><span className="text-right">Form</span><span className="text-right">Scouts</span>
       </div>
       {list.length ? (
         <ul className="mt-1 -mx-3 sm:mx-0">{list.map((p) => <PlayerRow key={p.id} player={p} inList={onList.has(p.id)} />)}</ul>

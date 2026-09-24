@@ -5,7 +5,7 @@ import { useGame } from '../store';
 import { entryGw, entryTotal, overallRank, RIVAL_ENTRIES } from '../data/scouts';
 import { LAST_COMPLETE_GW, TOTAL_SCOUTS } from '../data/season';
 import { ordinal } from '../lib/format';
-import { Card, PageTitle } from '../components/bits';
+import { Card, Delta, PageTitle } from '../components/bits';
 import { Button } from '../components/Button';
 import { cn } from '../lib/cn';
 
@@ -79,15 +79,29 @@ export function LeagueDetail() {
     const r = RIVAL_ENTRIES.find((x) => x.id === m)!;
     return { id: r.id, name: r.name, handle: r.handle, gw: entryGw(r.picks, LAST_COMPLETE_GW), total: entryTotal(r.picks), you: false };
   }).sort((a, b) => b.total - a.total);
-  const copy = async () => { try { await navigator.clipboard.writeText(`Join my Rally league "${lg.name}" with code ${lg.code}`); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* clipboard blocked */ } };
+  const prevOrder = [...rows].sort((a, b) => (b.total - b.gw) - (a.total - a.gw)).map((r) => r.id);
+  const moved = (id: string, i: number) => prevOrder.indexOf(id) - i;
+  const copy = async () => { try { await navigator.clipboard.writeText(`Join my Rally league "${lg.name}": ${location.origin}/join/${lg.code}`); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* clipboard blocked */ } };
 
   return (
     <div>
       <button onClick={() => nav('/leagues')} className="inline-flex items-center gap-1.5 min-h-11 -ml-1 px-1 font-semibold text-graphite hover:text-ink"><ArrowLeft size={18} aria-hidden />Leagues</button>
       <div className="mt-2 flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
         <div><div className="font-mono text-[12px] uppercase tracking-[0.08em] text-graphite">Private league · after GW{LAST_COMPLETE_GW}</div><h1 className="display text-[40px] lg:text-[56px] mt-1">{lg.name}</h1></div>
-        <Button variant="secondary" onClick={copy}><Copy size={17} aria-hidden />{copied ? 'Invite copied' : `Copy invite · ${lg.code}`}</Button>
+        <Button variant="secondary" onClick={copy}><Copy size={17} aria-hidden />{copied ? 'Invite link copied' : `Copy invite link · ${lg.code}`}</Button>
       </div>
+      {rows.length > 1 && (() => { const i = rows.findIndex((r) => r.you); const above = rows[i - 1]; const below = rows[i + 1]; return (
+        <div className="mb-5 grid sm:grid-cols-2 gap-3">
+          <div className="rounded-[16px] bg-ink text-white p-5">
+            <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-white/70">{above ? 'The one to catch' : 'Top of the table'}</div>
+            <div className="display text-[32px] mt-1 leading-none">{above ? `${above.name}, ${above.total - rows[i].total} pts ahead` : `You lead by ${rows[i].total - (below?.total ?? 0)} pts`}</div>
+            <p className="mt-2 text-[14px] text-white/75">{above ? `A good week from your five and you pass ${above.name}.` : `${below?.name} is the one behind you.`}</p>
+          </div>
+          <div className="rounded-[16px] bg-card shadow-md p-5">
+            <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-graphite">Best GW{LAST_COMPLETE_GW}</div>
+            {(() => { const top = [...rows].sort((a, b) => b.gw - a.gw)[0]; return <><div className="display text-[32px] mt-1 leading-none">{top.name} · {top.gw} pts</div><p className="mt-2 text-[14px] text-graphite">Highest score in the league last gameweek.</p></>; })()}
+          </div>
+        </div>); })()}
       <Card className="overflow-hidden">
         <table className="w-full text-left">
           <caption className="sr-only">{lg.name} table</caption>
@@ -95,7 +109,7 @@ export function LeagueDetail() {
           <tbody>
             {rows.map((r, i) => (
               <tr key={r.id} className={cn('border-b last:border-0 border-rule', r.you && 'bg-highlighter/45')}>
-                <td className="pl-4 sm:pl-5 py-3.5 display text-[24px] num">{i + 1}</td>
+                <td className="pl-4 sm:pl-5 py-3.5"><div className="display text-[24px] num leading-none">{i + 1}</div>{moved(r.id, i) !== 0 && <Delta value={moved(r.id, i)} className="text-[11px]" />}</td>
                 <td className="py-3.5"><div className="font-semibold">{r.name}{r.you && <span className="sr-only"> (you)</span>}</div><div className="text-[13px] text-graphite font-mono">@{r.handle}</div></td>
                 <td className="py-3.5 text-right font-mono num">{r.gw}</td>
                 <td className="pr-4 sm:pr-5 py-3.5 text-right display text-[26px] num">{r.total}</td>

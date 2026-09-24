@@ -13,7 +13,7 @@ interface State {
   picks: Pick[];
   swaps: Record<number, number>; // gw -> swaps used
   leagues: League[];
-  startOwn: () => void;
+  startOwn: (name?: string) => void;
   startSample: () => void;
   scout: (playerId: string) => Pick | null;
   release: (playerId: string) => void;
@@ -41,8 +41,8 @@ export const useGame = create<State>()(
       picks: [],
       swaps: {},
       leagues: [],
-      startOwn: () => set({ mode: 'own', picks: [], swaps: {}, leagues: [] }),
-      startSample: () => set({ mode: 'sample', picks: sampleList(), swaps: {}, leagues: [demoLeague()] }),
+      startOwn: (name) => set({ mode: 'own', picks: [], swaps: {}, leagues: [], name: name?.trim() || 'You' }),
+      startSample: () => set({ mode: 'sample', picks: sampleList(), swaps: {}, leagues: [demoLeague()], name: 'You' }),
       scout: (playerId) => {
         const { picks } = get();
         const p = playerById.get(playerId);

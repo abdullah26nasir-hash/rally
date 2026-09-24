@@ -9,12 +9,15 @@ import { ListPage } from './screens/ListPage';
 import { ReceiptPage } from './screens/ReceiptPage';
 import { Leagues, LeagueDetail } from './screens/Leagues';
 import { How } from './screens/How';
+import { Start, Join } from './screens/Start';
 
 export default function App() {
   const mode = useGame((s) => s.mode);
   return (
     <Routes>
       {mode === 'new' && <Route path="/" element={<Welcome />} />}
+      <Route path="/start" element={<Start />} />
+      <Route path="/join/:code" element={<Join />} />
       <Route element={<Shell />}>
         {mode !== 'new' && <Route path="/" element={<ThisWeek />} />}
         <Route path="/scout" element={<Scout />} />

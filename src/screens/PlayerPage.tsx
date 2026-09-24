@@ -9,7 +9,8 @@ import { Monogram } from '../components/Monogram';
 import { Button } from '../components/Button';
 import { Card, Delta, Eyebrow, PosTag } from '../components/bits';
 import { Sheet } from '../components/Sheet';
-import { weekSummary } from './ThisWeek';
+import { EventIcons } from '../components/EventIcons';
+import { Slip, SlipRule } from '../components/Slip';
 import { cn } from '../lib/cn';
 
 export function PlayerPage() {
@@ -47,27 +48,34 @@ export function PlayerPage() {
 
       <div className="mt-3 grid lg:grid-cols-[1fr_360px] gap-6 lg:gap-10 items-start">
         <div className="min-w-0">
-          <div className="flex items-center gap-4">
-            <Monogram player={p} size={72} />
-            <div className="min-w-0">
-              <Eyebrow>{p.role} · {p.nation}</Eyebrow>
-              <h1 className="display text-[44px] sm:text-[60px] leading-[0.9] mt-1">{p.name}</h1>
+          <Slip>
+            <div className="px-5 sm:px-6 pt-5 pb-7">
+              <div className="flex justify-between font-mono text-[11px] uppercase tracking-wide text-graphite"><span>Scouting report</span><span>After GW{LAST_COMPLETE_GW}</span></div>
+              <div className="mt-3 flex items-center gap-4">
+                <Monogram player={p} size={68} />
+                <div className="min-w-0">
+                  <Eyebrow>{p.role} · {p.nation} · Age {p.age}</Eyebrow>
+                  <h1 className="display text-[40px] sm:text-[56px] leading-[0.9] mt-1">{p.name}</h1>
+                  <div className="mt-1 text-graphite text-[15px] flex items-center gap-2 flex-wrap"><PosTag pos={p.position} />{club.name} · {club.league}</div>
+                </div>
+              </div>
+              <div className="mt-5"><SlipRule /></div>
+              <dl className="mt-3 grid gap-1 font-mono text-[13px]">
+                {([
+                  ['Season points', String(seasonPoints(p, LAST_COMPLETE_GW))], ['Last 3 gameweeks', `${formLast3(p, LAST_COMPLETE_GW)} pts`], ['Minutes', String(totals.min)],
+                  p.position === 'GK' || p.position === 'DEF' ? ['Clean sheets', String(totals.cs)] : ['Goals + assists', `${totals.g} + ${totals.a}`],
+                  ['Scouts with him', fmtPct(now)],
+                ] as Array<[string, string]>).map(([k, v]) => (
+                  <div key={k} className="flex items-baseline gap-2"><dt className="text-graphite">{k}</dt><span aria-hidden className="flex-1 border-b border-dotted border-graphite/40 -translate-y-[3px]" /><dd className="font-semibold num">{v}</dd></div>
+                ))}
+              </dl>
             </div>
-          </div>
-          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-graphite"><PosTag pos={p.position} /><span>{club.name}</span><span aria-hidden>·</span><span>{club.league}</span><span aria-hidden>·</span><span>Age {p.age}</span></div>
+          </Slip>
 
           <div className="lg:hidden mt-5 flex items-center gap-4 rounded-[14px] bg-card shadow-sm p-4">
-            <div className="shrink-0"><div className="text-[13px] text-graphite">{mine ? 'Your early call' : 'Early call now'}</div><div className="display text-[34px] text-biro num leading-none mt-0.5">{fmtMult(mine ? mine.multiplier : mult)}</div></div>
+            <div className="shrink-0"><div className="text-[13px] text-graphite">{mine ? 'Your early call' : mult > 1 ? 'Early call now' : 'No early bonus'}</div><div className="display text-[34px] text-biro num leading-none mt-0.5">{fmtMult(mine ? mine.multiplier : mult)}</div></div>
             <div className="flex-1 min-w-0 [&_button]:w-full">{action}</div>
           </div>
-
-          <dl className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-            {[
-              ['Season points', seasonPoints(p, LAST_COMPLETE_GW)], ['Last 3 GWs', formLast3(p, LAST_COMPLETE_GW)], ['Minutes', totals.min], [p.position === 'GK' || p.position === 'DEF' ? 'Clean sheets' : 'Goals + assists', p.position === 'GK' || p.position === 'DEF' ? totals.cs : `${totals.g} + ${totals.a}`],
-            ].map(([k, v]) => (
-              <div key={k as string} className="bg-card rounded-[14px] shadow-sm px-4 py-3"><dt className="text-[13px] text-graphite">{k}</dt><dd className="display text-[32px] num">{v}</dd></div>
-            ))}
-          </dl>
 
           <Card className="mt-6 p-5">
             <h2 className="display text-[26px]">Week by week</h2>
@@ -77,7 +85,7 @@ export function PlayerPage() {
                   <span className="font-mono text-[13px] text-graphite">GW{w.gw}</span>
                   <div className="min-w-0">
                     <div className="h-3 rounded-full bg-rule/70 overflow-hidden"><div className={cn('h-full rounded-full', w.moment ? 'bg-ink' : 'bg-biro')} style={{ width: `${(w.points / maxPts) * 100}%` }} /></div>
-                    <div className="mt-1 text-[13px] text-graphite truncate">{weekSummary(w)}</div>
+                    <div className="mt-1 text-[13px] text-graphite truncate"><EventIcons w={w} /></div>
                   </div>
                   <span className="display text-[22px] num text-right">{w.points}</span>
                 </li>
@@ -92,7 +100,7 @@ export function PlayerPage() {
             <div className="mt-1 flex items-baseline gap-3"><span className="display text-[48px] num">{fmtPct(now)}</span><Delta value={now - prev} suffix="% this week" /></div>
             <OwnershipChart values={p.ownership} />
             <div className="mt-4 rounded-[12px] bg-biro-wash px-4 py-3">
-              <div className="text-[14px] text-ink/80">{mine ? 'Your early call, locked when you scouted him' : 'Scout him now and every point counts'}</div>
+              <div className="text-[14px] text-ink/80">{mine ? 'Your early call, locked when you scouted him' : (mult > 1 ? 'Scout him now and every point counts' : 'Already widely scouted, so points count once. Early calls earn up to ×3.')}</div>
               <div className="display text-[40px] text-biro num">{fmtMult(mine ? mine.multiplier : mult)}</div>
             </div>
             <div className="mt-4 hidden lg:block">{action}</div>
