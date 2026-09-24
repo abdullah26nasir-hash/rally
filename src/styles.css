@@ -1,0 +1,76 @@
+@import "tailwindcss";
+@import "@fontsource-variable/big-shoulders-display";
+@import "@fontsource-variable/instrument-sans";
+@import "@fontsource/spline-sans-mono/400.css";
+@import "@fontsource/spline-sans-mono/600.css";
+
+@theme {
+  --color-paper: #F7F8F5;
+  --color-ink: #0F1729;
+  --color-biro: #2A3FE0;
+  --color-biro-deep: #1F30B8;
+  --color-biro-wash: #EEF0FD;
+  --color-highlighter: #E8FF59;
+  --color-stamp: #E5402B;
+  --color-stamp-deep: #C2311F;
+  --color-graphite: #5B6474;
+  --color-rule: #E3E6EC;
+  --color-card: #FFFFFF;
+
+  --font-display: "Big Shoulders Display Variable", "Arial Narrow", sans-serif;
+  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, monospace;
+
+  --radius-control: 10px;
+  --radius-card: 16px;
+
+  --shadow-sm: 0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08);
+  --shadow-md: 0px 0px 0px 1px rgba(0,0,0,0.06), 0px 1px 1px -0.5px rgba(0,0,0,0.06), 0px 3px 3px -1.5px rgba(0,0,0,0.06), 0px 6px 6px -3px rgba(0,0,0,0.06), 0px 12px 12px -6px rgba(0,0,0,0.06), 0px 24px 24px -12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 2.8px 2.2px rgba(0,0,0,0.034), 0 6.7px 5.3px rgba(0,0,0,0.048), 0 12.5px 10px rgba(0,0,0,0.06), 0 22.3px 17.9px rgba(0,0,0,0.072), 0 41.8px 33.4px rgba(0,0,0,0.086), 0 100px 80px rgba(0,0,0,0.12);
+
+  --ease-out-soft: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@layer base {
+  html { background: var(--color-paper); color: var(--color-ink); -webkit-text-size-adjust: 100%; }
+  body { font-family: var(--font-sans); font-size: 16px; line-height: 1.5; min-height: 100dvh; -webkit-font-smoothing: antialiased; }
+  :focus-visible { outline: 2px solid var(--color-biro); outline-offset: 2px; border-radius: 6px; }
+  button { cursor: pointer; }
+  [id] { scroll-margin-top: 80px; }
+}
+
+@layer components {
+  .display { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; line-height: 0.95; }
+  .num { font-variant-numeric: tabular-nums; }
+  .press { transition: transform 160ms var(--ease-out-soft), background-color 160ms ease, color 160ms ease, box-shadow 160ms ease; }
+  .press:active { transform: scale(0.97); }
+  /* highlighter swipe: sits behind text, slightly uneven like a real pen */
+  .hl { background: linear-gradient(104deg, transparent 0.4em, var(--color-highlighter) 0.5em, var(--color-highlighter) calc(100% - 0.3em), transparent calc(100% - 0.2em)); background-size: 100% 62%; background-position: 0 72%; background-repeat: no-repeat; padding: 0 0.15em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .serrate-top { --s: 10px; -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--s) 100%; mask: conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/var(--s) 100%; }
+  .receipt-paper { background: #FFFFFF; background-image: repeating-linear-gradient(0deg, rgba(15,23,41,0.018) 0 1px, transparent 1px 3px); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+}
+
+@keyframes print-in { from { clip-path: inset(0 0 100% 0); transform: translateY(-8px); } to { clip-path: inset(0 0 0 0); transform: none; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes stamp-in { 0% { opacity: 0; transform: scale(1.25); } 100% { opacity: 1; transform: scale(1); } }
+.anim-print { animation: print-in 700ms var(--ease-out-soft) both; }
+.anim-fade { animation: fade-up 220ms var(--ease-out-soft) both; }
+.anim-stamp { animation: stamp-in 260ms var(--ease-out-soft) 500ms both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-print, .anim-stamp { animation: fade-up 200ms ease both; }
+  .press:active { transform: none; }
+  * { scroll-behavior: auto !important; }
+}
+
+.sheet[data-state='open'] { animation: sheet-up 320ms var(--ease-drawer) both; }
+@media (min-width: 640px) { .sheet[data-state='open'] { animation: sheet-pop 220ms var(--ease-out-soft) both; } }
+@keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes sheet-pop { from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .sheet[data-state='open'] { animation: fade-up 180ms ease both; } }
+.overlay[data-state='open'] { animation: overlay-in 200ms ease both; }
+@keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
