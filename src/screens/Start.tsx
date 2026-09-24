@@ -68,7 +68,7 @@ export function Join() {
   const go = () => {
     if (mode === 'new') { useGame.getState().startSample(); }
     const l = joinLeague(code);
-    if (l) nav(`/leagues/${l.id}`, { replace: true }); else setErr(`No league uses the code ${code}. Check the link with whoever sent it.`);
+    if (l) nav(`/leagues/${l.id}`, { replace: true }); else setErr(`Couldn't find league ${code}. In this preview, leagues only live on the phone that made them, so a friend's league won't show up here yet. Try the demo league: LADS26.`);
   };
   return (
     <div className="min-h-dvh grid place-items-center px-5">

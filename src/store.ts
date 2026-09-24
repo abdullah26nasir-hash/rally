@@ -74,6 +74,8 @@ export const useGame = create<State>()(
       },
       joinLeague: (c) => {
         const clean = c.trim().toUpperCase();
+        const mine = get().leagues.find((l) => l.code === clean);
+        if (mine) return mine;
         if (clean === 'LADS26') {
           const existing = get().leagues.find((l) => l.code === 'LADS26');
           if (existing) return existing;
