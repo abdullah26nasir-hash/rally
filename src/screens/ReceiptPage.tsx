@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Share2, Download } from 'lucide-react';
-import { toPng } from 'html-to-image';
+import { toBlob } from 'html-to-image';
 import { useGame } from '../store';
 import { playerById } from '../data/pool';
 import { Receipt } from '../components/Receipt';
@@ -18,30 +18,38 @@ export function ReceiptPage() {
   const handle = name.toLowerCase().replace(/\s+/g, '');
   const pick = picks.find((p) => p.playerId === id);
   const ref = useRef<HTMLDivElement>(null);
-  const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState('');
   const [showPoints, setShowPoints] = useState(true);
   const [showEarly, setShowEarly] = useState(true);
+  // navigator.share only works inside the tap that triggered it, and rendering the
+  // image takes longer than browsers allow. So render it ahead of time and keep it fresh.
+  const [file, setFile] = useState<File | null>(null);
+  useEffect(() => {
+    if (!pick) return;
+    let live = true;
+    setFile(null);
+    const t = setTimeout(async () => {
+      const f = await renderReceipt(ref.current!, id).catch(() => null);
+      if (live) setFile(f);
+    }, isNew ? 1500 : 300);
+    return () => { live = false; clearTimeout(t); };
+  }, [pick, id, isNew, showPoints, showEarly]);
   if (!pick) return <div className="py-20 text-center"><p className="display text-[32px]">No receipt for this player</p><p className="text-graphite mt-1">Receipts are made when you scout someone.</p><Link to="/scout" className="inline-flex mt-4 min-h-11 items-center text-biro font-semibold">Go to Scout</Link></div>;
   const p = playerById.get(id)!;
 
-  async function image() {
-    const node = ref.current!;
-    return toPng(node, { pixelRatio: 3, backgroundColor: '#F7F8F5', style: { padding: '24px' } });
-  }
+  async function getFile() { return file ?? renderReceipt(ref.current!, id); }
   async function share() {
-    setBusy(true); setMsg('');
+    setMsg('');
     try {
-      const url = await image();
-      const blob = await (await fetch(url)).blob();
-      const file = new File([blob], `rally-receipt-${p.name.replace(/\s+/g, '-').toLowerCase()}.png`, { type: 'image/png' });
-      if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file], text: `I scouted ${p.name} first. Here's the receipt.` });
-      else { download(url); setMsg('Saved as an image. Share it wherever you like.'); }
-    } catch (e) { if ((e as Error).name !== 'AbortError') setMsg("Couldn't make the image. Try again, or screenshot the receipt."); }
-    setBusy(false);
+      const f = await getFile();
+      if (navigator.canShare?.({ files: [f] })) await navigator.share({ files: [f], text: `I scouted ${p.name} first. Here's the receipt.` });
+      else { download(f); setMsg("Your browser can't share images, so it's saved instead."); }
+    } catch (e) { if ((e as Error).name !== 'AbortError') setMsg("Couldn't share the image. Try Save image instead."); }
   }
-  async function save() { setBusy(true); try { download(await image()); setMsg('Saved.'); } catch { setMsg("Couldn't save the image. Try again."); } setBusy(false); }
-  function download(url: string) { const a = document.createElement('a'); a.href = url; a.download = `rally-receipt-${p.id}.png`; a.click(); }
+  async function save() {
+    setMsg('');
+    try { download(await getFile()); setMsg('Saved as a PNG.'); } catch { setMsg("Couldn't save the image. Try again."); }
+  }
 
   return (
     <div className="max-w-[560px] mx-auto">
@@ -54,8 +62,8 @@ export function ReceiptPage() {
         <Toggle label="Show your early call" on={showEarly} set={setShowEarly} />
       </fieldset>
       <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-        <Button size="lg" onClick={share} disabled={busy}><Share2 size={18} aria-hidden />Share receipt</Button>
-        <Button size="lg" variant="secondary" onClick={save} disabled={busy}><Download size={18} aria-hidden />Save image</Button>
+        <Button size="lg" onClick={share} disabled={!file}><Share2 size={18} aria-hidden />{file ? "Share receipt" : "Getting image ready…"}</Button>
+        <Button size="lg" variant="secondary" onClick={save} disabled={!file}><Download size={18} aria-hidden />Save image</Button>
       </div>
       <p role="status" className="mt-3 min-h-6 text-center text-[14px] text-graphite">{msg}</p>
       {isNew && (() => { const earned = stampsFor(picks).filter((s) => s.player.id === id && s.earnedAt === pick.scoutedAt); return earned.length ? (
@@ -76,4 +84,28 @@ function Toggle({ label, on, set }: { label: string; on: boolean; set: (v: boole
       <span className={'relative h-7 w-12 rounded-full transition-colors ' + (on ? 'bg-biro' : 'bg-ink/20')}><span className="absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition-transform" style={{ transform: on ? 'translateX(24px)' : 'translateX(4px)', transitionTimingFunction: 'cubic-bezier(.23,1,.32,1)' }} /></span>
     </button>
   );
+}
+
+async function renderReceipt(node: HTMLElement, id: string): Promise<File> {
+  const pad = 24;
+  const opts = {
+    pixelRatio: 3,
+    backgroundColor: '#F7F8F5',
+    width: node.offsetWidth + pad * 2,
+    height: node.offsetHeight + pad * 2,
+    style: { margin: '0', padding: `${pad}px`, boxSizing: 'content-box' as const },
+  };
+  await toBlob(node, opts); // Safari drops fonts on the first pass
+  const blob = await toBlob(node, opts);
+  if (!blob) throw new Error('render failed');
+  return new File([blob], `rally-receipt-${id}.png`, { type: 'image/png' });
+}
+
+function download(file: File) {
+  const url = URL.createObjectURL(file);
+  const a = Object.assign(document.createElement('a'), { href: url, download: file.name });
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10_000);
 }

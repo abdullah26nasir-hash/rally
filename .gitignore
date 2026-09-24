@@ -19,3 +19,6 @@ csp.mjs
 devices.mjs
 live1.mjs
 xss.mjs
+sharetest.mjs
+oldtest.mjs
+buttons.mjs
