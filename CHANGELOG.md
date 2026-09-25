@@ -69,3 +69,6 @@ Big-audit fix pass (57-page matrix: 12 routes x 3 breakpoints x fresh/sampled st
 - Receipt ID no longer wraps mid-number (stacks below 360px); "Scouting receipt" -> "Scout receipt" per doc anatomy
 - Primary button no longer appends an arrow icon; desktop "How scoring works" rail link now 44px; player name wraps at 320px (4px overflow residual closed)
 - Suites: buttons 117/117, a11y 143/143 (first time fully green - both 320px residuals closed)
+
+## v6.4.1 - 25 Sep 2026
+- Stamp tiles: GW labels clipped at the tile's bottom edge (his screenshot). Reverted the tile label to the v2.1 spec - number ring + "WK 06" week line (mono 500 11px ink); title+GW label was an off-doc invention that overflowed the 90px tile.
