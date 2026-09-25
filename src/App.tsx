@@ -11,6 +11,7 @@ import { PlayerPage } from './screens/PlayerPage';
 import { ListPage } from './screens/ListPage';
 import { ReceiptPage } from './screens/ReceiptPage';
 import { Leagues, LeagueDetail } from './screens/Leagues';
+import { FeedbackBoard, FeedbackNew, FeedbackRequest } from './screens/Feedback';
 import { How } from './screens/How';
 import { Start, Join } from './screens/Start';
 
@@ -33,6 +34,9 @@ export default function App() {
         <Route path="/leagues" element={<Leagues />} />
         <Route path="/leagues/:id" element={<LeagueDetail />} />
         <Route path="/how" element={<How />} />
+        <Route path="/feedback" element={<FeedbackBoard />} />
+        <Route path="/feedback/new" element={<FeedbackNew />} />
+        <Route path="/feedback/:id" element={<FeedbackRequest />} />
         <Route path="*" element={<ThisWeek />} />
       </Route>
     </Routes>

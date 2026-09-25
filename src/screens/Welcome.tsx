@@ -1,10 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useGame } from '../store';
 import { Button } from '../components/Button';
 import { Receipt } from '../components/Receipt';
 import { Eyebrow } from '../components/bits';
 import { Wordmark } from '../components/Shell';
 import { sampleList } from '../data/scouts';
+import { FeedbackLanding } from '../components/FeedbackLanding';
 import { EARLY_CALL_TIERS, fmtMult } from '../game/scoring';
 import { PLAYERS, playerById, ownershipNow } from '../data/source';
 
@@ -95,9 +96,12 @@ export function Welcome() {
         </div>
       </section>
 
+      <FeedbackLanding />
+
       <footer className="max-w-[1180px] mx-auto px-5 sm:px-8 pb-12 text-[14px] text-graphite border-t border-hairline pt-6 flex flex-col sm:flex-row gap-2 justify-between">
         <span>Preview season: every player, club and result here is fictional.</span>
         <span>Rallycademy is free to play, all season.</span>
+        <Link to="/feedback/new" className="underline underline-offset-4">Tell us what's missing</Link>
       </footer>
     </div>
   );

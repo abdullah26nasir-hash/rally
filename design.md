@@ -317,6 +317,26 @@ Perforation, the serrated edge and the stamp stay receipt-only (plus the stamp r
 
 ---
 
+### Feedback board (v6.6)
+
+Users post feature requests, vote and comment. Works before sign-in on a device identity (Scout number, local storage, never fingerprinted); rows migrate to user_id at signup. Lives as a "Feedback board" row at the top of How (Ticket panel row, 56px min height, card-title + data Pencil open count + chevron-right 20px ink) plus routes /feedback, /feedback/new, /feedback/:id. No fifth tab: tabs are the weekly game; feedback is occasional work.
+
+**Sort.** Top (default) and New as two text tabs (ink + 2px ink underline active, Graphite otherwise). top_score = (votes + 1) / (days_since_posted + 7)^0.5, computed server-side hourly; ties to newer, then lower id. Top shows open requests only; Shipped only under its filter. Rows never reorder during a visit: votes update the count instantly, order refreshes on next load.
+
+**Request row.** grid 48px 1fr, gap 12px, padding 16px, min-height 80px. Ticket panel split by hairlines. Title Inter 600 16px ink, 2-line clamp, is the stretched link; vote control sits above with z-index 1. Meta line data Pencil: SCOUT #4821 and 14 SEP 2026, 12px gap, no middle dot. Comment count message-square 14px Pencil + Plex Mono 500 13px, hidden at 0. One status chip max (Terrace fill, Graphite text - the word carries it). YOURS in label style Pencil after the meta. Hover row fill rgba(11,11,10,0.04) 140ms; pressed Terrace; focus 2px ink outline inset -2px.
+
+**Vote control** (the one new control; ink, never Flare). 48x56px hit box, radius 6px. chevron-up 16px 1.5px stroke above count, 2px gap. Count Plex Mono 600 15px tabular-nums; integer to 999 then 1.2K. Default transparent, 1px Pencil border, ink chevron/count. Hover border ink 140ms. Voted: ink fill, Ticket chevron/count (17.10:1), aria-pressed=true. Pressed scale(.97) 160ms ease-out. Focus 2px ink outline 2px offset. Rate-limited: Terrace fill, card-edge border, Pencil count, aria-disabled. Tap toggles; optimistic update, roll back on failure; polite live region announces "Vote added. 43 votes." Author's own vote is added on post (starts at 1).
+
+**Submit** (/feedback/new, full screen - a long form in a sheet fights the mobile keyboard). Entry: primary New request, in flow at the top of the board, full width on mobile. Title field per Input spec, label "What's missing?", required, 8-80 chars, counter right of the label (42/80, data Pencil). After 8 chars (debounced 400ms) up to 3 matching open requests appear under the field as compact rows with their own Vote control, headed "Already asked? Vote instead." (Inter 400 14px Graphite). Details textarea optional, 1000 max, counter from 800. Identity line above the button, data Pencil: POSTING AS SCOUT #4821 FROM THIS DEVICE, with a Ghost "What's this?" (44px hit) opening a sheet explaining the scout number lives on this device and moves to an account later; sheet action Secondary "Got it". Submit: Primary "Post request", disabled until the title is valid. Validation on blur and submit, never per keystroke. Failure keeps the text: Inter 400 14px Offside "Couldn't post. Your text is still here. Try again." Success goes to the new request's screen, vote already set. No toast.
+
+**Request screen** (/feedback/:id - own screen, shareable URL, back works). Vote control left, title h3 Inter 700 24px ink, meta line, status chip. Details body max 34em. Team update (when present) shows first on Ticket with 2px ink left rule: RALLYCADEMY label ink, date data Pencil, body ink. Composer in flow above the comments (never sticky): textarea 500 max, identity line, Primary "Post comment" disabled until text exists. Comments flat, oldest first, no threads. Comment row padding 16px; author and date data Pencil; body Inter 400 15px ink; team comments get the ink left rule. Ghost Report on comments not yours (sheet confirm, Inverse "Report comment"); Ghost Delete on your own (sheet confirm, Inverse "Delete comment").
+
+**States.** Empty board: "No requests yet." (Inter 600 17px ink) / "Tell us what's missing." (Graphite), New request stays primary. Empty filter: "Nothing shipped yet." Graphite, no button. Loading after 300ms: 4 static placeholder rows (Terrace block 48x56 + Terrace bars 70%/40% width, 12px tall, radius 2px), no shimmer, aria-busy. Load error: alert-circle 20px ink + "Couldn't load requests." + Secondary "Try again". Rate limited: affected controls disabled + Inter 400 14px Graphite "Limit reached. Try again at 14:05." Limits per device: 5 requests/day, 20 comments/day, 60 votes/hour. Already voted: the voted state is the message; tapping again removes; cross-tab reconcile silently. Reported by you: body replaced with "You reported this. Hidden for you while we check." (Pencil). 3+ reports: hidden for everyone; author still sees own text with "Under review" data Pencil. Removed request: "This request was removed." + Secondary "Back to the board".
+
+**One Flare fill per screen.** Board: New request. New request: Post request. Request screen: Post comment. Sheets: none. Votes, status chips, sort tabs and the team label never use Flare or Flare Ink.
+
+**Banned on the board.** Orange/Flare upvote or voted fill (Flare budget, looks like Reddit). Downvotes. Count-up, bounce, confetti on votes. Rows reordering after a vote. Floating + button or sticky composer. Green "Shipped"/amber "Planned" chips (semantic colours never fill). Relative times. Middle dots in meta. Avatars, identicons, emoji reactions. Karma, top-contributor lists, badges, trending flames. Nested threads. Roadmap kanban, public ETAs. Seeded or fake requests and votes. Tag chips on rows. Shimmer skeletons.
+
 ## 5. Signature element: the Scout Receipt
 
 This is the thing people screenshot. Everything else stays quiet so this can be loud. The receipt is identical in both themes: Ticket paper, ink type. It never inverts.
@@ -652,6 +672,17 @@ Sharp, dry, assured. Short sentences. The receipt carries the punchline.
 - Never: "unleash", "level up", "the ultimate", "game changer", "next big thing", exclamation marks, commentator voice.
 
 ---
+
+
+### Feedback slice on landing (v6.6)
+
+A read-only window onto the board. Proves players shape the game. Not a second place to vote.
+
+Position: after the ink band, before Close, on Stock. Unnumbered (numerals mark the pick/lock/prove/compete sequence). 1px ink rule above, 96-128px space either side. Headline h2 ink built from live numbers, stating a fact ("214 players voted on what we build next."). Rows: 3 - two top open requests by top_score plus the most recently shipped request from the last 60 days (otherwise three open). Only team-triaged requests (Under review, Planned, Shipped) with no pending reports: raw stranger posts never reach the marketing page. Show threshold: at least 3 qualifying requests and 20 total votes across them; below that the section does not render. Data fetched server-side, refreshed every 15 minutes; fetch failure = no render (no skeleton, no error on landing). No motion, no carousel, no count-up.
+
+Row (landing voice, not app voice: no scout numbers, no comment counts - vote count stays, it's the evidence): grid 1fr auto, gap 16px, padding 16px, min-height 64px. Title Inter 600 17px ink 2-line clamp. One Terrace status chip under the title; Shipped rows add the date in data Pencil. Vote count right, plain text (not a control): Plex Mono 600 20px ink number, VOTES data Pencil beneath; no border, no chevron, so it doesn't look tappable. Whole row links to /feedback/:id (stretched link, focus 2px ink outline inset -2px). Hover row fill rgba(11,11,10,0.04) + translateY(-2px) (landing may lift). Link under the panel: Ghost text link, ink, underlined, 44px hit: "See all 38 requests" with the live open count, no arrow.
+
+Flare budget: the slice gets none. Landing's fills stay Back your five (hero and close) and Start a league (ink band). Voting happens in the app only: device identity and rate limits live there, anonymous landing traffic is where vote stuffing comes from, and a vote button competes with the page's one job. Empty/thin state: the slice renders nothing ("if the real data does not exist yet, the section waits"); what always renders is a footer link, not proof, just a door: "Tell us what's missing" to /feedback/new, Inter 400 14px Graphite underlined.
 
 ## 11. Dark theme (alternate)
 

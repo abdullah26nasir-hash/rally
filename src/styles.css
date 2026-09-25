@@ -151,3 +151,14 @@ body { background-image: var(--grain-ink-4); background-color: #E5E2D8; }
 .tabbar-shadow { box-shadow: 0 -1px 2px rgba(11,11,10,0.08); }
 .section-rule { border-top: 3px double #0B0B0A; padding-top: 14px; }
 .league-cols th+th, .league-cols td+td { border-left: 1px solid var(--color-hairline); }
+
+/* Feedback board: the vote control (design.md §4, Opus board spec) - ink, never Flare */
+.vote { width: 48px; height: 56px; border-radius: 6px; border: 1px solid #5C5B55;
+  display: grid; place-content: center; gap: 2px; color: #0B0B0A; background: transparent;
+  font: 600 15px/1 "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; position: relative; z-index: 1; }
+.vote:hover { border-color: #0B0B0A; }
+.vote:active { transform: scale(.97); transition: transform 160ms cubic-bezier(.23,1,.32,1); }
+.vote[aria-pressed="true"] { background: #0B0B0A; border-color: #0B0B0A; color: #F1EFE7; }
+.vote:focus-visible { outline: 2px solid #0B0B0A; outline-offset: 2px; }
+.vote.vote-disabled, .vote[aria-disabled="true"] { background: #D9D6CA; border-color: rgba(11,11,10,.12); color: #5C5B55; }
+.stretched-link::after { content: ''; position: absolute; inset: 0; }

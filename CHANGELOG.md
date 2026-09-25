@@ -1,5 +1,16 @@
 # Rallycademy - Changelog
 
+## v6.6 (25 Sep 2026) - IN PROGRESS, not yet deployed
+Feedback board: requests, votes and comments on a pre-auth device identity, spec'd through the Opus design pipeline and folded into design.md (section 4 + landing slice in section 10).
+- Backend: D1 tables (requests, votes, comments, reports, scout numbers) + /api/feedback Pages Function. Rate limits per device (5 requests/day, 20 comments/day, 60 votes/hour), server-side top_score ranking, 3-report auto-hide, similar-request duplicate check.
+- Board at /feedback (row in How, no fifth tab): filter chips, Top/New sort tabs, ticket rows with the new ink Vote control (aria-pressed, live-region announcements, optimistic toggle).
+- Submit at /feedback/new: full screen, title validation on blur/submit, "Already asked? Vote instead." similar rows, identity line POSTING AS SCOUT #4821 with explainer sheet.
+- Request screen at /feedback/:id: vote header, team-update block (schema ready), in-flow composer, flat comments, report/delete sheets.
+- Landing slice (read-only): 3 triaged rows + live vote totals, renders only above the proof threshold, "Tell us what's missing" footer door always present.
+- PostHog: feedback_board_viewed, feedback_new_clicked, feedback_request_posted, feedback_request_viewed, feedback_vote_added/removed, feedback_comment_posted, feedback_comment_reported.
+- Suites: pending (run before deploy).
+
+
 ## v6.3 (25 Sep 2026)
 UI error-fix pass after owner review, audited against design.md v2 via the Opus design pipeline (v2.1 rules).
 - Stub rebuilt to spec: Receipt R + current screen title + WK/PREVIEW label (wordmark and stray flare dash removed from the band; wordmark bare everywhere).

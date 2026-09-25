@@ -6,6 +6,7 @@ import { Button } from '../components/Button';
 import { Sheet } from '../components/Sheet';
 import { EARLY_CALL_TIERS, RULES, fmtMult } from '../game/scoring';
 import { PageTitle, Card } from '../components/bits';
+import { FeedbackRow } from '../components/FeedbackRow';
 
 export function How() {
   const { mode, reset } = useGame();
@@ -22,6 +23,7 @@ export function How() {
       <Link to="/" className="inline-flex min-h-11 items-center gap-1 font-medium text-[15px] text-ink"><ChevronLeft size={20} aria-hidden />This week</Link>
       <PageTitle title="How scoring works">Rallycademy takes about five minutes a week. Here's everything that counts.</PageTitle>
       <div className="grid gap-6">
+        <FeedbackRow />
         <Card className="p-5 sm:p-6"><h2 className="display text-[28px]">Your list</h2><ul className="mt-3 grid gap-2 list-disc pl-5 text-ink/85"><li>Five under-21 players, one per club.</li><li>Change freely until your first deadline. After that you get one swap a week.</li><li>A player scores for you from the first gameweek after you scout him.</li></ul></Card>
         <Card className="overflow-hidden"><h2 className="display text-[28px] px-5 sm:px-6 pt-5">Points</h2>
           <table className="w-full mt-2"><caption className="sr-only">Points table</caption><tbody>{rows.map(([k, v]) => <tr key={k} className="border-t border-hairline"><td className="px-5 sm:px-6 py-3">{k}</td><td className="px-5 sm:px-6 py-3 text-right font-mono font-semibold whitespace-nowrap">{v}</td></tr>)}</tbody></table></Card>
