@@ -7,7 +7,7 @@ export function AnalyticsConsent() {
   useEffect(() => { const sync = () => setChoice(consent()); window.addEventListener('rally-consent', sync); return () => window.removeEventListener('rally-consent', sync); }, []);
   return <>
     {(!choice || settings) && <section role="region" aria-label="Analytics choice" className="fixed z-50 bottom-20 left-4 right-4 sm:bottom-4 sm:left-auto sm:right-6 sm:w-[420px] bg-card border border-rule shadow-lg rounded-[16px] px-5 py-4 pb-safe">
-      <h2 className="font-semibold text-[18px]">Help us improve Rally?</h2>
+      <h2 className="font-semibold text-[18px]">Help us improve Rallycademy?</h2>
       <p className="mt-1 text-[14px] text-graphite">With your OK, we measure page visits and game actions. We don't send league codes or scout names. You can change this choice any time.</p>
       <div className="mt-3 flex gap-2"><button className="min-h-11 px-4 rounded-[10px] bg-biro text-white font-semibold" onClick={() => { setConsent('yes'); setSettings(false); }}>Allow analytics</button><button className="min-h-11 px-4 rounded-[10px] border border-rule font-semibold" onClick={() => { setConsent('no'); setSettings(false); }}>No thanks</button></div>
     </section>}

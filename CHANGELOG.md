@@ -1,4 +1,11 @@
-# Rally - Changelog
+# Rallycademy - Changelog
+
+## v5.7 (25 Sep 2026)
+Renamed the app Rally -> Rallycademy.
+- Wordmark, page titles, meta, consent sheet, receipt, empty states and all user-facing copy now say Rallycademy; Receipt R mark kept (the R reads for Rallycademy).
+- Unchanged on purpose: rally-v1 localStorage key, X-Rally-Device header, D1 binding, Pages project name (rally-t9w3n6) and the PostHog app='rally' super-property (kept so the analytics stream stays continuous).
+- Small-viewport fix: header wordmark is fluid (clamp 16-24px) so RALLYCADEMY never causes sideways scroll at 320px.
+- Verified live: title + header wordmark on production; a11y + button suites re-run against production after deploy.
 
 ## v5.4 (25 Sep 2026, commit cf8f984 content)
 Shared leagues live (D1-backed) + opt-in analytics consent.

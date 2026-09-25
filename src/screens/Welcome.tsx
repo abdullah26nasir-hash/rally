@@ -97,7 +97,7 @@ export function Welcome() {
 
       <footer className="max-w-[1180px] mx-auto px-5 sm:px-8 pb-12 text-[14px] text-graphite border-t border-rule pt-6 flex flex-col sm:flex-row gap-2 justify-between">
         <span>Preview season: every player, club and result here is fictional.</span>
-        <span>Rally is free to play, all season.</span>
+        <span>Rallycademy is free to play, all season.</span>
       </footer>
     </div>
   );

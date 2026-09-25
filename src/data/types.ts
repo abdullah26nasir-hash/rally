@@ -28,7 +28,7 @@ export interface Player {
   clubId: string;
   nation: string;
   weeks: WeekStat[];
-  /** % of Rally scouts who had him on their list at the end of each gameweek, index 0 = before GW1 */
+  /** % of Rallycademy scouts who had him on their list at the end of each gameweek, index 0 = before GW1 */
   ownership: number[];
 }
 

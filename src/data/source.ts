@@ -42,7 +42,7 @@ export const previewSource: FootballDataSource = {
   kind: 'fictional-preview',
   async load() {
     return {
-      kind: 'fictional-preview', sourceName: 'Rally fictional preview', season: SEASON,
+      kind: 'fictional-preview', sourceName: 'Rallycademy fictional preview', season: SEASON,
       fetchedAt: null, lastCompletedGameweek: LAST_COMPLETE_GW,
       nextGameweek: NEXT_GW, totalScouts: TOTAL_SCOUTS,
       clubs: CLUBS, players: PLAYERS, fixtures: [],

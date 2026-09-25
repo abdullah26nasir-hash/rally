@@ -47,7 +47,7 @@ function RouteFocus() {
   useEffect(() => {
     const id = requestAnimationFrame(() => {
       const h1 = document.querySelector<HTMLElement>('h1');
-      document.title = h1?.textContent ? `${h1.textContent} · Rally` : 'Rally';
+      document.title = h1?.textContent ? `${h1.textContent} · Rallycademy` : 'Rallycademy';
       pageview();
       if (first.current) { first.current = false; return; }
       if (h1) { h1.tabIndex = -1; h1.style.outline = 'none'; h1.focus({ preventScroll: true }); }

@@ -77,7 +77,7 @@ export function ThisWeek() {
         {/* the gameweek slip */}
         <Slip>
           <div className="px-5 sm:px-6 pt-5 pb-8 font-mono text-[13px]">
-            <div className="flex justify-between text-graphite text-[11px] uppercase tracking-wide"><span>Rally · GW{gw} slip</span><span>@{name.toLowerCase()}</span></div>
+            <div className="flex justify-between text-graphite text-[11px] uppercase tracking-wide"><span>Rallycademy · GW{gw} slip</span><span>@{name.toLowerCase()}</span></div>
             {upcoming || pending ? (
               <div className="py-5">
                 <div className="font-sans display text-[44px] leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>{pending ? 'Your list is in.' : 'Not kicked off yet.'}</div>

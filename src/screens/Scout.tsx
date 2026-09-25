@@ -93,7 +93,7 @@ export function Scout() {
           <button onClick={() => { setQ(''); setPos('All'); setSort('rising'); }} className="mt-4 h-11 px-4 font-semibold text-biro hover:underline underline-offset-4">Clear filters</button>
         </div>
       )}
-      <p className="sm:hidden mt-4 text-[13px] text-graphite">"Scouts" is the share of Rally players with him on their list, and the change since last week.</p>
+      <p className="sm:hidden mt-4 text-[13px] text-graphite">"Scouts" is the share of Rallycademy players with him on their list, and the change since last week.</p>
     </div>
   );
 }

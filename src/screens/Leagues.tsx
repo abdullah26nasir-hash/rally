@@ -24,7 +24,7 @@ export function Leagues() {
 
   return (
     <div>
-      <PageTitle eyebrow="Beat your mates" title="Leagues">Private leagues are where Rally gets personal. Make one, send the code to the group chat.</PageTitle>
+      <PageTitle eyebrow="Beat your mates" title="Leagues">Private leagues are where Rallycademy gets personal. Make one, send the code to the group chat.</PageTitle>
       <div className="grid lg:grid-cols-[1.3fr_1fr] gap-6 items-start">
         <div className="grid gap-3">
           <Card className="p-5 flex items-center gap-4">
@@ -97,7 +97,7 @@ export function LeagueDetail() {
   })).sort((a, b) => b.total - a.total);
   const prevOrder = [...rows].sort((a, b) => (b.total - b.gw) - (a.total - a.gw)).map((r) => r.id);
   const moved = (id: string, i: number) => prevOrder.indexOf(id) - i;
-  const copy = async () => { try { await navigator.clipboard.writeText(`Join my Rally league "${lg.name}": ${location.origin}/join/${lg.code}`); setCopied(true); track('invite_copied'); setTimeout(() => setCopied(false), 2000); } catch { setCopyFail(true); } };
+  const copy = async () => { try { await navigator.clipboard.writeText(`Join my Rallycademy league "${lg.name}": ${location.origin}/join/${lg.code}`); setCopied(true); track('invite_copied'); setTimeout(() => setCopied(false), 2000); } catch { setCopyFail(true); } };
 
   return (
     <div>

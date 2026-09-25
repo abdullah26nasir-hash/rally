@@ -1,4 +1,4 @@
-# Rally - Product Requirements Document
+# Rallycademy - Product Requirements Document
 
 **Owner:** Abdullah Mansuri (7 day challenge)
 **Status:** Live preview (v4, supersedes v3). Function-first phase; branding pass is LAST.

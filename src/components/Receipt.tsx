@@ -8,7 +8,7 @@ import { cn } from '../lib/cn';
 
 interface Props { pick: Pick; scoutName: string; animate?: boolean; className?: string; showPoints?: boolean; showEarly?: boolean; }
 
-/** The Scout Receipt - Rally's signature element and share card. */
+/** The Scout Receipt - Rallycademy's signature element and share card. */
 export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick, scoutName, animate, className, showPoints = true, showEarly = true }, ref) {
   const p = playerById.get(pick.playerId)!;
   const club = clubOf(p);
@@ -23,7 +23,7 @@ export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick
       <div className="receipt-paper relative font-mono text-[13px] leading-[1.55] text-ink" style={{ clipPath: 'polygon(' + serrated() + ')' }}>
         <div className="px-6 pt-8 pb-9">
           <div className="flex items-baseline justify-between">
-            <span className="display text-[26px] tracking-tight not-italic font-sans" style={{ fontFamily: 'var(--font-display)' }}>RALLY</span>
+            <span className="display text-[26px] tracking-tight not-italic font-sans" style={{ fontFamily: 'var(--font-display)' }}>RALLYCADEMY</span>
             <span className="text-graphite text-[11px]">NO. {pick.receiptNo}</span>
           </div>
           <div className="text-[11px] text-graphite uppercase tracking-wide">Scouting receipt · {SEASON}</div>
