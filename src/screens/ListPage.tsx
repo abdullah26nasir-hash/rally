@@ -22,7 +22,7 @@ export function ListPage() {
 
   return (
     <div>
-      <PageTitle eyebrow={locked ? (left ? `1 swap left · deadline ${fmtDeadline(deadlineFor(NEXT_GW))}` : 'Swap used this week') : `Free changes until ${fmtDeadline(deadlineFor(NEXT_GW))}`} title="Your list">
+      <PageTitle eyebrow={locked ? (left ? `1 swap left. Deadline ${fmtDeadline(deadlineFor(NEXT_GW))}` : 'Swap used this week') : `Free changes until ${fmtDeadline(deadlineFor(NEXT_GW))}`} title="Your list">
         Five players, each stamped with the moment you scouted him.
       </PageTitle>
       <ul className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">

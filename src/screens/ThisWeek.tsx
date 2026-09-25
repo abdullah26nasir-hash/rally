@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Check, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useGame, MAX_PICKS, swapsLeft, isLocked } from '../store';
 import { playerById, PLAYERS, clubOf, ownershipNow, ownershipAt } from '../data/source';
 import { entryGw, entryTotal, overallRank, RIVAL_ENTRIES } from '../data/scouts';
@@ -34,7 +34,7 @@ export function ThisWeek() {
         <h1 className="display text-[44px] lg:text-[60px]">{picks.length === 0 ? 'Start your list' : `${picks.length} of ${MAX_PICKS} scouted`}</h1>
         <p className="mt-2 text-graphite max-w-[52ch]">Your list starts scoring from Gameweek {NEXT_GW}. Everyone you scout before the deadline is stamped with today's numbers, so the quieter the name, the bigger your early call.</p>
         <Slots count={picks.length} />
-        <Button size="lg" className="mt-6" onClick={() => nav('/scout')}>Scout {picks.length === 0 ? 'your first player' : 'the next one'}<ArrowRight size={18} aria-hidden /></Button>
+        <Button size="lg" className="mt-6" onClick={() => nav('/scout')}>Scout {picks.length === 0 ? 'your first player' : 'the next one'}</Button>
         {stamps.length > 0 && <div className="mt-10 min-w-0"><Card className="p-5 min-w-0"><LevelBar stamps={stamps} compact /><div tabIndex={0} role="region" aria-label="Recent stamps" className="stamp-row mt-4">{stamps.map((s) => <StampCard key={s.id} stamp={s} size="sm" />)}</div></Card></div>}
       </div>
     );
@@ -62,7 +62,7 @@ export function ThisWeek() {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:gap-8">
       {/* gameweek pager */}
-      {mode === 'sample' && <div className="mb-4 flex items-center justify-between gap-3 rounded-lg bg-flare-tint px-4 py-2 text-[14px]"><span>You're trying the sample season.</span><Link to="/how" className="min-h-11 inline-flex items-center font-semibold text-flare-ink shrink-0">Play your own</Link></div>}
+      {mode === 'sample' && <div className="mb-4 flex items-center justify-between gap-3 rounded-lg bg-flare-tint border border-ink/10 px-4 py-2 text-[14px]"><span>You're trying the sample season.</span><Link to="/how" className="min-h-11 inline-flex items-center rounded-md bg-flare border border-ink px-5 font-semibold text-ink shrink-0">Play your own</Link></div>}
       <div className="flex items-center justify-between gap-2">
         <button onClick={() => setGw((g) => Math.max(1, g - 1))} aria-disabled={gw <= 1} className="press grid place-items-center h-11 w-11 rounded-full bg-paper shadow-sm aria-disabled:opacity-40" aria-label="Previous gameweek"><ChevronLeft size={20} aria-hidden /></button>
         <div className="text-center" aria-live="polite">
@@ -121,7 +121,7 @@ export function ThisWeek() {
           <Card className="p-5 min-w-0">
             <LevelBar stamps={stamps} compact />
             <div tabIndex={0} role="region" aria-label="Recent stamps" className="stamp-row mt-4">{stamps.slice(0, 6).map((s) => <StampCard key={s.id} stamp={s} size="sm" />)}</div>
-            <Link to="/list#stamps" className="mt-2 inline-flex min-h-11 items-center text-[14px] font-semibold text-flare-ink hover:underline underline-offset-4">Stamp book · {stamps.length} collected</Link>
+            <div className="mt-2 flex items-baseline gap-2"><Link to="/list#stamps" className="inline-flex min-h-11 items-center text-[14px] font-semibold text-ink underline decoration-1 underline-offset-[3px] hover:decoration-2">Stamp book</Link><span className="font-mono text-[11px] uppercase text-pencil">{stamps.length} collected</span></div>
           </Card>
           <Card className="p-5">
             <h2 className="display text-[26px]">Your five minutes</h2>
@@ -160,7 +160,7 @@ function Todo({ done, label, to, action }: { done: boolean; label: string; to?: 
     <li className="flex items-center gap-3 min-h-11">
       <span className={cn('grid place-items-center h-6 w-6 rounded-full shrink-0', done ? 'bg-flare text-ink border border-ink' : 'border-2 border-hairline')}>{done && <Check size={14} strokeWidth={3} aria-hidden />}<span className="sr-only">{done ? 'Done:' : 'To do:'}</span></span>
       <span className={cn('flex-1', done && 'text-graphite')}>{label}</span>
-      {to && action && <Link to={to} className="text-[14px] font-semibold text-flare-ink hover:underline underline-offset-4 min-h-11 min-w-11 justify-end inline-flex items-center">{action}</Link>}
+      {to && action && <Link to={to} className="text-[14px] font-semibold text-ink underline decoration-1 underline-offset-[3px] hover:decoration-2 min-h-11 min-w-11 justify-end inline-flex items-center">{action}</Link>}
     </li>
   );
 }

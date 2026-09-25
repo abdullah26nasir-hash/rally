@@ -19,7 +19,7 @@ export function PlayerRow({ player, inList }: { player: Player; inList?: boolean
         <div className="min-w-0">
           <div className="flex items-center gap-2 min-w-0">
             <span className="font-semibold truncate">{player.name}</span>
-            {inList && <span className="inline-flex items-center gap-0.5 text-[12px] font-semibold text-flare-ink shrink-0"><Check size={14} strokeWidth={3} aria-hidden />On your list</span>}
+            {inList && <span className="inline-flex items-center gap-1 text-[12px] font-semibold uppercase tracking-[0.05em] text-graphite shrink-0"><Check size={14} strokeWidth={3} aria-hidden className="text-ink" />On your list</span>}
           </div>
           <div className="flex items-center gap-2 text-[14px] text-graphite min-w-0">
             <PosTag pos={player.position} /><span className="truncate">{club.name} · {player.age}</span>

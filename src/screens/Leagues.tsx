@@ -24,7 +24,7 @@ export function Leagues() {
 
   return (
     <div>
-      <PageTitle eyebrow="Beat your mates" title="Leagues">Private leagues are where Rallycademy gets personal. Make one, send the code to the group chat.</PageTitle>
+      <PageTitle title="Leagues">Private leagues are where Rallycademy gets personal. Make one, send the code to the group chat.</PageTitle>
       <div className="grid lg:grid-cols-[1.3fr_1fr] gap-6 items-start">
         <div className="grid gap-3">
           <Card className="p-5 flex items-center gap-4">
@@ -103,7 +103,7 @@ export function LeagueDetail() {
     <div>
       <button onClick={() => nav('/leagues')} className="inline-flex items-center gap-1.5 min-h-11 -ml-1 px-1 font-semibold text-graphite hover:text-ink"><ArrowLeft size={18} aria-hidden />Leagues</button>
       <div className="mt-2 flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
-        <div><div className="font-mono text-[12px] uppercase tracking-[0.08em] text-graphite">Private league · after GW{LAST_COMPLETE_GW}</div><h1 className="display text-[40px] lg:text-[56px] mt-1">{lg.name}</h1></div>
+        <div><h1 className="display text-[40px] lg:text-[56px]">{lg.name}</h1><div className="mt-2 text-[15px] text-graphite">Private league · after GW{LAST_COMPLETE_GW}</div></div>
         <Button variant="secondary" onClick={copy}><Copy size={17} aria-hidden />{copied ? 'Invite link copied' : `Copy invite link · ${lg.code}`}</Button>
         <p role="status" className="sr-only">{copied ? 'Invite link copied' : ''}</p>
         {copyFail && <p className="text-[14px] text-graphite sm:max-w-[300px]">Couldn't copy on this browser. Send this instead: <span className="font-mono text-ink select-all break-all">{location.origin}/join/{lg.code}</span></p>}

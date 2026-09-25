@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Share2, Download } from 'lucide-react';
+import { ChevronLeft, Share2, Download } from 'lucide-react';
 import { toBlob } from 'html-to-image';
 import { useGame } from '../store';
 import { playerById } from '../data/source';
@@ -70,7 +70,7 @@ export function ReceiptPage() {
 
   return (
     <div className="max-w-[560px] mx-auto">
-      <button onClick={() => (history.length > 1 ? nav(-1) : nav('/list'))} className="inline-flex items-center gap-1.5 min-h-11 -ml-1 px-1 font-semibold text-graphite hover:text-ink"><ArrowLeft size={18} aria-hidden />Back</button>
+      <button onClick={() => (history.length > 1 ? nav(-1) : nav('/list'))} className="inline-flex items-center gap-1 min-h-11 -ml-1 px-1 font-medium text-[15px] text-ink"><ChevronLeft size={20} aria-hidden />Your list</button>
       {isNew ? <h1 className="mt-2 text-center display text-[32px] anim-fade">{p.name.split(' ')[0]} is on your list.</h1> : <h1 className="sr-only">Receipt for {p.name}</h1>}
       <div className="mt-6"><Receipt ref={ref} pick={pick} scoutName={handle} animate={isNew} showPoints={showPoints} showEarly={showEarly} /></div>
       <fieldset className="mt-8 mx-auto max-w-[340px] grid gap-1">

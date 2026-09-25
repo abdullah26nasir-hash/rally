@@ -35,7 +35,7 @@ export function Shell() {
         </nav>
         <div className="mt-auto">
           <PreviewTag />
-          <NavLink to="/how" className="block mt-3 text-sm text-graphite hover:text-ink underline-offset-4 hover:underline">How scoring works</NavLink>
+          <NavLink to="/how" className="inline-flex items-center min-h-11 mt-1 text-sm text-graphite hover:text-ink underline-offset-4 hover:underline">How scoring works</NavLink>
         </div>
       </aside>
 

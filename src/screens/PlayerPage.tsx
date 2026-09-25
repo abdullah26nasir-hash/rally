@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Check, Bookmark, BookmarkCheck } from 'lucide-react';
+import { ChevronLeft, Check, Bookmark, BookmarkCheck } from 'lucide-react';
 import { playerById, clubOf, ownershipNow, ownershipAt } from '../data/source';
 import { earlyCallFor, fmtMult, fmtPct, formLast3, seasonPoints, RULES } from '../game/scoring';
 import { LAST_COMPLETE_GW, NEXT_GW } from '../data/source';
@@ -19,7 +19,7 @@ export function PlayerPage() {
   const p = playerById.get(id);
   const { picks, swaps, scout, swap, following, follow, unfollow } = useGame();
   const [swapOpen, setSwapOpen] = useState(false);
-  if (!p) return <div className="py-20 text-center"><h1 className="display text-[32px]">Player not found</h1><Link to="/scout" className="inline-flex mt-3 min-h-11 items-center text-flare-ink font-semibold">Back to Scout</Link></div>;
+  if (!p) return <div className="py-20 text-center"><h1 className="display text-[32px]">Player not found</h1><Link to="/scout" className="inline-flex mt-3 min-h-11 items-center text-ink font-semibold underline decoration-1 underline-offset-[3px] hover:decoration-2">Back to Scout</Link></div>;
 
   const club = clubOf(p);
   const now = ownershipNow(p);
@@ -45,7 +45,7 @@ export function PlayerPage() {
 
   return (
     <div>
-      <button onClick={() => (history.length > 1 ? nav(-1) : nav('/scout'))} className="inline-flex items-center gap-1.5 min-h-11 -ml-1 px-1 font-semibold text-graphite hover:text-ink"><ArrowLeft size={18} aria-hidden />Back</button>
+      <button onClick={() => (history.length > 1 ? nav(-1) : nav('/scout'))} className="inline-flex items-center gap-1 min-h-11 -ml-1 px-1 font-medium text-[15px] text-ink"><ChevronLeft size={20} aria-hidden />Scout</button>
 
       <div className="mt-3 grid lg:grid-cols-[1fr_360px] gap-6 lg:gap-10 items-start">
         <div className="min-w-0">
@@ -55,8 +55,8 @@ export function PlayerPage() {
               <div className="mt-3 flex items-center gap-4">
                 <Monogram player={p} size={68} />
                 <div className="min-w-0">
-                  <Eyebrow>{p.role} · {p.nation} · Age {p.age}</Eyebrow>
-                  <h1 className="display text-[40px] sm:text-[56px] leading-[0.9] mt-1">{p.name}</h1>
+                                    <h1 className="display text-[40px] sm:text-[56px] leading-[0.9] mt-1 break-words">{p.name}</h1>
+                  <div className="mt-1 text-[15px] text-graphite">{p.role} · {p.nation} · Age {p.age}</div>
                   <div className="mt-1 text-graphite text-[15px] flex items-center gap-2 flex-wrap"><PosTag pos={p.position} />{club.name} · {club.league}</div>
                 </div>
               </div>
@@ -92,7 +92,7 @@ export function PlayerPage() {
                 <li key={w.gw} className="grid grid-cols-[46px_1fr_36px] items-center gap-3">
                   <span className="font-mono text-[13px] text-graphite">GW{w.gw}</span>
                   <div className="min-w-0">
-                    <div className="h-3 rounded-full bg-rule/70 overflow-hidden"><div className={cn('h-full rounded-full', w.moment ? 'bg-ink' : 'bg-flare')} style={{ width: `${(w.points / maxPts) * 100}%` }} /></div>
+                    <div className="h-3 rounded-full bg-rule/70 overflow-hidden"><div className={cn('h-full rounded-full', 'bg-ink')} style={{ width: `${(w.points / maxPts) * 100}%` }} /></div>
                     <div className="mt-1 text-[13px] text-graphite truncate"><EventIcons w={w} /></div>
                   </div>
                   <span className="display text-[22px] num text-right">{w.points}</span>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ChevronLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGame } from '../store';
 import { Button } from '../components/Button';
@@ -18,8 +19,8 @@ export function How() {
   ];
   return (
     <div className="max-w-[760px]">
-      <Link to="/" className="inline-flex min-h-11 items-center font-semibold text-graphite hover:text-ink">← Rallycademy</Link>
-      <PageTitle eyebrow="Rules" title="How scoring works">Rallycademy takes about five minutes a week. Here's everything that counts.</PageTitle>
+      <Link to="/" className="inline-flex min-h-11 items-center gap-1 font-medium text-[15px] text-ink"><ChevronLeft size={20} aria-hidden />This week</Link>
+      <PageTitle title="How scoring works">Rallycademy takes about five minutes a week. Here's everything that counts.</PageTitle>
       <div className="grid gap-6">
         <Card className="p-5 sm:p-6"><h2 className="display text-[28px]">Your list</h2><ul className="mt-3 grid gap-2 list-disc pl-5 text-ink/85"><li>Five under-21 players, one per club.</li><li>Change freely until your first deadline. After that you get one swap a week.</li><li>A player scores for you from the first gameweek after you scout him.</li></ul></Card>
         <Card className="overflow-hidden"><h2 className="display text-[28px] px-5 sm:px-6 pt-5">Points</h2>

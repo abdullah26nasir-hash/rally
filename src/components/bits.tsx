@@ -29,8 +29,8 @@ export const PosTag = ({ pos }: { pos: string }) => (
 export function PageTitle({ eyebrow, title, children }: { eyebrow?: ReactNode; title: ReactNode; children?: ReactNode }) {
   return (
     <div className="mb-6 lg:mb-8">
-      {eyebrow && <Eyebrow className="mb-2">{eyebrow}</Eyebrow>}
       <h1 className="display text-[40px] lg:text-[56px]">{title}</h1>
+      {eyebrow && <div className="mt-2 text-[15px] text-graphite">{eyebrow}</div>}
       {children && <div className="mt-2 text-graphite max-w-[60ch]">{children}</div>}
     </div>
   );

@@ -22,11 +22,11 @@ export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick
     <div ref={ref} className={cn('relative w-full max-w-[340px] mx-auto', animate && 'anim-print', className)} style={{ filter: 'drop-shadow(0 2px 2px rgba(15,23,41,.06)) drop-shadow(0 12px 18px rgba(15,23,41,.10))' }}>
       <div className="receipt-paper relative font-mono text-[13px] leading-[1.55] text-ink" style={{ clipPath: 'polygon(' + serrated() + ')' }}>
         <div className="px-6 pt-8 pb-9">
-          <div className="flex items-baseline justify-between">
+          <div className="flex items-baseline justify-between max-[359px]:flex-col max-[359px]:gap-0.5">
             <span className="display text-[26px] tracking-tight not-italic font-sans" style={{ fontFamily: 'var(--font-display)' }}>RALLYCADEMY</span>
-            <span className="text-graphite text-[11px]">NO. {pick.receiptNo}</span>
+            <span className="text-graphite text-[11px] whitespace-nowrap shrink-0 pl-3">NO. {pick.receiptNo}</span>
           </div>
-          <div className="text-[11px] text-graphite uppercase tracking-wide">Scouting receipt · {SEASON}</div>
+          <div className="text-[11px] text-graphite uppercase tracking-wide">Scout receipt · {SEASON}</div>
           <Dash />
           <div className="text-[11px] uppercase tracking-wide text-graphite">Scouted</div>
           <div className={cn('display text-[clamp(24px,9.5vw,40px)] leading-[0.95] mt-1 break-words', animate && 'anim-stage-1')} style={{ fontFamily: 'var(--font-display)' }}>{p.name.toUpperCase()}</div>

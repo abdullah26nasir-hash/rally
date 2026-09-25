@@ -13,10 +13,9 @@ import type { Position } from '../data/types';
 
 const SORTS = [
   { id: 'following', label: 'Following', hint: 'Your private watchlist. Following does not use a scoring pick.' },
-  { id: 'rising', label: 'Breaking out', hint: 'Biggest jump in scouts last week' },
-  { id: 'gems', label: 'Hidden gems', hint: 'In form, but under 5% of scouts have them' },
-  { id: 'form', label: 'Form', hint: 'Points over the last 3 gameweeks' },
-  { id: 'popular', label: 'Most scouted', hint: 'Share of scouts with him on their list' },
+  { id: 'rising', label: 'Breakouts', hint: 'Biggest jump in scouts last week' },
+  { id: 'gems', label: 'Gems', hint: 'In form, but under 5% of scouts have them' },
+  { id: 'popular', label: 'For you', hint: 'Share of scouts with him on their list' },
 ] as const;
 type SortId = (typeof SORTS)[number]['id'];
 const POSITIONS: Array<'All' | Position> = ['All', 'GK', 'DEF', 'MID', 'FWD'];
@@ -39,7 +38,6 @@ export function Scout() {
     if (sort === 'following') xs = xs.filter((p) => following.includes(p.id));
     if (sort === 'gems') xs = xs.filter((p) => ownershipNow(p) < 5).sort((a, b) => formLast3(b, LAST_COMPLETE_GW) - formLast3(a, LAST_COMPLETE_GW));
     if (sort === 'rising') xs = [...xs].sort((a, b) => rise(b) - rise(a));
-    if (sort === 'form') xs = [...xs].sort((a, b) => formLast3(b, LAST_COMPLETE_GW) - formLast3(a, LAST_COMPLETE_GW));
     if (sort === 'popular') xs = [...xs].sort((a, b) => ownershipNow(b) - ownershipNow(a));
     return xs;
   }, [q, pos, sort, following]);
@@ -57,7 +55,7 @@ export function Scout() {
       {first && (
         <div className="mb-4 rounded-lg bg-flare-tint border border-card-edge p-4 flex gap-3 items-start anim-fade" role="note">
           <span className="display text-[28px] leading-none text-ink">1</span>
-          <p className="text-[15px]">Start with <b>Hidden gems</b>: in-form players almost nobody has yet. Tap one to see his weeks, then scout him.</p>
+          <p className="text-[15px]">Start with <b>Gems</b>: in-form players almost nobody has yet. Tap one to see his weeks, then scout him.</p>
         </div>
       )}
       <div className="sticky top-14 lg:top-0 z-20 -mx-4 sm:-mx-6 lg:mx-0 px-4 sm:px-6 lg:px-0 py-3 bg-bg">
@@ -76,7 +74,7 @@ export function Scout() {
 
       <div className="mt-2 flex gap-1 overflow-x-auto no-scrollbar border-b border-hairline" role="tablist" aria-label="Sort players">
         {SORTS.map((s) => (
-          <button key={s.id} role="tab" aria-selected={sort === s.id} onClick={() => setSort(s.id)} className={cn('shrink-0 h-11 px-3 text-[15px] font-semibold border-b-2 -mb-px transition-colors', sort === s.id ? 'border-ink text-ink' : 'border-transparent text-graphite hover:text-ink')}>{s.label}</button>
+          <button key={s.id} role="tab" aria-selected={sort === s.id} onClick={() => setSort(s.id)} className={cn('shrink-0 h-11 px-2 text-[13px] font-semibold border-b-2 -mb-px transition-colors', sort === s.id ? 'border-ink text-ink' : 'border-transparent text-graphite hover:text-ink')}>{s.label}</button>
         ))}
       </div>
       <p className="mt-3 text-[14px] text-graphite">{SORTS.find((s) => s.id === sort)!.hint}</p>
