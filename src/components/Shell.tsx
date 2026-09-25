@@ -16,6 +16,7 @@ export function Shell() {
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   return (
     <div className="min-h-dvh lg:grid lg:grid-cols-[232px_1fr]">
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-card focus:px-4 focus:py-3 focus:rounded-[10px] focus:shadow-md">Skip to content</a>
       {/* desktop rail */}
       <aside className="hidden lg:flex flex-col sticky top-0 h-dvh border-r border-rule px-4 py-6 bg-paper">
         <Wordmark />
@@ -34,19 +35,19 @@ export function Shell() {
 
       <div className="min-w-0 flex flex-col">
         {/* mobile top bar */}
-        <header className="lg:hidden sticky top-0 z-30 bg-paper/85 backdrop-blur-md border-b border-rule">
+        <header className="lg:hidden sticky top-0 z-30 bg-paper/85 backdrop-blur-md border-b border-rule pt-safe px-safe">
           <div className="flex items-center justify-between h-14 px-4">
             <Wordmark />
-            <PreviewTag compact />
+            <NavLink to="/how" className="inline-flex min-h-11 items-center" aria-label="Preview season. How scoring works"><PreviewTag compact /></NavLink>
           </div>
         </header>
-        <main className="flex-1 w-full max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-10 pt-5 lg:pt-10 pb-28 lg:pb-16">
+        <main id="main" tabIndex={-1} className="outline-none flex-1 w-full max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-10 pt-5 lg:pt-10 pb-28 lg:pb-16">
           <Outlet />
         </main>
       </div>
 
       {/* mobile tab bar */}
-      <nav aria-label="Main" className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-paper/90 backdrop-blur-md border-t border-rule pb-safe">
+      <nav aria-label="Main" className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-paper/90 backdrop-blur-md border-t border-rule pb-safe px-safe">
         <div className="grid grid-cols-4">
           {NAV.map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className={({ isActive }) => cn('flex flex-col items-center justify-center gap-0.5 h-16 text-[12px] font-medium', isActive ? 'text-biro' : 'text-graphite')}>
@@ -64,7 +65,7 @@ export function Shell() {
 
 export function Wordmark() {
   return (
-    <NavLink to="/" className="inline-flex items-center gap-2" aria-label="Rally home">
+    <NavLink to="/" className="inline-flex min-h-11 items-center gap-2" aria-label="Rally home">
       <span className="display text-[28px] leading-none tracking-tight">RALLY</span>
       <span className="h-2 w-6 rounded-sm bg-highlighter mt-2" aria-hidden />
     </NavLink>

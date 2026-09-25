@@ -15,7 +15,7 @@ export function Sheet({ open, onOpenChange, title, description, children }: { op
               <Dialog.Title className="display text-[28px]">{title}</Dialog.Title>
               {description ? <Dialog.Description className="mt-1 text-[15px] text-graphite">{description}</Dialog.Description> : <Dialog.Description className="sr-only">{title}</Dialog.Description>}
             </div>
-            <Dialog.Close className="press grid place-items-center h-11 w-11 -mr-2 -mt-1 rounded-full hover:bg-ink/5" aria-label="Close"><X size={20} /></Dialog.Close>
+            <Dialog.Close className="press shrink-0 grid place-items-center h-11 w-11 -mr-2 -mt-1 rounded-full hover:bg-ink/5" aria-label="Close"><X size={20} aria-hidden /></Dialog.Close>
           </div>
           <div className="px-5 pt-4 pb-6">{children}</div>
         </Dialog.Content>

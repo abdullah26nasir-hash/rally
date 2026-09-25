@@ -31,7 +31,7 @@ export function earlyCallFor(ownership: number): number {
 }
 
 export function pickPointsForGw(pick: Pick, player: Player, gw: number): number {
-  if (gw < pick.gwFrom) return 0;
+  if (gw < pick.gwFrom || (pick.gwTo !== undefined && gw > pick.gwTo)) return 0;
   const w = player.weeks.find((x) => x.gw === gw);
   if (!w) return 0;
   return Math.round(w.points * pick.multiplier);

@@ -39,6 +39,7 @@ export interface Pick {
   ownershipAtPick: number;
   multiplier: number;
   receiptNo: string;
+  gwTo?: number; // last scoring gameweek, set when swapped out
 }
 
 export interface ScoutEntry {

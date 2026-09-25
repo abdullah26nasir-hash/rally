@@ -1,8 +1,8 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import type { League, Pick } from './data/types';
 import { makePick, sampleList, RIVAL_ENTRIES } from './data/scouts';
-import { NEXT_GW } from './data/season';
+import { NEXT_GW, LAST_COMPLETE_GW } from './data/season';
 import { playerById } from './data/pool';
 
 export const MAX_PICKS = 5;
@@ -11,6 +11,7 @@ interface State {
   mode: 'new' | 'own' | 'sample';
   name: string;
   picks: Pick[];
+  history: Pick[]; // swapped-out picks: their points and stamps stay yours
   swaps: Record<number, number>; // gw -> swaps used
   leagues: League[];
   startOwn: (name?: string) => void;
@@ -22,6 +23,8 @@ interface State {
   joinLeague: (code: string) => League | null;
   reset: () => void;
 }
+
+const clubTaken = (picks: Pick[], clubId: string) => picks.some((x) => playerById.get(x.playerId)?.clubId === clubId);
 
 export const isLocked = (picks: Pick[]) => picks.some((p) => p.gwFrom < NEXT_GW);
 export const swapsLeft = (picks: Pick[], swaps: Record<number, number>) => (isLocked(picks) ? Math.max(0, 1 - (swaps[NEXT_GW] ?? 0)) : Infinity);
@@ -39,14 +42,16 @@ export const useGame = create<State>()(
       mode: 'new',
       name: 'You',
       picks: [],
+      history: [],
       swaps: {},
       leagues: [],
-      startOwn: (name) => set({ mode: 'own', picks: [], swaps: {}, leagues: [], name: name?.trim() || 'You' }),
-      startSample: () => set({ mode: 'sample', picks: sampleList(), swaps: {}, leagues: [demoLeague()], name: 'You' }),
+      startOwn: (name) => set({ mode: 'own', picks: [], history: [], swaps: {}, leagues: [], name: name?.trim() || 'You' }),
+      startSample: () => set({ mode: 'sample', picks: sampleList(), history: [], swaps: {}, leagues: [demoLeague()], name: 'You' }),
       scout: (playerId) => {
         const { picks } = get();
         const p = playerById.get(playerId);
         if (!p || picks.length >= MAX_PICKS || picks.some((x) => x.playerId === playerId)) return null;
+        if (clubTaken(picks, p.clubId)) return null;
         if (isLocked(picks)) return null; // after the first deadline, changes go through swap()
         const pk = makePick(p, NEXT_GW, new Date(), Date.now());
         set({ picks: [...picks, pk], mode: get().mode === 'new' ? 'own' : get().mode });
@@ -58,13 +63,20 @@ export const useGame = create<State>()(
         set({ picks: picks.filter((x) => x.playerId !== playerId) });
       },
       swap: (outId, inId) => {
-        const { picks, swaps } = get();
+        const { picks, swaps, history } = get();
         const p = playerById.get(inId);
-        if (!p) return null;
+        const out = picks.find((x) => x.playerId === outId);
+        if (!p || !out || picks.some((x) => x.playerId === inId)) return null;
+        if (clubTaken(picks.filter((x) => x !== out), p.clubId)) return null;
         const used = swaps[NEXT_GW] ?? 0;
         if (isLocked(picks) && used >= 1) return null;
         const pk = makePick(p, NEXT_GW, new Date(), Date.now());
-        set({ picks: picks.map((x) => (x.playerId === outId ? pk : x)), swaps: { ...swaps, [NEXT_GW]: used + (isLocked(picks) ? 1 : 0) } });
+        const scored = out.gwFrom <= LAST_COMPLETE_GW;
+        set({
+          picks: picks.map((x) => (x === out ? pk : x)),
+          history: scored ? [...history, { ...out, gwTo: NEXT_GW - 1 }] : history,
+          swaps: { ...swaps, [NEXT_GW]: used + (isLocked(picks) ? 1 : 0) },
+        });
         return pk;
       },
       createLeague: (name) => {
@@ -85,8 +97,36 @@ export const useGame = create<State>()(
         }
         return null;
       },
-      reset: () => set({ mode: 'new', picks: [], swaps: {}, leagues: [] }),
+      reset: () => set({ mode: 'new', picks: [], history: [], swaps: {}, leagues: [] }),
     }),
-    { name: 'rally-v1' },
+    {
+      name: 'rally-v1',
+      // Private browsing or strict settings can block storage. The game still works for the session.
+      storage: createJSONStorage(() => ({
+        getItem: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
+        setItem: (k, v) => { try { localStorage.setItem(k, v); } catch { /* not saved */ } },
+        removeItem: (k) => { try { localStorage.removeItem(k); } catch { /* ignore */ } },
+      })),
+      version: 2,
+      migrate: (s) => s as State, // v1 had no history; merge() fills it in
+      // Stored data can be old, hand-edited or half-written. Keep only what still makes sense.
+      merge: (stored, current) => {
+        const s = (stored ?? {}) as Partial<State>;
+        const known = (a: unknown) => (Array.isArray(a) ? (a as Pick[]).filter((x) => x && playerById.has(x.playerId)) : []);
+        const mode = s.mode === 'own' || s.mode === 'sample' ? s.mode : 'new';
+        return {
+          ...current,
+          mode,
+          name: typeof s.name === 'string' ? s.name.slice(0, 20) : current.name,
+          picks: known(s.picks).slice(0, MAX_PICKS),
+          history: known(s.history),
+          swaps: s.swaps && typeof s.swaps === 'object' ? s.swaps : {},
+          leagues: Array.isArray(s.leagues) ? s.leagues.filter((l) => l && typeof l.code === 'string' && typeof l.name === 'string') : [],
+        };
+      },
+    },
   ),
 );
+
+// Keep two open tabs in step: when one saves, the other reloads its state.
+if (typeof window !== 'undefined') window.addEventListener('storage', (e) => { if (e.key === 'rally-v1') useGame.persist.rehydrate(); });

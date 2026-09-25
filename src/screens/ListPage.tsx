@@ -13,7 +13,7 @@ import { LevelBar } from '../components/Level';
 import { stampsFor, STAMP_INFO, type StampKind } from '../game/stamps';
 
 export function ListPage() {
-  const { picks, swaps, release } = useGame();
+  const { picks, history, swaps, release } = useGame();
   const nav = useNavigate();
   const locked = isLocked(picks);
   const left = swapsLeft(picks, swaps);
@@ -64,7 +64,7 @@ export function ListPage() {
       <section id="stamps" className="mt-12">
         <h2 className="display text-[36px] lg:text-[44px]">Stamp book</h2>
         <p className="text-graphite mt-1">Every stamp is proof of a call you made. They're yours even if you swap the player out.</p>
-        {(() => { const st = stampsFor(picks); const have = new Set(st.map((s) => s.kind)); const missing = (Object.keys(STAMP_INFO) as StampKind[]).filter((k) => !have.has(k)); return (
+        {(() => { const st = stampsFor([...picks, ...history]); const have = new Set(st.map((s) => s.kind)); const missing = (Object.keys(STAMP_INFO) as StampKind[]).filter((k) => !have.has(k)); return (
           <div className="mt-5 grid lg:grid-cols-[320px_1fr] gap-6 items-start">
             <div className="bg-card rounded-[16px] shadow-md p-5"><LevelBar stamps={st} /></div>
             <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-5 justify-items-center sm:justify-items-start">

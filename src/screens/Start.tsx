@@ -47,7 +47,7 @@ export function Start() {
           <div className="flex-1 flex flex-col anim-fade">
             <h1 className="display text-[48px] sm:text-[64px] leading-[0.9]">Collect stamps. Climb the ladder.</h1>
             <p className="mt-3 text-[17px] text-ink/80">Spot a player before the crowd, see his debut, watch him get called up: each one is a stamp for your book, and XP towards your scout level. Sunday watcher to head of recruitment.</p>
-            <div className="mt-6 flex gap-3 overflow-x-auto no-scrollbar pb-2">
+            <div tabIndex={0} role="region" aria-label="Stamps you can earn" className="mt-6 flex gap-3 overflow-x-auto no-scrollbar pb-2">
               {(['first-call', 'under-radar', 'debut', 'called-it'] as const).map((k) => <StampCard key={k} kind={k} locked size="sm" />)}
             </div>
             <p className="mt-2 text-[14px] text-graphite">Your first stamp comes with your first call.</p>

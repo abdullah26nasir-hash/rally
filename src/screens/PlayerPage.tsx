@@ -19,7 +19,7 @@ export function PlayerPage() {
   const p = playerById.get(id);
   const { picks, swaps, scout, swap } = useGame();
   const [swapOpen, setSwapOpen] = useState(false);
-  if (!p) return <div className="py-20 text-center"><p className="display text-[32px]">Player not found</p><Link to="/scout" className="text-biro font-semibold">Back to Scout</Link></div>;
+  if (!p) return <div className="py-20 text-center"><h1 className="display text-[32px]">Player not found</h1><Link to="/scout" className="inline-flex mt-3 min-h-11 items-center text-biro font-semibold">Back to Scout</Link></div>;
 
   const club = clubOf(p);
   const now = ownershipNow(p);

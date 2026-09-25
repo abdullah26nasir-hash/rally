@@ -10,12 +10,12 @@ import { Button } from '../components/Button';
 import { cn } from '../lib/cn';
 
 export function Leagues() {
-  const { picks, leagues, createLeague, joinLeague } = useGame();
+  const { picks, history, leagues, createLeague, joinLeague } = useGame();
   const nav = useNavigate();
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [err, setErr] = useState('');
-  const total = entryTotal(picks);
+  const total = entryTotal([...picks, ...history]);
   const scoring = picks.some((p) => p.gwFrom <= LAST_COMPLETE_GW);
 
   return (
@@ -41,6 +41,7 @@ export function Leagues() {
             );
           })}
           {!leagues.length && <p className="text-graphite text-[15px] px-1">No private leagues yet. Start one on the right, or join with a code. (Try <span className="font-mono">LADS26</span> for the demo league.)</p>}
+          <p className="text-[14px] text-graphite px-1">Preview: leagues are on this device only. Mates can't join from their own phones yet.</p>
         </div>
 
         <div className="grid gap-4">
@@ -70,18 +71,20 @@ export function Leagues() {
 export function LeagueDetail() {
   const { id = '' } = useParams();
   const nav = useNavigate();
-  const { leagues, picks } = useGame();
+  const { leagues, picks, history } = useGame();
+  const every = [...picks, ...history];
   const [copied, setCopied] = useState(false);
+  const [copyFail, setCopyFail] = useState(false);
   const lg = leagues.find((l) => l.id === id);
-  if (!lg) return <div className="py-20 text-center"><p className="display text-[32px]">League not found</p><Link to="/leagues" className="inline-flex mt-3 min-h-11 items-center text-biro font-semibold">All leagues</Link></div>;
+  if (!lg) return <div className="py-20 text-center"><h1 className="display text-[32px]">League not found</h1><Link to="/leagues" className="inline-flex mt-3 min-h-11 items-center text-biro font-semibold">All leagues</Link></div>;
   const rows = lg.members.map((m) => {
-    if (m === 'you') return { id: 'you', name: 'You', handle: 'you', gw: entryGw(picks, LAST_COMPLETE_GW), total: entryTotal(picks), you: true };
+    if (m === 'you') return { id: 'you', name: 'You', handle: 'you', gw: entryGw(every, LAST_COMPLETE_GW), total: entryTotal(every), you: true };
     const r = RIVAL_ENTRIES.find((x) => x.id === m)!;
     return { id: r.id, name: r.name, handle: r.handle, gw: entryGw(r.picks, LAST_COMPLETE_GW), total: entryTotal(r.picks), you: false };
   }).sort((a, b) => b.total - a.total);
   const prevOrder = [...rows].sort((a, b) => (b.total - b.gw) - (a.total - a.gw)).map((r) => r.id);
   const moved = (id: string, i: number) => prevOrder.indexOf(id) - i;
-  const copy = async () => { try { await navigator.clipboard.writeText(`Join my Rally league "${lg.name}": ${location.origin}/join/${lg.code}`); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* clipboard blocked */ } };
+  const copy = async () => { try { await navigator.clipboard.writeText(`Join my Rally league "${lg.name}": ${location.origin}/join/${lg.code}`); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { setCopyFail(true); } };
 
   return (
     <div>
@@ -89,6 +92,8 @@ export function LeagueDetail() {
       <div className="mt-2 flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
         <div><div className="font-mono text-[12px] uppercase tracking-[0.08em] text-graphite">Private league · after GW{LAST_COMPLETE_GW}</div><h1 className="display text-[40px] lg:text-[56px] mt-1">{lg.name}</h1></div>
         <Button variant="secondary" onClick={copy}><Copy size={17} aria-hidden />{copied ? 'Invite link copied' : `Copy invite link · ${lg.code}`}</Button>
+        <p role="status" className="sr-only">{copied ? 'Invite link copied' : ''}</p>
+        {copyFail && <p className="text-[14px] text-graphite sm:max-w-[300px]">Couldn't copy on this browser. Send this instead: <span className="font-mono text-ink select-all break-all">{location.origin}/join/{lg.code}</span></p>}
       </div>
       {rows.length > 1 && (() => { const i = rows.findIndex((r) => r.you); const above = rows[i - 1]; const below = rows[i + 1]; return (
         <div className="mb-5 grid sm:grid-cols-2 gap-3">
@@ -118,7 +123,8 @@ export function LeagueDetail() {
           </tbody>
         </table>
       </Card>
-      {rows.length === 1 && <p className="mt-4 text-graphite">Just you so far. Copy the invite and drop it in the group chat. <span className="block text-[14px] mt-1">In this preview, leagues live on this device. Real leagues with mates arrive with sign-in.</span></p>}
+      {rows.length === 1 && <p className="mt-4 text-graphite">Just you so far.</p>}
+      <p className="mt-4 text-[14px] text-graphite">Preview: leagues are on this device only, so an invite opened on another phone starts a separate copy. Shared leagues arrive with sign-in.</p>
     </div>
   );
 }

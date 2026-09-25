@@ -18,11 +18,12 @@ import { LevelBar } from '../components/Level';
 import { cn } from '../lib/cn';
 
 export function ThisWeek() {
-  const { picks, swaps, leagues, name } = useGame();
+  const { picks, history, swaps, leagues, name, mode } = useGame();
+  const every = [...picks, ...history];
   const nav = useNavigate();
   const [gw, setGw] = useState(LAST_COMPLETE_GW);
   const locked = isLocked(picks);
-  const stamps = stampsFor(picks);
+  const stamps = stampsFor(every);
 
   if (picks.length < MAX_PICKS && !locked) {
     return (
@@ -39,15 +40,18 @@ export function ThisWeek() {
 
   const upcoming = gw > LAST_COMPLETE_GW;
   const pending = picks.every((p) => p.gwFrom > LAST_COMPLETE_GW);
-  const total = entryTotal(picks, Math.min(gw, LAST_COMPLETE_GW));
-  const gwPts = entryGw(picks, gw);
+  const total = entryTotal(every, Math.min(gw, LAST_COMPLETE_GW));
+  const gwPts = entryGw(every, gw);
   const rank = overallRank(total);
-  const prevRank = overallRank(entryTotal(picks, Math.min(gw, LAST_COMPLETE_GW) - 1));
+  const prevRank = overallRank(entryTotal(every, Math.min(gw, LAST_COMPLETE_GW) - 1));
   const lads = leagues.find((l) => l.id === 'lg-sunday');
   const table = [...RIVAL_ENTRIES.map((r) => ({ name: r.name, total: entryTotal(r.picks, Math.min(gw, LAST_COMPLETE_GW)) })), { name: 'You', total }].sort((a, b) => b.total - a.total);
   const pos = table.findIndex((r) => r.name === 'You');
   const rival = pos > 0 ? { text: `${table[pos - 1].total - total} pts behind ${table[pos - 1].name}`, ahead: false } : { text: `${total - table[1].total} pts clear of ${table[1].name}`, ahead: true };
-  const mine = picks.map((pk) => ({ pk, p: playerById.get(pk.playerId)! })).map((m) => ({ ...m, pts: pickPointsForGw(m.pk, m.p, gw) }));
+  // The slip for a past week shows who was on your list that week, including players you've since swapped out.
+  const past = history.filter((pk) => (pk.gwTo ?? 0) >= gw);
+  const slip = past.length ? [...past, ...picks.filter((pk) => pk.gwFrom <= gw)] : picks;
+  const mine = slip.map((pk) => ({ pk, p: playerById.get(pk.playerId)! })).map((m) => ({ ...m, pts: pickPointsForGw(m.pk, m.p, gw) }));
   const best = Math.max(...mine.map((m) => m.pts));
   const onList = new Set(picks.map((p) => p.playerId));
   const breaking = PLAYERS.filter((p) => !onList.has(p.id)).map((p) => ({ p, rise: ownershipNow(p) - ownershipAt(p, LAST_COMPLETE_GW - 1) })).sort((a, b) => b.rise - a.rise).slice(0, 4);
@@ -57,13 +61,14 @@ export function ThisWeek() {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:gap-8">
       {/* gameweek pager */}
+      {mode === 'sample' && <div className="mb-4 flex items-center justify-between gap-3 rounded-[12px] bg-biro-wash px-4 py-2 text-[14px]"><span>You're trying the sample season.</span><Link to="/how" className="min-h-11 inline-flex items-center font-semibold text-biro shrink-0">Play your own</Link></div>}
       <div className="flex items-center justify-between gap-2">
-        <button onClick={() => setGw((g) => Math.max(1, g - 1))} disabled={gw <= 1} className="press grid place-items-center h-11 w-11 rounded-full bg-card shadow-sm disabled:opacity-40" aria-label="Previous gameweek"><ChevronLeft size={20} /></button>
+        <button onClick={() => setGw((g) => Math.max(1, g - 1))} aria-disabled={gw <= 1} className="press grid place-items-center h-11 w-11 rounded-full bg-card shadow-sm aria-disabled:opacity-40" aria-label="Previous gameweek"><ChevronLeft size={20} aria-hidden /></button>
         <div className="text-center" aria-live="polite">
-          <div className="display text-[26px] leading-none">Gameweek {gw}</div>
+          <h1 className="display text-[26px] leading-none">Gameweek {gw}</h1>
           <div className="font-mono text-[12px] text-graphite mt-1">{upcoming ? `Deadline ${fmtDeadline(deadlineFor(gw))}` : gw === LAST_COMPLETE_GW ? 'Latest result' : 'Past result'}</div>
         </div>
-        <button onClick={() => setGw((g) => Math.min(NEXT_GW, g + 1))} disabled={gw >= NEXT_GW} className="press grid place-items-center h-11 w-11 rounded-full bg-card shadow-sm disabled:opacity-40" aria-label="Next gameweek"><ChevronRight size={20} /></button>
+        <button onClick={() => setGw((g) => Math.min(NEXT_GW, g + 1))} aria-disabled={gw >= NEXT_GW} className="press grid place-items-center h-11 w-11 rounded-full bg-card shadow-sm aria-disabled:opacity-40" aria-label="Next gameweek"><ChevronRight size={20} aria-hidden /></button>
       </div>
 
       <div className="grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 lg:gap-8 items-start">
@@ -154,7 +159,7 @@ function Todo({ done, label, to, action }: { done: boolean; label: string; to?: 
     <li className="flex items-center gap-3 min-h-11">
       <span className={cn('grid place-items-center h-6 w-6 rounded-full shrink-0', done ? 'bg-biro text-white' : 'border-2 border-rule')}>{done && <Check size={14} strokeWidth={3} aria-hidden />}<span className="sr-only">{done ? 'Done:' : 'To do:'}</span></span>
       <span className={cn('flex-1', done && 'text-graphite')}>{label}</span>
-      {to && action && <Link to={to} className="text-[14px] font-semibold text-biro hover:underline underline-offset-4 min-h-11 inline-flex items-center">{action}</Link>}
+      {to && action && <Link to={to} className="text-[14px] font-semibold text-biro hover:underline underline-offset-4 min-h-11 min-w-11 justify-end inline-flex items-center">{action}</Link>}
     </li>
   );
 }
