@@ -23,6 +23,7 @@ export function smallTargets(p) {
     if (!r.width || !r.height || cs.visibility === 'hidden') return false;
     if (e.matches('.sr-only:not(:focus)')) return false; // visually hidden skip link; sized when focused
     if (e.tagName === 'A' && cs.display === 'inline' && e.closest('p')) return false;
+    if (e.matches('a.stretched-link')) { const pr = e.parentElement?.getBoundingClientRect(); if (pr && pr.width >= 44 && pr.height >= 44) return false; } // ::after covers the whole row
     if (e.matches('[tabindex="0"]:not(a,button)') && r.height > 60) return false; // scroll regions
     return r.width < 44 || r.height < 44;
   }).map((e) => `${e.tagName.toLowerCase()} "${(e.getAttribute('aria-label') || e.textContent || e.placeholder || '').trim().slice(0, 24)}" ${Math.round(e.getBoundingClientRect().width)}x${Math.round(e.getBoundingClientRect().height)}`));

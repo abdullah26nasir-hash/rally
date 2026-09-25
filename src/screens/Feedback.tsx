@@ -31,7 +31,7 @@ function VoteBox({ id, votes, voted, onChange, disabled }: { id: number; votes: 
   }
   return (
     <>
-      <button type="button" onClick={toggle} aria-pressed={voted} aria-disabled={disabled || undefined}
+      <button type="button" onClick={toggle} aria-pressed={!!voted} aria-disabled={disabled || undefined}
         aria-label={`Vote for this request. ${votes} votes.`}
         className={cn('vote relative z-[1]', disabled && 'vote-disabled')}>
         <ChevronUp size={16} strokeWidth={1.5} aria-hidden />
@@ -83,12 +83,12 @@ export function FeedbackBoard() {
       <div className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-5" role="radiogroup" aria-label="Filter requests">
         {FILTERS.map(([v, label]) => (
           <button key={v} role="radio" aria-checked={filter === v} onClick={() => setFilter(v)}
-            className={cn('min-h-11 rounded-[5px] px-3 text-[14px] font-medium', filter === v ? 'bg-well text-ink' : 'text-graphite hover:text-ink')}>{label}</button>
+            className={cn('min-h-11 min-w-11 rounded-[5px] px-3 text-[14px] font-medium', filter === v ? 'bg-well text-ink' : 'text-graphite hover:text-ink')}>{label}</button>
         ))}
         <span className="ml-auto flex gap-4 text-[15px]" role="group" aria-label="Sort">
           {(['top', 'new'] as const).map((s) => (
             <button key={s} onClick={() => setSort(s)} aria-pressed={sort === s}
-              className={cn('min-h-11 capitalize', sort === s ? 'text-ink font-semibold border-b-2 border-ink' : 'text-graphite hover:text-ink')}>{s === 'top' ? 'Top' : 'New'}</button>
+              className={cn('min-h-11 min-w-11 px-2 capitalize', sort === s ? 'text-ink font-semibold border-b-2 border-ink' : 'text-graphite hover:text-ink')}>{s === 'top' ? 'Top' : 'New'}</button>
           ))}
         </span>
       </div>

@@ -101,7 +101,7 @@ export function Welcome() {
       <footer className="max-w-[1180px] mx-auto px-5 sm:px-8 pb-12 text-[14px] text-graphite border-t border-hairline pt-6 flex flex-col sm:flex-row gap-2 justify-between">
         <span>Preview season: every player, club and result here is fictional.</span>
         <span>Rallycademy is free to play, all season.</span>
-        <Link to="/feedback/new" className="underline underline-offset-4">Tell us what's missing</Link>
+        <Link to="/feedback/new" className="inline-flex min-h-11 items-center underline underline-offset-4">Tell us what's missing</Link>
       </footer>
     </div>
   );
