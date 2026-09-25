@@ -22,9 +22,8 @@ export function StampCard({ stamp, size = 'md', locked, kind: lockedKind }: { st
       <span className={cn('grid place-items-center h-8 w-8 rounded-full border-[1.5px]', locked ? 'border-card-edge text-pencil' : 'border-flare-ink text-ink')}>
         {locked ? <Icon size={14} strokeWidth={2} aria-hidden /> : <span className="font-mono font-semibold text-[15px] num">{shirtNumber(stamp!.player)}</span>}
       </span>
-      <span className={cn('font-mono font-medium text-[10px] uppercase tracking-[0.05em] text-center leading-[1.25] px-1 grid', locked ? 'text-pencil' : 'text-ink')}>
-        <span>{locked ? 'Not yet' : info.title}</span>
-        {!locked && <span className="text-graphite">GW{stamp!.gw}</span>}
+      <span className={cn('font-mono font-medium text-[11px] uppercase tracking-[0.05em] text-center leading-[1.25] px-1', locked ? 'text-pencil' : 'text-ink')}>
+        {locked ? 'Not yet' : `WK ${String(stamp!.gw).padStart(2, '0')}`}
       </span>
       <figcaption className="sr-only">{info.rule}</figcaption>
     </figure>

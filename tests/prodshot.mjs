@@ -1,0 +1,10 @@
+import { launch, BASE, W, sample } from './lib.mjs';
+const b = await launch();
+const pg = await (await b.newContext({ viewport: { width: 390, height: 844 } })).newPage();
+await sample(pg); await pg.goto(BASE + '/', W); await pg.waitForTimeout(700);
+await pg.screenshot({ path: '/downloads/prod64-m-home.png' });
+await pg.goto(BASE + '/scout', W); await pg.waitForTimeout(700);
+await pg.screenshot({ path: '/downloads/prod64-m-scout.png' });
+await pg.goto(BASE + '/receipt/p005', W); await pg.waitForTimeout(700);
+await pg.screenshot({ path: '/downloads/prod64-m-receipt.png' });
+console.log('ok'); await b.close();

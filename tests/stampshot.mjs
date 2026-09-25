@@ -1,0 +1,12 @@
+import { launch, BASE, W, sample } from './lib.mjs';
+const b = await launch();
+const pg = await (await b.newContext({ viewport: { width: 390, height: 844 } })).newPage();
+await sample(pg);
+await pg.goto(BASE + '/', W); await pg.waitForTimeout(600);
+const el = pg.locator('text=Stamp book').first();
+await el.scrollIntoViewIfNeeded(); await pg.waitForTimeout(400);
+await pg.screenshot({ path: '/tmp/v641-stamps-home.png' });
+await pg.goto(BASE + '/list#stamps', W); await pg.waitForTimeout(600);
+await pg.locator('#stamps').scrollIntoViewIfNeeded(); await pg.waitForTimeout(400);
+await pg.screenshot({ path: '/tmp/v641-stamps-list.png' });
+console.log('ok'); await b.close();
