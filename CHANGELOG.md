@@ -57,3 +57,15 @@ Every-button crawl (11 screens, ~100 controls), two league fixes, clean-code pas
 - Receipt IDs now issue RC- prefix (owner decision 25 Sep 2026); previously issued receipts keep their stored numbers
 - Receipt image save fixed/hardened for mobile: render retries step down pixelRatio 3->2->1.5 (iOS Safari canvas failures), Save uses the native share sheet where <a download> is unreliable, blank renders detected, and receipt_render_failed / receipt_save_failed events now report real device errors to PostHog
 - Back on the light base (v5.7) per owner direction; stronger light brand application follows as a separate design pass
+
+## v6.4 - 25 Sep 2026
+Big-audit fix pass (57-page matrix: 12 routes x 3 breakpoints x fresh/sampled states, plus 320px + sheets).
+- Eyebrows above Display headlines removed; real info moves to status lines under the headline (doc: mono is never an eyebrow)
+- This week flare budget enforced: "Play your own" is the one Flare fill (button in sample banner); XP bar ink on Terrace; "Stamp book", "Find a swap", "Share" now ink underlined text links
+- "On your list" now ink check + graphite caps label (Flare Ink off its allowlist)
+- Back links use chevron-left + destination title (This week / Scout / Your list), never "Back"/"Rallycademy"
+- Scout sort tabs shortened (Following / Breakouts / Gems / For you), all fit 320px; Form tab folded away
+- Player week-by-week bars ink (one fill per screen: "Swap him in")
+- Receipt ID no longer wraps mid-number (stacks below 360px); "Scouting receipt" -> "Scout receipt" per doc anatomy
+- Primary button no longer appends an arrow icon; desktop "How scoring works" rail link now 44px; player name wraps at 320px (4px overflow residual closed)
+- Suites: buttons 117/117, a11y 143/143 (first time fully green - both 320px residuals closed)
