@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import type { Player } from '../data/types';
-import { clubOf, ownershipNow, ownershipAt } from '../data/pool';
+import { clubOf, ownershipNow, ownershipAt } from '../data/source';
 import { formLast3, fmtPct, earlyCallFor, fmtMult } from '../game/scoring';
-import { LAST_COMPLETE_GW } from '../data/season';
+import { LAST_COMPLETE_GW } from '../data/source';
 import { Monogram } from './Monogram';
 import { Delta, PosTag } from './bits';
 

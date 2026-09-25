@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
-import { PLAYERS, clubOf, ownershipNow, ownershipAt } from '../data/pool';
+import { PLAYERS, clubOf, ownershipNow, ownershipAt } from '../data/source';
 import { formLast3 } from '../game/scoring';
-import { LAST_COMPLETE_GW, NEXT_GW, deadlineFor } from '../data/season';
+import { LAST_COMPLETE_GW, NEXT_GW, deadlineFor } from '../data/source';
 import { useGame, MAX_PICKS, isLocked, swapsLeft } from '../store';
 import { PlayerRow } from '../components/PlayerRow';
 import { PageTitle } from '../components/bits';
@@ -12,6 +12,7 @@ import { fmtDeadline } from '../lib/format';
 import type { Position } from '../data/types';
 
 const SORTS = [
+  { id: 'following', label: 'Following', hint: 'Your private watchlist. Following does not use a scoring pick.' },
   { id: 'rising', label: 'Breaking out', hint: 'Biggest jump in scouts last week' },
   { id: 'gems', label: 'Hidden gems', hint: 'In form, but under 5% of scouts have them' },
   { id: 'form', label: 'Form', hint: 'Points over the last 3 gameweeks' },
@@ -21,7 +22,7 @@ type SortId = (typeof SORTS)[number]['id'];
 const POSITIONS: Array<'All' | Position> = ['All', 'GK', 'DEF', 'MID', 'FWD'];
 
 export function Scout() {
-  const { picks, swaps } = useGame();
+  const { picks, swaps, following } = useGame();
   const [params] = useSearchParams();
   const first = params.get('first') === '1' && picks.length === 0;
   const [q, setQ] = useState('');
@@ -35,12 +36,13 @@ export function Scout() {
     const needle = q.trim().toLowerCase();
     let xs = PLAYERS.filter((p) => (pos === 'All' || p.position === pos) && (!needle || p.name.toLowerCase().includes(needle) || clubOf(p).name.toLowerCase().includes(needle)));
     const rise = (p: typeof PLAYERS[number]) => ownershipNow(p) - ownershipAt(p, LAST_COMPLETE_GW - 1);
+    if (sort === 'following') xs = xs.filter((p) => following.includes(p.id));
     if (sort === 'gems') xs = xs.filter((p) => ownershipNow(p) < 5).sort((a, b) => formLast3(b, LAST_COMPLETE_GW) - formLast3(a, LAST_COMPLETE_GW));
     if (sort === 'rising') xs = [...xs].sort((a, b) => rise(b) - rise(a));
     if (sort === 'form') xs = [...xs].sort((a, b) => formLast3(b, LAST_COMPLETE_GW) - formLast3(a, LAST_COMPLETE_GW));
     if (sort === 'popular') xs = [...xs].sort((a, b) => ownershipNow(b) - ownershipNow(a));
     return xs;
-  }, [q, pos, sort]);
+  }, [q, pos, sort, following]);
 
   const status = locked
     ? left ? '1 swap left before the deadline' : 'Swap used this week'
@@ -86,8 +88,8 @@ export function Scout() {
         <ul className="mt-1 -mx-3 sm:mx-0">{list.map((p) => <PlayerRow key={p.id} player={p} inList={onList.has(p.id)} />)}</ul>
       ) : (
         <div className="mt-10 text-center py-12 bg-card rounded-[16px] shadow-sm">
-          <p className="display text-[26px]">No one matches that</p>
-          <p className="mt-1 text-graphite">Try another name or club, or clear the filters.</p>
+          <p className="display text-[26px]">{sort === 'following' && following.length === 0 ? 'No players followed yet' : 'No one matches that'}</p>
+          <p className="mt-1 text-graphite">{sort === 'following' && following.length === 0 ? 'Open a player and tap Follow to start a private watchlist.' : 'Try another name or club, or clear the filters.'}</p>
           <button onClick={() => { setQ(''); setPos('All'); setSort('rising'); }} className="mt-4 h-11 px-4 font-semibold text-biro hover:underline underline-offset-4">Clear filters</button>
         </div>
       )}

@@ -1,5 +1,5 @@
 import type { Player } from '../data/types';
-import { clubOf } from '../data/pool';
+import { clubOf } from '../data/source';
 import { cn } from '../lib/cn';
 
 export const shirtNumber = (p: Player) => {

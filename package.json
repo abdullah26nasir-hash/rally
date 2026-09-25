@@ -11,8 +11,9 @@
     "test:a11y": "node tests/a11y.mjs",
     "test:buttons": "node tests/buttons.mjs",
     "test:edge": "node tests/edge.mjs",
+    "test:following": "node tests/following.mjs",
     "test:security": "node tests/security.mjs",
-    "test": "node tests/security.mjs && node tests/edge.mjs && node tests/a11y.mjs && node tests/buttons.mjs"
+    "test": "node tests/security.mjs && node tests/edge.mjs && node tests/following.mjs && node tests/a11y.mjs && node tests/buttons.mjs"
   },
   "dependencies": {
     "@fontsource-variable/big-shoulders-display": "^5.3.0",

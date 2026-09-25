@@ -1,9 +1,9 @@
 import { forwardRef } from 'react';
 import type { Pick } from '../data/types';
-import { playerById, clubOf, ownershipNow } from '../data/pool';
+import { playerById, clubOf, ownershipNow } from '../data/source';
 import { fmtMult, fmtPct, pickPointsTotal } from '../game/scoring';
 import { fmtStamp } from '../lib/format';
-import { LAST_COMPLETE_GW, SEASON } from '../data/season';
+import { LAST_COMPLETE_GW, SEASON } from '../data/source';
 import { cn } from '../lib/cn';
 
 interface Props { pick: Pick; scoutName: string; animate?: boolean; className?: string; showPoints?: boolean; showEarly?: boolean; }

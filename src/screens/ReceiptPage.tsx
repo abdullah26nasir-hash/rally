@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, Share2, Download } from 'lucide-react';
 import { toBlob } from 'html-to-image';
 import { useGame } from '../store';
-import { playerById } from '../data/pool';
+import { playerById } from '../data/source';
 import { Receipt } from '../components/Receipt';
 import { Button } from '../components/Button';
 import { StampCard } from '../components/StampCard';

@@ -1,0 +1,25 @@
+// Rallycademy preview watchlist is independent of scoring picks and survives old saves.
+import { launch, BASE, W, sample, tally } from './lib.mjs';
+const b = await launch(); const t = tally('following'); const p = await b.newPage({ viewport: { width: 390, height: 844 } });
+const errors = []; p.on('pageerror', e => errors.push(e.message));
+await sample(p);
+const old = await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('rally-v1')); s.version = 2; delete s.state.following; localStorage.setItem('rally-v1', JSON.stringify(s)); return s.state.picks.length; });
+await p.reload(W);
+t.check('old save keeps five picks', old === 5 && await p.evaluate(() => JSON.parse(localStorage.getItem('rally-v1')).state.picks.length === 5));
+await p.goto(BASE + '/scout', W);
+await p.getByRole('tab', { name: 'Following' }).click();
+t.check('empty watchlist explains first action', /Open a player and tap Follow/.test(await p.locator('body').innerText()));
+await p.getByRole('tab', { name: 'Breaking out' }).click();
+const href = await p.locator('a[href^="/player/"]').first().getAttribute('href'); await p.locator('a[href^="/player/"]').first().click();
+await p.getByRole('button', { name: 'Follow this player' }).click();
+t.check('follow control changes', await p.getByRole('button', { name: 'Following - remove' }).count() === 1);
+const s = await p.evaluate(() => JSON.parse(localStorage.getItem('rally-v1')).state);
+t.check('follow saves without changing five picks or history', s.following?.length === 1 && s.picks.length === 5 && s.history.length === 0);
+await p.reload(W);
+t.check('follow survives reload', await p.getByRole('button', { name: 'Following - remove' }).count() === 1);
+await p.goto(BASE + '/scout', W); await p.getByRole('tab', { name: 'Following' }).click();
+t.check('watchlist filters to followed player', (await p.locator('a[href^="/player/"]').count()) === 1 && (await p.locator('a[href^="/player/"]').first().getAttribute('href')) === href, JSON.stringify({href, rows: await p.locator('a[href^="/player/"]').allInnerTexts()}));
+await p.locator('a[href^="/player/"]').first().click(); await p.getByRole('button', { name: 'Following - remove' }).click();
+t.check('remove follows only', await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('rally-v1')).state; return s.following.length === 0 && s.picks.length === 5; }));
+t.check('no page errors', !errors.length, errors.join(' | '));
+process.exitCode = t.done(); await b.close();

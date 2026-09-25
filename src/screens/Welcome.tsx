@@ -6,7 +6,7 @@ import { Eyebrow } from '../components/bits';
 import { Wordmark } from '../components/Shell';
 import { sampleList } from '../data/scouts';
 import { EARLY_CALL_TIERS, fmtMult } from '../game/scoring';
-import { PLAYERS, playerById, ownershipNow } from '../data/pool';
+import { PLAYERS, playerById, ownershipNow } from '../data/source';
 
 export function Welcome() {
   const nav = useNavigate();

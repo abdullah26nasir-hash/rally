@@ -1,6 +1,6 @@
 import type { Pick, Player } from '../data/types';
-import { playerById, ownershipNow } from '../data/pool';
-import { LAST_COMPLETE_GW, GW1_DATE } from '../data/season';
+import { playerById, ownershipNow } from '../data/source';
+import { LAST_COMPLETE_GW, GW1_DATE } from '../data/source';
 
 export type StampKind = 'first-call' | 'under-radar' | 'called-it' | 'debut' | 'call-up' | 'big-week';
 

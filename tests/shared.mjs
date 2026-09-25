@@ -1,5 +1,5 @@
 import { launch, tally } from './lib.mjs';
-const B='http://127.0.0.1:4180', t=tally('shared leagues + consent');
+const B=process.env.BASE||'http://127.0.0.1:4180', t=tally('shared leagues + consent');
 const b=await launch(); const c1=await b.newContext({viewport:{width:390,height:844},permissions:['clipboard-read','clipboard-write']}), c2=await b.newContext({viewport:{width:390,height:844}});
 const a=await c1.newPage(), mate=await c2.newPage();
 const err=[]; for(const p of [a,mate]) p.on('pageerror',e=>err.push(e.message));

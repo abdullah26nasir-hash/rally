@@ -3,8 +3,8 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import type { League, Pick } from './data/types';
 import { track } from './lib/analytics';
 import { makePick, sampleList, RIVAL_ENTRIES } from './data/scouts';
-import { NEXT_GW, LAST_COMPLETE_GW } from './data/season';
-import { playerById } from './data/pool';
+import { NEXT_GW, LAST_COMPLETE_GW } from './data/source';
+import { playerById } from './data/source';
 
 export const MAX_PICKS = 5;
 
@@ -12,6 +12,9 @@ interface State {
   mode: 'new' | 'own' | 'sample';
   name: string;
   picks: Pick[];
+  following: string[]; // private, device-local preview watchlist; does not score in leagues
+  follow: (playerId: string) => void;
+  unfollow: (playerId: string) => void;
   history: Pick[]; // swapped-out picks: their points and stamps stay yours
   swaps: Record<number, number>; // gw -> swaps used
   leagues: League[];
@@ -44,6 +47,9 @@ export const useGame = create<State>()(
       mode: 'new',
       name: 'You',
       picks: [],
+      following: [],
+      follow: (id) => { if (!playerById.has(id)) return; set({ following: [...new Set([...get().following, id])] }); },
+      unfollow: (id) => set({ following: get().following.filter((x) => x !== id) }),
       history: [],
       swaps: {},
       leagues: [],
@@ -116,8 +122,8 @@ export const useGame = create<State>()(
         setItem: (k, v) => { try { localStorage.setItem(k, v); } catch { /* not saved */ } },
         removeItem: (k) => { try { localStorage.removeItem(k); } catch { /* ignore */ } },
       })),
-      version: 2,
-      migrate: (s) => s as State, // v1 had no history; merge() fills it in
+      version: 3,
+      migrate: (s) => s as State, // older versions had no following; merge() fills it in
       // Stored data can be old, hand-edited or half-written. Keep only what still makes sense.
       merge: (stored, current) => {
         const s = (stored ?? {}) as Partial<State>;
@@ -128,6 +134,7 @@ export const useGame = create<State>()(
           mode,
           name: typeof s.name === 'string' ? s.name.slice(0, 20) : current.name,
           picks: known(s.picks).slice(0, MAX_PICKS),
+          following: Array.isArray(s.following) ? [...new Set(s.following.filter((id): id is string => typeof id === 'string' && playerById.has(id)))].slice(0, 126) : [],
           history: known(s.history),
           swaps: s.swaps && typeof s.swaps === 'object' ? s.swaps : {},
           leagues: Array.isArray(s.leagues) ? s.leagues.filter((l) => l && typeof l.code === 'string' && typeof l.name === 'string') : [],

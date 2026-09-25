@@ -1,9 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Plus, ReceiptText } from 'lucide-react';
 import { useGame, MAX_PICKS, isLocked, swapsLeft } from '../store';
-import { playerById, clubOf, ownershipNow } from '../data/pool';
+import { playerById, clubOf, ownershipNow } from '../data/source';
 import { fmtMult, fmtPct, pickPointsTotal } from '../game/scoring';
-import { LAST_COMPLETE_GW, NEXT_GW, deadlineFor } from '../data/season';
+import { LAST_COMPLETE_GW, NEXT_GW, deadlineFor } from '../data/source';
 import { fmtDate, fmtDeadline } from '../lib/format';
 import { Monogram } from '../components/Monogram';
 import { PageTitle, PosTag } from '../components/bits';

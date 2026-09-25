@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Users } from 'lucide-react';
 import { useGame } from '../store';
 import { entryGw, entryTotal, overallRank, RIVAL_ENTRIES } from '../data/scouts';
-import { LAST_COMPLETE_GW, TOTAL_SCOUTS } from '../data/season';
+import { LAST_COMPLETE_GW, TOTAL_SCOUTS } from '../data/source';
 import { ordinal } from '../lib/format';
 import { Card, Delta, PageTitle } from '../components/bits';
 import { Button } from '../components/Button';

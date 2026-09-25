@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Check } from 'lucide-react';
-import { playerById, clubOf, ownershipNow, ownershipAt } from '../data/pool';
+import { ArrowLeft, Check, Bookmark, BookmarkCheck } from 'lucide-react';
+import { playerById, clubOf, ownershipNow, ownershipAt } from '../data/source';
 import { earlyCallFor, fmtMult, fmtPct, formLast3, seasonPoints, RULES } from '../game/scoring';
-import { LAST_COMPLETE_GW, NEXT_GW } from '../data/season';
+import { LAST_COMPLETE_GW, NEXT_GW } from '../data/source';
 import { useGame, MAX_PICKS, isLocked, swapsLeft } from '../store';
 import { Monogram } from '../components/Monogram';
 import { Button } from '../components/Button';
@@ -17,7 +17,7 @@ export function PlayerPage() {
   const { id = '' } = useParams();
   const nav = useNavigate();
   const p = playerById.get(id);
-  const { picks, swaps, scout, swap } = useGame();
+  const { picks, swaps, scout, swap, following, follow, unfollow } = useGame();
   const [swapOpen, setSwapOpen] = useState(false);
   if (!p) return <div className="py-20 text-center"><h1 className="display text-[32px]">Player not found</h1><Link to="/scout" className="inline-flex mt-3 min-h-11 items-center text-biro font-semibold">Back to Scout</Link></div>;
 
@@ -26,6 +26,7 @@ export function PlayerPage() {
   const prev = ownershipAt(p, LAST_COMPLETE_GW - 1);
   const mult = earlyCallFor(now);
   const mine = picks.find((x) => x.playerId === p.id);
+  const isFollowing = following.includes(p.id);
   const locked = isLocked(picks);
   const left = swapsLeft(picks, swaps);
   const clubClash = picks.find((x) => x.playerId !== p.id && playerById.get(x.playerId)!.clubId === p.clubId);
@@ -58,6 +59,13 @@ export function PlayerPage() {
                   <h1 className="display text-[40px] sm:text-[56px] leading-[0.9] mt-1">{p.name}</h1>
                   <div className="mt-1 text-graphite text-[15px] flex items-center gap-2 flex-wrap"><PosTag pos={p.position} />{club.name} · {club.league}</div>
                 </div>
+              </div>
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+                <Button variant="secondary" aria-pressed={isFollowing} onClick={() => isFollowing ? unfollow(p.id) : follow(p.id)}>
+                  {isFollowing ? <BookmarkCheck size={18} aria-hidden /> : <Bookmark size={18} aria-hidden />}
+                  {isFollowing ? 'Following - remove' : 'Follow this player'}
+                </Button>
+                <span className="text-[13px] text-graphite">Following is separate from your five scoring picks.</span>
               </div>
               <div className="mt-5"><SlipRule /></div>
               <dl className="mt-3 grid gap-1 font-mono text-[13px]">

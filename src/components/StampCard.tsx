@@ -1,7 +1,7 @@
 import { Eye, Flag, Star, Radar, Zap, Footprints } from 'lucide-react';
 import type { Stamp, StampKind } from '../game/stamps';
 import { STAMP_INFO } from '../game/stamps';
-import { clubOf } from '../data/pool';
+import { clubOf } from '../data/source';
 import { shirtNumber } from './Monogram';
 import { fmtDate } from '../lib/format';
 import { cn } from '../lib/cn';

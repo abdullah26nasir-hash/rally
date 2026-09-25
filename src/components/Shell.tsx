@@ -2,7 +2,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { CalendarDays, Search, ListChecks, Trophy } from 'lucide-react';
 import { useEffect } from 'react';
 import { cn } from '../lib/cn';
-import { SEASON } from '../data/season';
+import { SEASON } from '../data/source';
 
 const NAV = [
   { to: '/', label: 'This week', icon: CalendarDays, end: true },
