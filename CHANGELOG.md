@@ -31,3 +31,8 @@ Standards pass + preview-honesty copy.
 
 ## v4 (earlier)
 Every-button crawl (11 screens, ~100 controls), two league fixes, clean-code pass.
+
+## v6.1 - 25 Sep 2026 - Receipt save hardening + RC- on light
+- Receipt IDs now issue RC- prefix (owner decision 25 Sep 2026); previously issued receipts keep their stored numbers
+- Receipt image save fixed/hardened for mobile: render retries step down pixelRatio 3->2->1.5 (iOS Safari canvas failures), Save uses the native share sheet where <a download> is unreliable, blank renders detected, and receipt_render_failed / receipt_save_failed events now report real device errors to PostHog
+- Back on the light base (v5.7) per owner direction; stronger light brand application follows as a separate design pass

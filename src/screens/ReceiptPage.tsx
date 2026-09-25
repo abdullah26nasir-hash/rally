@@ -52,7 +52,20 @@ export function ReceiptPage() {
   }
   async function save() {
     setMsg('');
-    try { download(await getFile()); setMsg('Saved as a PNG.'); } catch { setMsg("Couldn't save the image. Try again."); }
+    track('receipt_save_tapped', { player_id: id });
+    try {
+      const f = await getFile();
+      // iOS Safari ignores <a download> in some contexts; the share sheet is
+      // the reliable way to get an image into Photos there.
+      if (navigator.canShare?.({ files: [f] })) {
+        try { await navigator.share({ files: [f] }); setMsg('Use the share sheet to save the image.'); return; }
+        catch (e) { if ((e as Error).name === 'AbortError') return; }
+      }
+      download(f); setMsg('Saved as a PNG.');
+    } catch (e) {
+      track('receipt_save_failed', { player_id: id, error: String(e).slice(0, 120) });
+      setMsg("Couldn't save the image. Try again.");
+    }
   }
 
   return (
@@ -92,17 +105,26 @@ function Toggle({ label, on, set }: { label: string; on: boolean; set: (v: boole
 
 async function renderReceipt(node: HTMLElement, id: string): Promise<File> {
   const pad = 24;
-  const opts = {
-    pixelRatio: 3,
+  const base = {
     backgroundColor: '#F7F8F5',
     width: node.offsetWidth + pad * 2,
     height: node.offsetHeight + pad * 2,
     style: { margin: '0', padding: `${pad}px`, boxSizing: 'content-box' as const },
   };
-  await toBlob(node, opts); // Safari drops fonts on the first pass
-  const blob = await toBlob(node, opts);
-  if (!blob) throw new Error('render failed');
-  return new File([blob], `rally-receipt-${id}.png`, { type: 'image/png' });
+  // Mobile browsers (esp. iOS Safari) can fail canvas renders at high pixel
+  // ratios, so step down until one succeeds.
+  let lastErr: unknown = null;
+  for (const pixelRatio of [3, 2, 1.5]) {
+    try {
+      const opts = { ...base, pixelRatio };
+      await toBlob(node, opts); // Safari drops fonts on the first pass
+      const blob = await toBlob(node, opts);
+      if (blob && blob.size > 10_000) return new File([blob], `rally-receipt-${id}.png`, { type: 'image/png' });
+      lastErr = new Error(blob ? 'render too small' : 'render failed');
+    } catch (e) { lastErr = e; }
+  }
+  track('receipt_render_failed', { player_id: id, error: String(lastErr).slice(0, 120) });
+  throw lastErr;
 }
 
 function download(file: File) {
