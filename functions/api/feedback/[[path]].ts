@@ -26,6 +26,10 @@ async function limited(db: D1Database, table: string, col: string, device: strin
   const hh = String(retry.getUTCHours()).padStart(2, '0'); const mm = String(retry.getUTCMinutes()).padStart(2, '0');
   return json({ error: `Limit reached. Try again at ${hh}:${mm}.` }, 429);
 }
+const daysSince = (iso: string) => Math.max(0, (Date.now() - new Date(iso.endsWith('Z') ? iso : iso + 'Z').getTime()) / 86400e3);
+const topScore = (votes: number, iso: string) => (votes + 1) / Math.sqrt(daysSince(iso) + 7);
+const byTop = (a: { votes: number; createdAt: string; id: number }, b: { votes: number; createdAt: string; id: number }) =>
+  topScore(b.votes, b.createdAt) - topScore(a.votes, a.createdAt) || b.createdAt.localeCompare(a.createdAt) || a.id - b.id;
 const VISIBLE = "status IN ('open','under_review','planned')";
 async function run({ request, env }: Context): Promise<Response> {
   const db = env.DB;
@@ -46,10 +50,10 @@ async function run({ request, env }: Context): Promise<Response> {
        WHERE r.hidden=0 AND r.status IN ('under_review','planned','shipped')
          AND NOT EXISTS (SELECT 1 FROM fb_comments c JOIN fb_reports rp ON rp.comment_id=c.id WHERE c.request_id=r.id GROUP BY c.id HAVING COUNT(*)>=3)
          AND (r.status!='shipped' OR r.created_at >= datetime('now','-60 days'))
-       ORDER BY CASE r.status WHEN 'shipped' THEN 1 ELSE 0 END,
-         (CAST((SELECT COUNT(*) FROM fb_votes v WHERE v.request_id=r.id) AS REAL)+1) /
-           power((julianday('now')-julianday(r.created_at))+7, 0.5) DESC, r.created_at DESC, r.id ASC
-       LIMIT 3`).all();
+       ORDER BY r.created_at DESC LIMIT 30`).all();
+    (results as { status: string; votes: number; createdAt: string; id: number }[]).sort((a, b) =>
+      (a.status === 'shipped' ? 1 : 0) - (b.status === 'shipped' ? 1 : 0) || byTop(a, b));
+    results.length = Math.min(results.length, 3);
     const open = await db.prepare(`SELECT COUNT(*) AS n FROM fb_requests WHERE hidden=0 AND ${VISIBLE}`).first<{ n: number }>();
     const totalVotes = await db.prepare('SELECT COUNT(*) AS n FROM fb_votes').first<{ n: number }>();
     return json({ rows: results, openCount: open?.n ?? 0, totalVotes: totalVotes?.n ?? 0 });
@@ -67,9 +71,7 @@ async function run({ request, env }: Context): Promise<Response> {
     if (filter === 'under_review' || filter === 'planned') where += ` AND r.status='${filter}'`;
     else if (filter === 'shipped') where += " AND r.status='shipped'";
     else where += ` AND ${VISIBLE.replace(/status/g, 'r.status')}`;
-    const order = sort === 'new' ? 'r.created_at DESC, r.id DESC'
-      : `(CAST((SELECT COUNT(*) FROM fb_votes v WHERE v.request_id=r.id) AS REAL)+1) /
-         power((julianday('now')-julianday(r.created_at))+7, 0.5) DESC, r.created_at DESC, r.id ASC`;
+    const order = 'r.created_at DESC, r.id DESC';
     const { results } = await db.prepare(
       `SELECT r.id, r.title, r.status, r.created_at AS createdAt, r.device_hash AS author,
         (SELECT scout_number FROM fb_scouts s WHERE s.device_hash=r.device_hash) AS scout,
@@ -77,6 +79,8 @@ async function run({ request, env }: Context): Promise<Response> {
         (SELECT COUNT(*) FROM fb_comments c WHERE c.request_id=r.id AND c.hidden=0) AS comments,
         EXISTS(SELECT 1 FROM fb_votes v WHERE v.request_id=r.id AND v.device_hash=?) AS voted
        FROM fb_requests r WHERE ${where} ORDER BY ${order} LIMIT 100`).bind(device).all();
+    results.forEach((r) => { delete (r as Record<string, unknown>).author; });
+    if (sort === 'top') (results as { votes: number; createdAt: string; id: number }[]).sort(byTop);
     const open = await db.prepare(`SELECT COUNT(*) AS n FROM fb_requests WHERE hidden=0 AND ${VISIBLE}`).first<{ n: number }>();
     return json({ rows: results, openCount: open?.n ?? 0, scout: me });
   }
@@ -188,5 +192,5 @@ async function run({ request, env }: Context): Promise<Response> {
   return json({ error: 'Not found.' }, 404);
 }
 export async function onRequest(context: Context) {
-  try { return await run(context); } catch (e) { console.error('Rally feedback API error', e instanceof Error ? e.name : 'error'); return json({ error: 'The feedback service is unavailable. Try again later.' }, 503); }
+  try { return await run(context); } catch (e) { console.error('Rally feedback API error', e instanceof Error ? e.message : 'error'); return json({ error: 'The feedback service is unavailable. Try again later.' }, 503); }
 }
