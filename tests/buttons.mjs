@@ -1,7 +1,7 @@
 // Clicks every visible control on every screen, one at a time from the same saved state,
 // and checks something visible happened (new page, new text, a download or a share) with no errors.
 import { launch, BASE, W, sample, tally } from './lib.mjs';
-const routes = process.argv.slice(2).length ? process.argv.slice(2) : ['/', '/scout', '/list', '/leagues', '/leagues/lg-sunday', '/how', '/player/p003', '/receipt/p005', '/join/LADS26', '/start'];
+const routes = process.argv.slice(2).length ? process.argv.slice(2) : ['/', '/scout', '/list', '/leagues', '/leagues/lg-sunday', '/how', '/player/p003', '/receipt/p005', '/join/LADS26', '/start', '/feedback', '/feedback/new'];
 const b = await launch(); const t = tally(`buttons ${routes.join(' ')}`);
 const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, acceptDownloads: true, permissions: ['clipboard-read', 'clipboard-write'] });
 await ctx.addInitScript(() => { navigator.canShare = () => true; navigator.share = async () => { window.__shared = 1; }; });

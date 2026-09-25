@@ -22,6 +22,10 @@ const states = [
   ['join', async (p) => { await p.goto(BASE + '/join/LADS26', W); }],
   ['how', async (p) => { await p.goto(BASE + '/how', W); }],
   ['not found', async (p) => { await p.goto(BASE + '/player/nope', W); }],
+  ['feedback board', async (p) => { await p.goto(BASE + '/feedback', W); await p.waitForTimeout(800); }],
+  ['feedback new', async (p) => { await p.goto(BASE + '/feedback/new', W); }],
+  ['feedback new error', async (p) => { await p.goto(BASE + '/feedback/new', W); await p.getByLabel(/What's missing/).fill('short'); await p.getByRole('button', { name: 'Post request' }).click().catch(()=>{}); await p.locator('text=Title needs at least 8 characters.').waitFor({timeout:5000}).catch(()=>{}); }],
+  ['feedback request', async (p) => { await p.goto(BASE + '/feedback/1', W); await p.waitForTimeout(800); }],
 ];
 for (const [vw, vh, dev] of [[390, 844, 'phone'], [1280, 800, 'desktop'], [320, 640, 'small']].filter((x) => !only || x[2] === only)) {
   const p = await b.newPage({ viewport: { width: vw, height: vh } });
