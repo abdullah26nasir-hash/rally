@@ -343,7 +343,7 @@ CURRENT RANK      018
 ─────────────────────────────────────────────
 YOU WERE 184 PLACES EARLY.
 
-RECEIPT ID        RC-7A42-OKA
+RECEIPT ID        RC-060473
 ```
 
 ### Spec
@@ -369,6 +369,7 @@ RECEIPT ID        RC-7A42-OKA
 
 1. **A receipt is immutable.** Once issued, its fields never change. Rank updates show on a separate "now" line or a new receipt, never by editing the old one. Proof that edits itself is not proof.
 2. Existing `RL-` IDs stay valid forever. New receipts issue `RC-` IDs. Never reissue or rewrite an old ID after the rename.
+3. Format: `RC-` plus six digits - the two-digit week the call was made, then a four-digit serial (`RC-060473`). All numeric, no letters, never wraps mid-number (the whole ID stacks under 360px).
 3. The key line is always contextual and always true: `YOU WERE 184 PLACES EARLY.` / `12 PEOPLE IN YOUR LEAGUE MISSED HIM.` / `PICKED 43 DAYS BEFORE HIS FIRST START.` / `YOU HAD HIM BEFORE THE CALL-UP.` If there is nothing true to say yet, the line reads `CALL LOCKED. RESULT PENDING.`
 4. The share image renders at 1080×1350: receipt centred on Stock with 5% grain and `shadow-md`, wordmark in ink at the bottom. No other decoration. A dark share variant (receipt on Turnstile Black) is available from the share sheet.
 5. The receipt never becomes a generic card style. Nothing else in the product uses perforation, the dot or the stamp.
