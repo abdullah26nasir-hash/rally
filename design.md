@@ -57,11 +57,13 @@ On light, shadows read. The guide's three presets, tinted with ink rather than n
 
 | Preset | Value | Use |
 |---|---|---|
-| `shadow-sm` | `0 1px 2px rgba(11,11,10,0.08)` | A Pick Card while dragging or reordering only |
-| `shadow-md` | `0 1px 2px rgba(11,11,10,0.06), 0 4px 12px rgba(11,11,10,0.08)` | Scout Receipt, dropdowns, menus |
+| `shadow-sm` | `0 1px 2px rgba(11,11,10,0.08)` | Every Ticket object at rest: panels, Pick Cards, the league panel, the feedback panel, earned stamp tiles. The Stub and tab bar, but only while content is scrolled under them |
+| `shadow-md` | `0 1px 2px rgba(11,11,10,0.06), 0 4px 12px rgba(11,11,10,0.08)` | Scout Receipt, dropdowns, menus, a Pick Card while dragging |
 | `shadow-lg` | `0 2px 4px rgba(11,11,10,0.06), 0 12px 32px rgba(11,11,10,0.12), 0 32px 64px rgba(11,11,10,0.10)` | Sheets, modals, the landing hero receipt |
 
-One strength per state. Never mix with default Tailwind shadows (`shadow`, `shadow-xl` are banned). A shadow never replaces a border: every card keeps `--card-edge`. No hard offset shadows (`4px 4px 0 #000`), ever.
+One strength per state. Never mix with default Tailwind shadows (`shadow`, `shadow-xl` are banned). A shadow never replaces a border: every Ticket object carries `--card-edge` AND `shadow-sm` at rest, both, always. No hard offset shadows (`4px 4px 0 #000`), ever.
+
+Depth rules (v2.2): hover changes the border only, never the shadow. Stub and tab bar shadows toggle instantly (not animated) through an IntersectionObserver on a 1px sentinel at the top or bottom of main - never a scroll listener; the tab bar uses `0 -1px 2px rgba(11,11,10,0.08)`. Buttons, chips, inputs, rows and vote controls never get shadows (shadows on buttons read as SaaS). Terrace wells press into the board instead of lifting: `border-top: 1px solid rgba(11,11,10,0.16)`, no shadow.
 
 ### Semantic (light)
 
@@ -300,6 +302,19 @@ Make a call before everyone agrees with you.
 [ Back your five ]
 ```
 
+### Printed detail (v2.2)
+
+Richness from parts already in the system. No new concepts.
+
+| Detail | Spec | Where |
+|---|---|---|
+| Double rule | `border-top: 3px double #0B0B0A` (two 1px lines, 1px gap), the programme section rule | Above each app section heading (Your five, League, Stamp book). Landing section rules stay single 1px. |
+| Panel header band | Terrace, 0% grain, 40px tall, 16px padding, `label` style ink, 1px ink bottom rule | Top of a Ticket panel that holds rows (league table, feedback list, player list) |
+| Tear line | The receipt's divider: 1px ink, dashed 4px 3px | Inside a locked Pick Card, between player details and the LOCKED counterfoil. Inside the league invite card, above the code. Nowhere else. |
+| Column rules | 1px `--hairline` vertical rules between rank, name and score | League table only |
+
+Perforation, the serrated edge and the stamp stay receipt-only (plus the stamp ring on earned stamp tiles). Spreading them would kill the signature.
+
 ---
 
 ## 5. Signature element: the Scout Receipt
@@ -452,19 +467,34 @@ No information may depend on animation. The locked state, rank and breakout all 
 
 ## 7. Texture
 
-Texture says "printed". It never says "distressed". On light, grain is what separates board stock from a flat web background, so it matters more here than in dark. It still never touches app UI.
+Texture says "printed". It never says "distressed". Each material gets its own grain, so Stock reads as board and Ticket as smoother card stock. (v2.2: app UI grain loosened per owner direction - the app read flat because Stock and Ticket sat 1.13:1 apart with nothing separating them.)
 
-| Surface | Texture | Opacity |
+| Surface | Grain | Why |
 |---|---|---|
-| Landing and campaign Stock | Monochrome fine noise, `multiply` | 5% (4 to 7) |
-| Scout Receipt (both themes) | Fine grain 4% plus paper fibre 2% | total under 9% |
-| Share image Stock | Fine noise | 5% |
-| Large Flare graphics (landing only) | Uneven print density | 4% (3 to 6) |
-| App UI (Stock page, panels, cards, forms, any body text) | **None** | 0% |
+| Stock (page, light) | 4% ink | The board. The biggest single fix for flatness. |
+| Ticket (panels, Pick Cards, tab bar) | 2% ink | Smoother card stock; the grain difference separates Ticket from Stock. |
+| Flare Tint region | 2% ink | Same as Ticket. |
+| The Stub | 3% paper (light specks) | Printed ink band. |
+| Primary button (Flare fill) | 3% ink | The brand's "uneven print density", allowed on the one fill. |
+| Scout Receipt (both themes) | 4% grain + 2% fibre | Unchanged. |
+| Landing and campaign Stock | Monochrome fine noise | 5% (4 to 7), unchanged. |
+| Terrace (wells, pressed, chips, disabled) | **0%** | Pencil drops to 4.39:1 at 3%. It fails. |
+| Proof (sheets, menus, input fill) | **0%** | Typed and form text sits here. |
+| Anything under 48px tall or wide (chips, vote control, switch, icons, dots) | **0%** | Grain becomes dirt at that size. |
 
-Implementation: a prerendered 256×256 PNG tile as a `background-image`, `mix-blend-mode: multiply` on light and `screen` on dark. Never a live SVG `feTurbulence` filter (it repaints on scroll and kills low end Android). Never animated. Removed entirely under `prefers-contrast: more`. After adding texture, recheck every pairing against the darkest pixel of the tile on light surfaces: pairs must still pass. Pencil on grained Stock is the tightest pair; if it drops under 4.5, Pencil text moves to Graphite on that surface.
+Dark theme: Turnstile Black page 3% paper, Stand cards 2% paper. Same logic, inverted.
 
-Banned: scratches, grunge brushes, torn paper, coffee rings, curled edges, dirty stadium overlays, film burn, halftone dots over type.
+Body text cap: any surface holding body text carries at most 2% grain. Stock at 4% holds headings, status lines and panels, never paragraphs sitting directly on it.
+
+Measured pairings (against the darkest grain pixel): Pencil on Stock 4% = 4.82 pass; Pencil on Ticket 2% = 5.67 pass; Pencil on Terrace 3% = 4.39 fail (Terrace stays 0%); Flare Ink on Stock 4% = 4.38 fail (Flare Ink never sits directly on Stock - its allowed uses live on Ticket or Flare Tint); Flare Ink on Flare Tint 2% = 4.76 pass; semantic set on Stock 4% >= 4.76 pass; ink on Flare 3% = 5.61 pass; Ticket on Stub 3% = 16.24 pass; Flare focus on Stub 3% = 5.64 pass.
+
+Implementation: bake the grain into prerendered 256x256 PNG tiles (ink or paper specks in alpha, so they behave like multiply without paying for `mix-blend-mode`). One tile per grain level in `public/grain/`, <= 40 KB each. `background-attachment: scroll`, never fixed (fixed repaints every scroll frame on Android). No live SVG `feTurbulence`. Never animated. Rows inside a panel stay transparent, so never more than two grained layers stack (page, then card). Preload `ink-4.png`. Removed entirely under `prefers-contrast: more` and `forced-colors: active`. After adding texture, recheck every pairing against the darkest pixel of the tile: pairs must still pass.
+
+Flare budget is unchanged: grain on the primary button does not make it a second fill, and grain never counts as colour.
+
+Banned: scratches, grunge brushes, torn paper, coffee rings, curled edges, dirty stadium overlays, film burn, halftone dots over type, fake print misregistration (offset colour copies of type or shapes).
+
+Watch list: test on a budget Android (Moto G class) with paint flashing - no frame over 16ms; all tiles together add at most 120KB; if frames drop, drop the Ticket grain first, never the Stock grain.
 
 ---
 
@@ -687,7 +717,7 @@ Run before merging any UI PR. Any "no" blocks the merge.
 - [ ] Input never blocked mid transition. Keyboard actions do not animate. Reduced motion version shipped in the same PR.
 - [ ] Destructive actions confirm, with the Inverse button. Every drag has a tap alternative.
 - [ ] Landing: light, none of the six AI premium tells, no invented proof anywhere.
-- [ ] No texture on app UI.
+- [ ] Grain only per the surface table. <=2% under body text. 0% on Terrace, Proof and anything under 48px. Every Ticket object has `--card-edge` and `shadow-sm`.
 - [ ] No banned words: squad, manager, transfer, ownership, portfolio, asset, investment.
 - [ ] Nothing on screen that a fantasy football app, a betting app or a cream and terracotta template would also show.
 - [ ] Would this screenshot still feel like evidence? If not, remove something.
