@@ -8,6 +8,7 @@ import { ordinal } from '../lib/format';
 import { Card, Delta, PageTitle } from '../components/bits';
 import { Button } from '../components/Button';
 import { cn } from '../lib/cn';
+import { track } from '../lib/analytics';
 
 export function Leagues() {
   const { picks, history, leagues, createLeague, joinLeague } = useGame();
@@ -84,7 +85,7 @@ export function LeagueDetail() {
   }).sort((a, b) => b.total - a.total);
   const prevOrder = [...rows].sort((a, b) => (b.total - b.gw) - (a.total - a.gw)).map((r) => r.id);
   const moved = (id: string, i: number) => prevOrder.indexOf(id) - i;
-  const copy = async () => { try { await navigator.clipboard.writeText(`Join my Rally league "${lg.name}": ${location.origin}/join/${lg.code}`); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { setCopyFail(true); } };
+  const copy = async () => { try { await navigator.clipboard.writeText(`Join my Rally league "${lg.name}": ${location.origin}/join/${lg.code}`); setCopied(true); track('invite_copied'); setTimeout(() => setCopied(false), 2000); } catch { setCopyFail(true); } };
 
   return (
     <div>

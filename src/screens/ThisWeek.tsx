@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useGame, MAX_PICKS, swapsLeft, isLocked } from '../store';
@@ -16,12 +16,14 @@ import { Slip, SlipRule } from '../components/Slip';
 import { StampCard } from '../components/StampCard';
 import { LevelBar } from '../components/Level';
 import { cn } from '../lib/cn';
+import { track } from '../lib/analytics';
 
 export function ThisWeek() {
   const { picks, history, swaps, leagues, name, mode } = useGame();
   const every = [...picks, ...history];
   const nav = useNavigate();
   const [gw, setGw] = useState(LAST_COMPLETE_GW);
+  useEffect(() => { track('slip_viewed', { gw, latest: gw === LAST_COMPLETE_GW }); }, [gw]);
   const locked = isLocked(picks);
   const stamps = stampsFor(every);
 

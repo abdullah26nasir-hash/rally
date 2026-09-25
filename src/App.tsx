@@ -1,3 +1,4 @@
+import { pageview } from './lib/analytics';
 import { useEffect, useRef } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { useGame } from './store';
@@ -45,6 +46,7 @@ function RouteFocus() {
     const id = requestAnimationFrame(() => {
       const h1 = document.querySelector<HTMLElement>('h1');
       document.title = h1?.textContent ? `${h1.textContent} · Rally` : 'Rally';
+      pageview();
       if (first.current) { first.current = false; return; }
       if (h1) { h1.tabIndex = -1; h1.style.outline = 'none'; h1.focus({ preventScroll: true }); }
     });

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { League, Pick } from './data/types';
+import { track } from './lib/analytics';
 import { makePick, sampleList, RIVAL_ENTRIES } from './data/scouts';
 import { NEXT_GW, LAST_COMPLETE_GW } from './data/season';
 import { playerById } from './data/pool';
@@ -29,7 +30,7 @@ const clubTaken = (picks: Pick[], clubId: string) => picks.some((x) => playerByI
 export const isLocked = (picks: Pick[]) => picks.some((p) => p.gwFrom < NEXT_GW);
 export const swapsLeft = (picks: Pick[], swaps: Record<number, number>) => (isLocked(picks) ? Math.max(0, 1 - (swaps[NEXT_GW] ?? 0)) : Infinity);
 
-const code = () => Array.from({ length: 6 }, () => 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 30)]).join('');
+const code = () => Array.from({ length: 6 }, () => 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 31)]).join('');
 
 const demoLeague = (): League => ({
   id: 'lg-sunday', name: 'Sunday League Lads', code: 'LADS26', kind: 'private', createdAt: '2026-08-10T19:00:00+01:00',
@@ -45,8 +46,8 @@ export const useGame = create<State>()(
       history: [],
       swaps: {},
       leagues: [],
-      startOwn: (name) => set({ mode: 'own', picks: [], history: [], swaps: {}, leagues: [], name: name?.trim() || 'You' }),
-      startSample: () => set({ mode: 'sample', picks: sampleList(), history: [], swaps: {}, leagues: [demoLeague()], name: 'You' }),
+      startOwn: (name) => { track('season_started', { mode: 'own' }); set({ mode: 'own', picks: [], history: [], swaps: {}, leagues: [], name: name?.trim() || 'You' }); },
+      startSample: () => { track('season_started', { mode: 'sample' }); set({ mode: 'sample', picks: sampleList(), history: [], swaps: {}, leagues: [demoLeague()], name: 'You' }); },
       scout: (playerId) => {
         const { picks } = get();
         const p = playerById.get(playerId);
@@ -55,12 +56,14 @@ export const useGame = create<State>()(
         if (isLocked(picks)) return null; // after the first deadline, changes go through swap()
         const pk = makePick(p, NEXT_GW, new Date(), Date.now());
         set({ picks: [...picks, pk], mode: get().mode === 'new' ? 'own' : get().mode });
+        track('player_scouted', { player_id: p.id, position: p.position, early_call: pk.multiplier, list_size: picks.length + 1 });
         return pk;
       },
       release: (playerId) => {
         const { picks } = get();
         if (isLocked(picks)) return;
         set({ picks: picks.filter((x) => x.playerId !== playerId) });
+        track('player_released', { player_id: playerId });
       },
       swap: (outId, inId) => {
         const { picks, swaps, history } = get();
@@ -77,27 +80,31 @@ export const useGame = create<State>()(
           history: scored ? [...history, { ...out, gwTo: NEXT_GW - 1 }] : history,
           swaps: { ...swaps, [NEXT_GW]: used + (isLocked(picks) ? 1 : 0) },
         });
+        track('player_swapped', { out_id: outId, in_id: inId, early_call: pk.multiplier, locked: isLocked(picks) });
         return pk;
       },
       createLeague: (name) => {
         const lg: League = { id: `lg-${Date.now()}`, name: name.trim(), code: code(), kind: 'private', createdAt: new Date().toISOString(), members: ['you'] };
         set({ leagues: [...get().leagues, lg] });
+        track('league_created');
         return lg;
       },
       joinLeague: (c) => {
         const clean = c.trim().toUpperCase();
         const mine = get().leagues.find((l) => l.code === clean);
-        if (mine) return mine;
+        if (mine) { track('league_joined', { already_member: true }); return mine; }
         if (clean === 'LADS26') {
           const existing = get().leagues.find((l) => l.code === 'LADS26');
           if (existing) return existing;
           const lg = demoLeague();
           set({ leagues: [...get().leagues, lg] });
+          track('league_joined', { demo: true });
           return lg;
         }
+        track('league_join_failed');
         return null;
       },
-      reset: () => set({ mode: 'new', picks: [], history: [], swaps: {}, leagues: [] }),
+      reset: () => { track('season_reset'); set({ mode: 'new', picks: [], history: [], swaps: {}, leagues: [] }); },
     }),
     {
       name: 'rally-v1',

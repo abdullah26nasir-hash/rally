@@ -8,6 +8,7 @@ import { Receipt } from '../components/Receipt';
 import { Button } from '../components/Button';
 import { StampCard } from '../components/StampCard';
 import { stampsFor, STAMP_INFO } from '../game/stamps';
+import { track } from '../lib/analytics';
 
 export function ReceiptPage() {
   const { id = '' } = useParams();
@@ -25,6 +26,7 @@ export function ReceiptPage() {
   // navigator.share only works inside the tap that triggered it, and rendering the
   // image takes longer than browsers allow. So render it ahead of time and keep it fresh.
   const [file, setFile] = useState<File | null>(null);
+  useEffect(() => { if (pick) track('receipt_viewed', { player_id: id, just_scouted: isNew }); }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!pick) return;
     let live = true;
@@ -41,6 +43,7 @@ export function ReceiptPage() {
   async function getFile() { return file ?? renderReceipt(ref.current!, id); }
   async function share() {
     setMsg('');
+    track('receipt_shared', { player_id: id });
     try {
       const f = await getFile();
       if (navigator.canShare?.({ files: [f] })) await navigator.share({ files: [f], text: `I scouted ${p.name} first. Here's the receipt.` });
