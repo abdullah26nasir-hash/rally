@@ -16,4 +16,4 @@ function teeth(edge: 'bottom' | 'both') {
   for (let i = n; i >= 0; i--) pts.push(`${(i / n) * 100}% calc(100% - ${i % 2 ? h : 0}px)`);
   return pts.join(',');
 }
-export const SlipRule = () => <div className="border-t border-dashed border-ink/25" />;
+export const SlipRule = () => <div className="border-t border-dashed border-hairline" />;

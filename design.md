@@ -306,7 +306,7 @@ RECEIPT ID        RC-7A42-OKA
 ### Rules
 
 1. **A receipt is immutable.** Once issued, its fields never change. Rank updates show on a separate "now" line or a new receipt, never by editing the old one. Proof that edits itself is not proof.
-2. Existing `RL-` IDs stay valid forever. New receipts issue `RC-` IDs. Never reissue or rewrite an old ID after the rename.
+2. All receipts issue `RC-` IDs (owner decision, 25 Sep 2026). Receipts issued before the decision keep their original numbers - a receipt is immutable proof and never re-numbers.
 3. The key line is always contextual and always true: `YOU WERE 184 PLACES EARLY.` / `12 PEOPLE IN YOUR LEAGUE MISSED HIM.` / `PICKED 43 DAYS BEFORE HIS FIRST START.` / `YOU HAD HIM BEFORE THE CALL-UP.` If there is nothing true to say yet, the line reads `CALL LOCKED. RESULT PENDING.`
 4. The share image renders at 1080×1350, receipt centred on Turnstile Black with 1% grain, wordmark at the bottom. No other decoration.
 5. The receipt never becomes a generic card style. Nothing else in the product uses Ticket fill, perforation or the dot.

@@ -37,7 +37,7 @@ export function ReceiptPage() {
     }, isNew ? 1500 : 300);
     return () => { live = false; clearTimeout(t); };
   }, [pick, id, isNew, showPoints, showEarly]);
-  if (!pick) return <div className="py-20 text-center"><h1 className="display text-[32px]">No receipt for this player</h1><p className="text-graphite mt-1">Receipts are made when you scout someone.</p><Link to="/scout" className="inline-flex mt-4 min-h-11 items-center text-biro font-semibold">Go to Scout</Link></div>;
+  if (!pick) return <div className="py-20 text-center"><h1 className="display text-[32px]">No receipt for this player</h1><p className="text-newsprint mt-1">Receipts are made when you scout someone.</p><Link to="/scout" className="inline-flex mt-4 min-h-11 items-center text-flare font-semibold">Go to Scout</Link></div>;
   const p = playerById.get(id)!;
 
   async function getFile() { return file ?? renderReceipt(ref.current!, id); }
@@ -57,7 +57,7 @@ export function ReceiptPage() {
 
   return (
     <div className="max-w-[560px] mx-auto">
-      <button onClick={() => (history.length > 1 ? nav(-1) : nav('/list'))} className="inline-flex items-center gap-1.5 min-h-11 -ml-1 px-1 font-semibold text-graphite hover:text-ink"><ArrowLeft size={18} aria-hidden />Back</button>
+      <button onClick={() => (history.length > 1 ? nav(-1) : nav('/list'))} className="inline-flex items-center gap-1.5 min-h-11 -ml-1 px-1 font-semibold text-newsprint hover:text-paper"><ArrowLeft size={18} aria-hidden />Back</button>
       {isNew ? <h1 className="mt-2 text-center display text-[32px] anim-fade">{p.name.split(' ')[0]} is on your list.</h1> : <h1 className="sr-only">Receipt for {p.name}</h1>}
       <div className="mt-6"><Receipt ref={ref} pick={pick} scoutName={handle} animate={isNew} showPoints={showPoints} showEarly={showEarly} /></div>
       <fieldset className="mt-8 mx-auto max-w-[340px] grid gap-1">
@@ -69,14 +69,14 @@ export function ReceiptPage() {
         <Button size="lg" onClick={share} disabled={!file}><Share2 size={18} aria-hidden />{file ? "Share receipt" : "Getting image ready…"}</Button>
         <Button size="lg" variant="secondary" onClick={save} disabled={!file}><Download size={18} aria-hidden />Save image</Button>
       </div>
-      <p role="status" className="mt-3 min-h-6 text-center text-[14px] text-graphite">{msg}</p>
+      <p role="status" className="mt-3 min-h-6 text-center text-[14px] text-newsprint">{msg}</p>
       {isNew && (() => { const earned = stampsFor([...picks, ...history]).filter((s) => s.player.id === id && s.earnedAt === pick.scoutedAt); return earned.length ? (
         <div className="mt-6 flex flex-col items-center text-center anim-stage-2">
-          <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-graphite">Stamp{earned.length > 1 ? 's' : ''} earned</div>
+          <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-newsprint">Stamp{earned.length > 1 ? 's' : ''} earned</div>
           <div className="mt-3 flex gap-3">{earned.map((s) => <StampCard key={s.id} stamp={s} size="sm" />)}</div>
-          <p className="mt-2 text-[14px] text-graphite">+{earned.reduce((a, s) => a + STAMP_INFO[s.kind].xp, 0)} XP towards your scout level</p>
+          <p className="mt-2 text-[14px] text-newsprint">+{earned.reduce((a, s) => a + STAMP_INFO[s.kind].xp, 0)} XP towards your scout level</p>
         </div>) : null; })()}
-      {isNew && <div className="text-center"><Link to="/scout" className="inline-flex min-h-11 items-center font-semibold text-biro hover:underline underline-offset-4">Keep scouting</Link></div>}
+      {isNew && <div className="text-center"><Link to="/scout" className="inline-flex min-h-11 items-center font-semibold text-flare hover:underline underline-offset-4">Keep scouting</Link></div>}
     </div>
   );
 }
@@ -85,7 +85,7 @@ function Toggle({ label, on, set }: { label: string; on: boolean; set: (v: boole
   return (
     <button type="button" role="switch" aria-checked={on} onClick={() => set(!on)} className="flex items-center justify-between gap-4 min-h-11 text-left">
       <span className="text-[15px]">{label}</span>
-      <span className={'relative h-7 w-12 rounded-full transition-colors ' + (on ? 'bg-biro' : 'bg-ink/20')}><span className="absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition-transform" style={{ transform: on ? 'translateX(24px)' : 'translateX(4px)', transitionTimingFunction: 'cubic-bezier(.23,1,.32,1)' }} /></span>
+      <span className={'relative h-7 w-12 rounded-full transition-colors ' + (on ? 'bg-flare' : 'bg-paper/20')}><span className="absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition-transform" style={{ transform: on ? 'translateX(24px)' : 'translateX(4px)', transitionTimingFunction: 'cubic-bezier(.23,1,.32,1)' }} /></span>
     </button>
   );
 }

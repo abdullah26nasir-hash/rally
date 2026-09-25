@@ -20,7 +20,7 @@ export function StampCard({ stamp, size = 'md', locked, kind: lockedKind }: { st
     <figure className={cn('stamp-perf relative bg-white p-[7px]', locked && 'opacity-75')} aria-label={locked ? `Locked stamp: ${info.title}. ${info.rule}` : `${info.title} stamp: ${stamp!.player.name}, ${fmtDate(stamp!.earnedAt)}`}>
       <div className="flex flex-col overflow-hidden" style={{ aspectRatio: '4 / 5', background: locked ? 'repeating-linear-gradient(135deg,#F2F3F5 0 6px,#E9EBEF 6px 12px)' : a }}>
         <div className="flex-1 flex items-start justify-between p-2">
-          <span className={cn('grid place-items-center h-7 w-7 rounded-full', locked ? 'bg-white/80 text-graphite' : 'bg-white text-ink')}><Icon size={15} strokeWidth={2.2} aria-hidden /></span>
+          <span className={cn('grid place-items-center h-7 w-7 rounded-full', locked ? 'bg-white/80 text-newsprint' : 'bg-white text-paper')}><Icon size={15} strokeWidth={2.2} aria-hidden /></span>
           {!locked && <span className="display text-[24px] leading-none" style={{ color: readable(a) }}>{shirtNumber(stamp!.player)}</span>}
         </div>
         <div className="px-2 pt-1.5 pb-2" style={{ background: locked ? 'rgba(255,255,255,.75)' : b, color: locked ? '#5B6474' : readable(b) }}>

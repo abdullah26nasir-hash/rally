@@ -24,11 +24,11 @@ export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick
         <div className="px-6 pt-8 pb-9">
           <div className="flex items-baseline justify-between">
             <span className="display text-[26px] tracking-tight not-italic font-sans" style={{ fontFamily: 'var(--font-display)' }}>RALLYCADEMY</span>
-            <span className="text-graphite text-[11px]">NO. {pick.receiptNo}</span>
+            <span className="text-ink text-[11px]">NO. {pick.receiptNo}</span>
           </div>
-          <div className="text-[11px] text-graphite uppercase tracking-wide">Scouting receipt · {SEASON}</div>
+          <div className="text-[11px] text-ink uppercase tracking-wide">Scouting receipt · {SEASON}</div>
           <Dash />
-          <div className="text-[11px] uppercase tracking-wide text-graphite">Scouted</div>
+          <div className="text-[11px] uppercase tracking-wide text-ink">Scouted</div>
           <div className={cn('display text-[clamp(24px,9.5vw,40px)] leading-[0.95] mt-1 break-words', animate && 'anim-stage-1')} style={{ fontFamily: 'var(--font-display)' }}>{p.name.toUpperCase()}</div>
           <div className={cn('mt-1.5', animate && 'anim-stage-1')}>{p.role} · {club.name} · Age {p.age}</div>
           <Dash />
@@ -43,17 +43,17 @@ export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick
           {!pending && growth >= 2 ? (
             <p className="text-[13px]"><span className="hl font-semibold">{Math.round(growth)}× more scouts</span> have him now than when you called it.</p>
           ) : (
-            <p className="text-[13px] text-graphite">Kept on file. If he breaks out, this is your proof.</p>
+            <p className="text-[13px] text-ink">Kept on file. If he breaks out, this is your proof.</p>
           )}
           <div className="mt-5 flex items-end justify-between gap-3">
             <Barcode seed={pick.receiptNo} />
-            <div className="shrink-0" style={{ transform: 'rotate(-6deg)' }}><div className={cn('border-[2.5px] border-stamp text-stamp rounded-md px-2.5 py-1.5 text-center leading-tight', animate && 'anim-stamp')} aria-label={`Scouted ${stamp.day} at ${stamp.time}`}>
+            <div className="shrink-0" style={{ transform: 'rotate(-6deg)' }}><div className={cn('border-[2.5px] border-flare-ink text-flare-ink rounded-md px-2.5 py-1.5 text-center leading-tight', animate && 'anim-stamp')} aria-label={`Scouted ${stamp.day} at ${stamp.time}`}>
               <div className="text-[10px] font-semibold tracking-widest">SCOUTED</div>
               <div className="text-[12px] font-semibold whitespace-nowrap">{stamp.day}</div>
               <div className="display text-[22px]" style={{ fontFamily: 'var(--font-display)' }}>{stamp.time}</div>
             </div></div>
           </div>
-          <div className="mt-4 text-center text-[10px] text-graphite tracking-wide">FREE TO PLAY · BRAGGING RIGHTS ONLY</div>
+          <div className="mt-4 text-center text-[10px] text-ink tracking-wide">FREE TO PLAY · BRAGGING RIGHTS ONLY</div>
         </div>
       </div>
     </div>
@@ -63,7 +63,7 @@ export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick
 function Line({ k, v, strong }: { k: string; v: string; strong?: boolean }) {
   return (
     <div className="flex items-baseline gap-2">
-      <span className="text-graphite">{k}</span>
+      <span className="text-ink">{k}</span>
       <span className="flex-1 border-b border-dotted border-graphite/40 translate-y-[-3px]" />
       <span className={cn('num', strong && 'font-semibold')}>{v}</span>
     </div>

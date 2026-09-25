@@ -18,7 +18,7 @@ export function makePick(player: Player, gwFrom: number, scoutedAt: Date, seed: 
     gwFrom,
     ownershipAtPick: Number(own.toFixed(1)),
     multiplier: earlyCallFor(own),
-    receiptNo: `R-${(gwFrom).toString().padStart(2, '0')}${(seed % 9973).toString().padStart(4, '0')}`,
+    receiptNo: `RC-${(gwFrom).toString().padStart(2, '0')}${(seed % 9973).toString().padStart(4, '0')}`,
   };
 }
 

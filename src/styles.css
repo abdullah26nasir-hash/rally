@@ -5,46 +5,47 @@
 @import "@fontsource/ibm-plex-mono/600.css";
 
 @theme {
-  /* Rally Brand Foundation v0.1: Turnstile Black / Ticket / Flare */
-  --color-paper: #F1EFE7;
-  --color-ink: #0B0B0A;
-  --color-biro: #FF4D22;
-  --color-biro-deep: #FF6B4A;  /* hover: lighter, keeps ink text AA on flare */
-  --color-biro-wash: #FBE7DF;
-  --color-highlighter: #FF4D22;
-  --color-stamp: #FF4D22;
-  --color-stamp-deep: #FF6B4A;
-  --color-graphite: #6E6A63;
-  --color-rule: #DDD8CE;
-  --color-card: #FAF8F3;
+  /* Rallycademy design.md: dark-first. Turnstile Black base, Ticket as text/objects, Flare accent */
+  --color-ink: #0B0B0A;          /* app background; text on Ticket/Flare */
+  --color-paper: #F1EFE7;        /* primary text on dark; receipt surface */
+  --color-flare: #FF4D22;        /* accent fill: CTA, active, focus ring on dark (ink text on it) */
+  --color-flare-deep: #FF6B4A;   /* flare hover: lighter, keeps ink text AA */
+  --color-flare-ink: #B23415;    /* flare as text/icon on Ticket surfaces only */
+  --color-flare-wash: #32150E;   /* accent surface: breakout card, your league row */
+  --color-newsprint: #B4B2AA;    /* secondary text on dark */
+  --color-ash: #85847D;          /* metadata on ink/surface-1/surface-2 only */
+  --color-surface-1: #121211;    /* Stand: cards */
+  --color-surface-2: #1A1A18;    /* Concrete: raised (sheets, menus, modals) */
+  --color-surface-3: #252522;    /* Floodlight Grey: selected/hover rows */
+  --color-hairline: rgba(241,239,231,0.14);
+  --color-card-edge: rgba(241,239,231,0.10);
+  --color-match: #5DDB8B;
+  --color-offside: #FF6868;
+  --color-pending: #EAB85C;
+  --color-info: #70A9FF;
 
   --font-display: "Archivo Black", "Arial Narrow", sans-serif;
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  --radius-control: 10px;
-  --radius-card: 16px;
+  --radius-control: 6px;
+  --radius-card: 8px;
 
   --shadow-sm: 0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08);
   --shadow-md: 0px 0px 0px 1px rgba(0,0,0,0.06), 0px 1px 1px -0.5px rgba(0,0,0,0.06), 0px 3px 3px -1.5px rgba(0,0,0,0.06), 0px 6px 6px -3px rgba(0,0,0,0.06), 0px 12px 12px -6px rgba(0,0,0,0.06), 0px 24px 24px -12px rgba(0,0,0,0.06);
-  --shadow-lg: 0 2.8px 2.2px rgba(0,0,0,0.034), 0 6.7px 5.3px rgba(0,0,0,0.048), 0 12.5px 10px rgba(0,0,0,0.06), 0 22.3px 17.9px rgba(0,0,0,0.072), 0 41.8px 33.4px rgba(0,0,0,0.086), 0 100px 80px rgba(0,0,0,0.12);
+  --shadow-lg: 0 1px 0 rgba(241,239,231,0.06) inset, 0 12px 32px rgba(0,0,0,0.45), 0 32px 64px rgba(0,0,0,0.35);
 
   --ease-out-soft: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 
-/* Brand AA rules: Flare fills carry Turnstile Black text; Flare TEXT uses the deepened AA tone (Guide: never color-only meaning, 4.5:1 floor) */
-@layer utilities {
-  .text-biro { color: #B23415; }
-  .text-stamp, .text-stamp-deep { color: #B23415; }
-}
 
 
 @layer base {
-  html { background: var(--color-paper); color: var(--color-ink); -webkit-text-size-adjust: 100%; }
+  html { background: var(--color-ink); color: var(--color-paper); -webkit-text-size-adjust: 100%; }
   body { font-family: var(--font-sans); font-size: 16px; line-height: 1.5; min-height: 100dvh; -webkit-font-smoothing: antialiased; }
-  :focus-visible { outline: 2px solid var(--color-biro); outline-offset: 2px; border-radius: 6px; }
+  :focus-visible { outline: 2px solid var(--color-flare); outline-offset: 2px; border-radius: 6px; }
   button { cursor: pointer; }
   [id] { scroll-margin-top: 80px; }
 }
@@ -55,9 +56,9 @@
   .press { transition: transform 160ms var(--ease-out-soft), background-color 160ms ease, color 160ms ease, box-shadow 160ms ease; }
   .press:active { transform: scale(0.97); }
   /* highlighter swipe: sits behind text, slightly uneven like a real pen */
-  .hl { background: linear-gradient(104deg, transparent 0.4em, var(--color-highlighter) 0.5em, var(--color-highlighter) calc(100% - 0.3em), transparent calc(100% - 0.2em)); background-size: 100% 62%; background-position: 0 72%; background-repeat: no-repeat; padding: 0 0.15em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .hl { background: linear-gradient(104deg, transparent 0.4em, var(--color-flare) 0.5em, var(--color-flare) calc(100% - 0.3em), transparent calc(100% - 0.2em)); background-size: 100% 62%; background-position: 0 72%; background-repeat: no-repeat; padding: 0 0.15em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
   .serrate-top { --s: 10px; -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--s) 100%; mask: conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/var(--s) 100%; }
-  .receipt-paper { background: #FFFFFF; background-image: repeating-linear-gradient(0deg, rgba(15,23,41,0.018) 0 1px, transparent 1px 3px); }
+  .receipt-paper { background: #F1EFE7; background-image: repeating-linear-gradient(0deg, rgba(15,23,41,0.018) 0 1px, transparent 1px 3px); }
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { scrollbar-width: none; }
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
@@ -94,7 +95,8 @@
   mask: linear-gradient(#000 0 0) content-box, radial-gradient(circle 3.5px, #0000 96%, #000 100%) -5px -5px / 10px 10px round;
 }
 
-/* Brand AA overrides - intentionally UNLAYERED so they beat Tailwind v4 native cascade layers */
-.bg-biro.text-white, .bg-stamp.text-white, .bg-biro-deep.text-white, .bg-stamp-deep.text-white { color: #0B0B0A; }
-.text-biro, .text-stamp, .text-stamp-deep { color: #B23415; }
-.bg-highlighter\/45 .text-graphite { color: #0B0B0A; }
+/* design.md AA overrides - intentionally UNLAYERED so they beat Tailwind v4 native cascade layers */
+.bg-flare, .bg-flare *, .bg-flare-deep, .bg-flare-deep * { color: #0B0B0A; }
+.surface-paper .text-flare, .receipt-paper .text-flare { color: #B23415; }
+.surface-3 .text-ash, .bg-flare-wash .text-ash { color: #B4B2AA; }
+.bg-flare\/45 .text-newsprint { color: #0B0B0A; }

@@ -13,7 +13,7 @@ export function Monogram({ player, size = 44, className }: { player: Player; siz
   const light = (hex: string) => { const n = parseInt(hex.slice(1), 16); return ((n >> 16) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000 > 150; };
   const numColor = light(a) ? '#0F1729' : light(b) ? b : '#FFFFFF';
   return (
-    <span aria-hidden className={cn('relative inline-grid place-items-center shrink-0 rounded-full bg-ink/[0.05]', className)} style={{ width: size, height: size }}>
+    <span aria-hidden className={cn('relative inline-grid place-items-center shrink-0 rounded-full bg-paper/[0.08]', className)} style={{ width: size, height: size }}>
       <svg viewBox="0 0 40 40" width={size * 0.82} height={size * 0.82}>
         <path d="M13 5 L8 7 L2 13 L6 19 L9 17 L9 36 L31 36 L31 17 L34 19 L38 13 L32 7 L27 5 C26 8 23.5 9.5 20 9.5 C16.5 9.5 14 8 13 5 Z" fill={a} stroke="rgba(15,23,41,.28)" strokeWidth="1" strokeLinejoin="round" />
         <path d="M13 5 C14 8 16.5 9.5 20 9.5 C23.5 9.5 26 8 27 5" fill="none" stroke={b} strokeWidth="2.2" />

@@ -31,3 +31,11 @@ Standards pass + preview-honesty copy.
 
 ## v4 (earlier)
 Every-button crawl (11 screens, ~100 controls), two league fixes, clean-code pass.
+
+## v6.0 - 25 Sep 2026 - Dark rebuild per design.md
+- Full dark-first apply of the Rallycademy design system (design.md v1): Turnstile Black base (#0B0B0A), Ticket text, Flare accents; all light-theme tokens replaced across every screen
+- New token set in styles.css (dark @theme, surfaces, hairlines, semantics), radius 8/6 per spec, unlayered AA overrides (Tailwind v4 cascade fix, codified in design.md §8)
+- Receipt IDs now issue RC- prefix (owner decision 25 Sep 2026); receipts issued before keep their stored R- numbers (immutability)
+- LeagueTable my-row highlight switched from alpha flare/45 to opaque Flare-Wash (axe contrast fix)
+- design.md updated with RC- decision + unlayered-override rule
+- Verified: a11y suite phone+desktop — only pre-existing 4-5px 320px scroll residuals remain (tracked since v5.7); buttons suite all green; visual checks Welcome/Scout/Leagues/List at mobile + desktop
