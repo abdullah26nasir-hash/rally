@@ -14,17 +14,17 @@ export function PlayerRow({ player, inList }: { player: Player; inList?: boolean
   const form = formLast3(player, LAST_COMPLETE_GW);
   return (
     <li>
-      <Link to={`/player/${player.id}`} className="group grid grid-cols-[44px_1fr_auto] sm:grid-cols-[44px_1fr_80px_72px_96px] items-center gap-3 sm:gap-4 px-3 sm:px-4 py-3 rounded-[12px] hover:bg-biro-wash/60 transition-colors">
+      <Link to={`/player/${player.id}`} className="group grid grid-cols-[44px_1fr_auto] sm:grid-cols-[44px_1fr_80px_72px_96px] items-center gap-3 sm:gap-4 px-3 sm:px-4 py-3 rounded-lg hover:bg-well transition-colors">
         <Monogram player={player} />
         <div className="min-w-0">
           <div className="flex items-center gap-2 min-w-0">
             <span className="font-semibold truncate">{player.name}</span>
-            {inList && <span className="inline-flex items-center gap-0.5 text-[12px] font-semibold text-biro shrink-0"><Check size={14} strokeWidth={3} aria-hidden />On your list</span>}
+            {inList && <span className="inline-flex items-center gap-0.5 text-[12px] font-semibold text-flare-ink shrink-0"><Check size={14} strokeWidth={3} aria-hidden />On your list</span>}
           </div>
           <div className="flex items-center gap-2 text-[14px] text-graphite min-w-0">
             <PosTag pos={player.position} /><span className="truncate">{club.name} · {player.age}</span>
           </div>
-          {!inList && earlyCallFor(now) > 1 && <div className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-biro-wash px-2 py-0.5 text-[12px] font-semibold text-biro">{fmtMult(earlyCallFor(now))} if you scout now</div>}
+          {!inList && earlyCallFor(now) > 1 && <div className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-flare-tint px-2 py-0.5 text-[12px] font-semibold text-flare-ink">{fmtMult(earlyCallFor(now))} if you scout now</div>}
         </div>
         <div className="hidden sm:block"><Last5 values={player.weeks.slice(-5).map((w) => w.points)} /></div>
         <div className="hidden sm:block text-right">
@@ -44,7 +44,7 @@ function Last5({ values }: { values: number[] }) {
   const max = 15;
   return (
     <span className="flex items-end gap-[3px] h-7" role="img" aria-label={`Last 5 gameweeks: ${values.join(', ')} points`}>
-      {values.map((v, i) => <span key={i} className={v >= 10 ? 'w-2 rounded-[2px] bg-ink' : 'w-2 rounded-[2px] bg-biro'} style={{ height: `${Math.max(8, Math.min(1, v / max) * 100)}%`, opacity: v === 0 ? 0.25 : 1 }} />)}
+      {values.map((v, i) => <span key={i} className={v >= 10 ? 'w-2 rounded-[2px] bg-ink' : 'w-2 rounded-[2px] bg-flare'} style={{ height: `${Math.max(8, Math.min(1, v / max) * 100)}%`, opacity: v === 0 ? 0.25 : 1 }} />)}
     </span>
   );
 }

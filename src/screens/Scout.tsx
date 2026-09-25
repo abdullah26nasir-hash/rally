@@ -55,28 +55,28 @@ export function Scout() {
       </PageTitle>
 
       {first && (
-        <div className="mb-4 rounded-[14px] bg-ink text-white p-4 flex gap-3 items-start anim-fade" role="note">
+        <div className="mb-4 rounded-lg bg-flare-tint border border-flare-ink p-4 flex gap-3 items-start anim-fade" role="note">
           <span className="display text-[28px] leading-none text-highlighter">1</span>
           <p className="text-[15px]">Start with <b>Hidden gems</b>: in-form players almost nobody has yet. Tap one to see his weeks, then scout him.</p>
         </div>
       )}
-      <div className="sticky top-14 lg:top-0 z-20 -mx-4 sm:-mx-6 lg:mx-0 px-4 sm:px-6 lg:px-0 py-3 bg-paper/90 backdrop-blur-md">
+      <div className="sticky top-14 lg:top-0 z-20 -mx-4 sm:-mx-6 lg:mx-0 px-4 sm:px-6 lg:px-0 py-3 bg-bg">
         <label className="relative block">
           <span className="sr-only">Search players or clubs</span>
           <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-graphite" aria-hidden />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search players or clubs" className="w-full h-12 pl-10 pr-11 rounded-[12px] bg-card shadow-sm text-[16px] placeholder:text-graphite focus:outline-2 focus:outline-biro" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search players or clubs" className="w-full h-12 pl-10 pr-11 rounded-md bg-surface-2 border border-pencil text-[16px] placeholder:text-pencil focus:outline-2 focus:outline-ink" />
           {q && <button onClick={() => setQ('')} aria-label="Clear search" className="absolute right-1 top-1/2 -translate-y-1/2 grid place-items-center h-11 w-11 text-graphite hover:text-ink"><X size={18} /></button>}
         </label>
         <div className="mt-3 flex gap-2 overflow-x-auto no-scrollbar" role="group" aria-label="Position">
           {POSITIONS.map((p) => (
-            <button key={p} onClick={() => setPos(p)} aria-pressed={pos === p} className={cn('press shrink-0 h-11 px-4 rounded-full text-[14px] font-semibold border', pos === p ? 'bg-ink text-white border-ink' : 'bg-card border-rule text-ink hover:border-ink/40')}>{p === 'All' ? 'All positions' : p}</button>
+            <button key={p} onClick={() => setPos(p)} aria-pressed={pos === p} className={cn('press shrink-0 h-11 px-4 rounded-full text-[14px] font-semibold border', pos === p ? 'bg-ink text-paper border-ink' : 'bg-well border-transparent text-graphite hover:text-ink')}>{p === 'All' ? 'All positions' : p}</button>
           ))}
         </div>
       </div>
 
-      <div className="mt-2 flex gap-1 overflow-x-auto no-scrollbar border-b border-rule" role="tablist" aria-label="Sort players">
+      <div className="mt-2 flex gap-1 overflow-x-auto no-scrollbar border-b border-hairline" role="tablist" aria-label="Sort players">
         {SORTS.map((s) => (
-          <button key={s.id} role="tab" aria-selected={sort === s.id} onClick={() => setSort(s.id)} className={cn('shrink-0 h-11 px-3 text-[15px] font-semibold border-b-2 -mb-px transition-colors', sort === s.id ? 'border-biro text-ink' : 'border-transparent text-graphite hover:text-ink')}>{s.label}</button>
+          <button key={s.id} role="tab" aria-selected={sort === s.id} onClick={() => setSort(s.id)} className={cn('shrink-0 h-11 px-3 text-[15px] font-semibold border-b-2 -mb-px transition-colors', sort === s.id ? 'border-flare text-ink' : 'border-transparent text-graphite hover:text-ink')}>{s.label}</button>
         ))}
       </div>
       <p className="mt-3 text-[14px] text-graphite">{SORTS.find((s) => s.id === sort)!.hint}</p>
@@ -87,10 +87,10 @@ export function Scout() {
       {list.length ? (
         <ul className="mt-1 -mx-3 sm:mx-0">{list.map((p) => <PlayerRow key={p.id} player={p} inList={onList.has(p.id)} />)}</ul>
       ) : (
-        <div className="mt-10 text-center py-12 bg-card rounded-[16px] shadow-sm">
+        <div className="mt-10 text-center py-12 bg-paper rounded-[16px] shadow-sm">
           <p className="display text-[26px]">{sort === 'following' && following.length === 0 ? 'No players followed yet' : 'No one matches that'}</p>
           <p className="mt-1 text-graphite">{sort === 'following' && following.length === 0 ? 'Open a player and tap Follow to start a private watchlist.' : 'Try another name or club, or clear the filters.'}</p>
-          <button onClick={() => { setQ(''); setPos('All'); setSort('rising'); }} className="mt-4 h-11 px-4 font-semibold text-biro hover:underline underline-offset-4">Clear filters</button>
+          <button onClick={() => { setQ(''); setPos('All'); setSort('rising'); }} className="mt-4 h-11 px-4 font-semibold text-flare-ink hover:underline underline-offset-4">Clear filters</button>
         </div>
       )}
       <p className="sm:hidden mt-4 text-[13px] text-graphite">"Scouts" is the share of Rallycademy players with him on their list, and the change since last week.</p>

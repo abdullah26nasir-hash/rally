@@ -7,14 +7,14 @@ export const Eyebrow = ({ children, className }: { children: ReactNode; classNam
 );
 
 export const Card = ({ children, className, as: As = 'section' }: { children: ReactNode; className?: string; as?: 'section' | 'div' | 'article' }) => (
-  <As className={cn('bg-card rounded-[16px] shadow-md', className)}>{children}</As>
+  <As className={cn('bg-paper rounded-lg border border-card-edge', className)}>{children}</As>
 );
 
 export function Delta({ value, suffix = '', className }: { value: number; suffix?: string; className?: string }) {
   if (Math.abs(value) < 0.05) return <span className={cn('text-graphite num', className)}>no change</span>;
   const up = value > 0;
   return (
-    <span className={cn('inline-flex items-center gap-0.5 num font-semibold', up ? 'text-biro' : 'text-stamp-deep', className)}>
+    <span className={cn('inline-flex items-center gap-0.5 num font-semibold', up ? 'text-match' : 'text-offside', className)}>
       {up ? <ArrowUp size={14} strokeWidth={2.6} aria-hidden /> : <ArrowDown size={14} strokeWidth={2.6} aria-hidden />}
       <span className="sr-only">{up ? 'up' : 'down'}</span>
       {Math.abs(value).toLocaleString('en-GB', { maximumFractionDigits: 1 })}{suffix}

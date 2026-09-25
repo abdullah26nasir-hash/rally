@@ -22,7 +22,7 @@ export function Start() {
     <div className="min-h-dvh flex flex-col">
       <header className="max-w-[640px] w-full mx-auto flex items-center justify-between px-5 h-16">
         {step > 0 ? <button onClick={() => setStep(step - 1)} className="inline-flex items-center gap-1.5 min-h-11 font-semibold text-graphite hover:text-ink"><ArrowLeft size={18} aria-hidden />Back</button> : <Wordmark />}
-        <div className="flex gap-1.5" role="img" aria-label={`Step ${step + 1} of 3`}>{[0, 1, 2].map((i) => <span key={i} className={cn('h-1.5 w-8 rounded-full', i <= step ? 'bg-biro' : 'bg-rule')} />)}</div>
+        <div className="flex gap-1.5" role="img" aria-label={`Step ${step + 1} of 3`}>{[0, 1, 2].map((i) => <span key={i} className={cn('h-1.5 w-8 rounded-full', i <= step ? 'bg-flare' : 'bg-rule')} />)}</div>
       </header>
       <main className="flex-1 max-w-[640px] w-full mx-auto px-5 pt-6 sm:pt-16 pb-10 flex flex-col">
         {step === 0 && (
@@ -30,7 +30,7 @@ export function Start() {
             <h1 className="display text-[48px] sm:text-[64px] leading-[0.9]">Every call you make gets your name on it.</h1>
             <p className="mt-3 text-[17px] text-ink/80">What should your receipts say?</p>
             <label className="mt-6 grid gap-1.5"><span className="text-[14px] font-medium">Scout name</span>
-              <input autoFocus value={name} onChange={(e) => setName(e.target.value.replace(/[^\w .-]/g, ''))} maxLength={20} placeholder="e.g. Abdullah" autoComplete="nickname" className="h-13 px-4 rounded-[12px] bg-card shadow-sm text-[18px] focus:outline-2 focus:outline-biro" /></label>
+              <input autoFocus value={name} onChange={(e) => setName(e.target.value.replace(/[^\w .-]/g, ''))} maxLength={20} placeholder="e.g. Abdullah" autoComplete="nickname" className="h-12 px-4 rounded-md bg-surface-2 border border-pencil text-[18px] focus:outline-2 focus:outline-ink" /></label>
             <p className="mt-3 text-[14px] text-graphite">No account needed in this preview. Your list stays on this device; shared leagues let mates join with a code from their own phones.</p>
             <div className="mt-auto pt-8 sm:mt-10 sm:pt-0"><Button size="lg" className="w-full" type="submit" disabled={!valid}>Continue</Button></div>
           </form>
@@ -38,8 +38,8 @@ export function Start() {
         {step === 1 && (
           <div className="flex-1 flex flex-col anim-fade">
             <h1 className="display text-[48px] sm:text-[64px] leading-[0.9]">The earlier you call it, the more it's worth.</h1>
-            <p className="mt-3 text-[17px] text-ink/80">When you scout a player, we stamp how many scouts already had him. That sets your early call for the whole season.</p>
-            <ul className="mt-6 bg-card rounded-[16px] shadow-md divide-y divide-rule">
+            <p className="mt-3 text-[17px] text-ink/80">When you scout a player, we flare how many scouts already had him. That sets your early call for the whole season.</p>
+            <ul className="mt-6 bg-paper rounded-lg border border-card-edge divide-y divide-hairline">
               {EARLY_CALL_TIERS.map((t) => <li key={t.label} className="flex items-center justify-between px-5 py-3.5"><span>{t.label}</span><span className="display text-[28px]">{t.multiplier === 3 ? <span className="hl">{fmtMult(t.multiplier)}</span> : fmtMult(t.multiplier)}</span></li>)}
             </ul>
             <div className="mt-auto pt-8 sm:mt-10 sm:pt-0"><Button size="lg" className="w-full" onClick={() => setStep(2)}>Got it</Button></div>
@@ -47,12 +47,12 @@ export function Start() {
         )}
         {step === 2 && (
           <div className="flex-1 flex flex-col anim-fade">
-            <h1 className="display text-[48px] sm:text-[64px] leading-[0.9]">Collect stamps. Climb the ladder.</h1>
-            <p className="mt-3 text-[17px] text-ink/80">Spot a player before the crowd, see his debut, watch him get called up: each one is a stamp for your book, and XP towards your scout level. Sunday watcher to head of recruitment.</p>
+            <h1 className="display text-[48px] sm:text-[64px] leading-[0.9]">Collect flares. Climb the ladder.</h1>
+            <p className="mt-3 text-[17px] text-ink/80">Spot a player before the crowd, see his debut, watch him get called up: each one is a flare for your book, and XP towards your scout level. Sunday watcher to head of recruitment.</p>
             <div tabIndex={0} role="region" aria-label="Stamps you can earn" className="mt-6 flex gap-3 overflow-x-auto no-scrollbar pb-2">
               {(['first-call', 'under-radar', 'debut', 'called-it'] as const).map((k) => <StampCard key={k} kind={k} locked size="sm" />)}
             </div>
-            <p className="mt-2 text-[14px] text-graphite">Your first stamp comes with your first call.</p>
+            <p className="mt-2 text-[14px] text-graphite">Your first flare comes with your first call.</p>
             <div className="mt-auto pt-8 sm:mt-10 sm:pt-0"><Button size="lg" className="w-full" onClick={() => { startOwn(name); nav('/scout?first=1'); }}>Make my first call</Button></div>
           </div>
         )}
@@ -85,10 +85,10 @@ export function Join() {
         <Wordmark />
         <h1 className="display text-[44px] mt-8 leading-[0.9]">You've been invited to a league</h1>
         <p className="mt-3 text-graphite">{code ? <>Code <span className="font-mono font-semibold text-ink">{code}</span>. One tap and you're in.</> : "This invite link looks broken. Ask whoever sent it for the league code."}</p>
-        {mode === 'new' && <label className="mt-5 grid gap-1 text-left text-[14px] font-medium">Scout name<input value={scoutName} onChange={(e) => setScoutName(e.target.value.replace(/[^\w .-]/g, ''))} maxLength={20} placeholder="e.g. Sam" className="h-12 px-3 rounded-[10px] bg-card border border-rule text-[16px]" /></label>}
+        {mode === 'new' && <label className="mt-5 grid gap-1 text-left text-[14px] font-medium">Scout name<input value={scoutName} onChange={(e) => setScoutName(e.target.value.replace(/[^\w .-]/g, ''))} maxLength={20} placeholder="e.g. Sam" className="h-12 px-3 rounded-md bg-surface-2 border border-pencil text-[16px]" /></label>}
         <p className="mt-3 text-[14px] text-graphite">Your league starts with an empty list. Scout your five after joining.</p>
         <Button size="lg" className="w-full mt-8" onClick={go} disabled={!code || busy || (mode === 'new' && scoutName.trim().length < 2)}>{busy ? 'Joining...' : 'Join league'}</Button>
-        {err && <p role="alert" className="mt-4 text-stamp-deep">{err}</p>}
+        {err && <p role="alert" className="mt-4 text-flare-ink">{err}</p>}
       </div>
     </div>
   );

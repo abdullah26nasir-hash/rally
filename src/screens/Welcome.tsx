@@ -41,7 +41,7 @@ export function Welcome() {
         </div>
       </section>
 
-      <section className="bg-card border-y border-rule">
+      <section className="bg-paper border-y border-hairline">
         <div className="max-w-[1180px] mx-auto px-5 sm:px-8 py-16 lg:py-20">
           <h2 className="display text-[40px] sm:text-[52px] max-w-[18ch]">One list. One swap a week. Your name on the call.</h2>
           <ol className="mt-10 grid md:grid-cols-3 gap-8 md:gap-10">
@@ -62,9 +62,9 @@ export function Welcome() {
 
       <section className="max-w-[1180px] mx-auto px-5 sm:px-8 py-16 lg:py-20">
         <h2 className="display text-[40px] sm:text-[52px] max-w-[18ch]">Five minutes on a Saturday morning.</h2>
-        <p className="mt-3 text-[18px] text-ink/80 max-w-[46ch]">Check your slip, make your one swap, collect your stamps. These are real screens from the sample season.</p>
-        <ul tabIndex={0} aria-label="App screens" className="focus-visible:outline-2 focus-visible:outline-biro mt-10 -mx-5 px-5 sm:mx-0 sm:px-0 flex sm:grid sm:grid-cols-3 gap-5 lg:gap-8 overflow-x-auto sm:overflow-visible no-scrollbar snap-x snap-mandatory scroll-px-5 pt-2 pb-8 -mb-6">
-          {[['week', 'This week', 'Your gameweek slip and how far clear you are of your mates.'], ['scout', 'Scout', 'Who is breaking out, who nobody has found yet.'], ['stamps', 'Stamp book', 'A stamp for every call that comes good. Your scout level rises with them.']].map(([k, t, d]) => (
+        <p className="mt-3 text-[18px] text-ink/80 max-w-[46ch]">Check your slip, make your one swap, collect your flares. These are real screens from the sample season.</p>
+        <ul tabIndex={0} aria-label="App screens" className="focus-visible:outline-2 focus-visible:outline-ink mt-10 -mx-5 px-5 sm:mx-0 sm:px-0 flex sm:grid sm:grid-cols-3 gap-5 lg:gap-8 overflow-x-auto sm:overflow-visible no-scrollbar snap-x snap-mandatory scroll-px-5 pt-2 pb-8 -mb-6">
+          {[['week', 'This week', 'Your gameweek slip and how far clear you are of your mates.'], ['scout', 'Scout', 'Who is breaking out, who nobody has found yet.'], ['flares', 'Stamp book', 'A flare for every call that comes good. Your scout level rises with them.']].map(([k, t, d]) => (
             <li key={k} className="snap-start shrink-0 w-[70vw] max-w-[300px] sm:w-auto sm:max-w-none">
               <div className="rounded-[28px] bg-ink p-2 shadow-md"><img src={`/screens/${k}.webp`} alt={`${t} screen from the sample season`} width={390} height={844} className="block w-full h-auto rounded-[21px]" /></div>
               <h3 className="display text-[26px] mt-4">{t}</h3>
@@ -79,13 +79,13 @@ export function Welcome() {
           <h2 className="display text-[40px] sm:text-[52px]">The earlier you call it, the more it's worth.</h2>
           <p className="mt-4 text-[18px] text-ink/80 max-w-[42ch]">Your early-call multiplier is locked the moment you scout a player, based on how many scouts had him. Pick him at 0.8% and every point he scores counts triple for you, all season.</p>
         </div>
-        <div className="bg-card rounded-[16px] shadow-md overflow-hidden">
+        <div className="bg-paper rounded-lg border border-card-edge overflow-hidden">
           <table className="w-full text-left">
             <caption className="sr-only">Early call multipliers</caption>
-            <thead><tr className="border-b border-rule text-[13px] font-mono text-graphite"><th className="font-normal px-5 py-3">When you scouted him</th><th className="font-normal px-5 py-3 text-right">His points count</th></tr></thead>
+            <thead><tr className="border-b border-hairline text-[13px] font-mono text-graphite"><th className="font-normal px-5 py-3">When you scouted him</th><th className="font-normal px-5 py-3 text-right">His points count</th></tr></thead>
             <tbody>
               {EARLY_CALL_TIERS.map((t) => (
-                <tr key={t.label} className="border-b last:border-0 border-rule">
+                <tr key={t.label} className="border-b last:border-0 border-hairline">
                   <td className="px-5 py-4">{t.label}</td>
                   <td className="px-5 py-4 text-right display text-[30px] num">{t.multiplier === 3 ? <span className="hl">{fmtMult(t.multiplier)}</span> : fmtMult(t.multiplier)}</td>
                 </tr>
@@ -95,7 +95,7 @@ export function Welcome() {
         </div>
       </section>
 
-      <footer className="max-w-[1180px] mx-auto px-5 sm:px-8 pb-12 text-[14px] text-graphite border-t border-rule pt-6 flex flex-col sm:flex-row gap-2 justify-between">
+      <footer className="max-w-[1180px] mx-auto px-5 sm:px-8 pb-12 text-[14px] text-graphite border-t border-hairline pt-6 flex flex-col sm:flex-row gap-2 justify-between">
         <span>Preview season: every player, club and result here is fictional.</span>
         <span>Rallycademy is free to play, all season.</span>
       </footer>

@@ -19,7 +19,7 @@ export function PlayerPage() {
   const p = playerById.get(id);
   const { picks, swaps, scout, swap, following, follow, unfollow } = useGame();
   const [swapOpen, setSwapOpen] = useState(false);
-  if (!p) return <div className="py-20 text-center"><h1 className="display text-[32px]">Player not found</h1><Link to="/scout" className="inline-flex mt-3 min-h-11 items-center text-biro font-semibold">Back to Scout</Link></div>;
+  if (!p) return <div className="py-20 text-center"><h1 className="display text-[32px]">Player not found</h1><Link to="/scout" className="inline-flex mt-3 min-h-11 items-center text-flare-ink font-semibold">Back to Scout</Link></div>;
 
   const club = clubOf(p);
   const now = ownershipNow(p);
@@ -80,8 +80,8 @@ export function PlayerPage() {
             </div>
           </Slip>
 
-          <div className="lg:hidden mt-5 flex items-center gap-4 rounded-[14px] bg-card shadow-sm p-4">
-            <div className="shrink-0"><div className="text-[13px] text-graphite">{mine ? 'Your early call' : mult > 1 ? 'Early call now' : 'No early bonus'}</div><div className="display text-[34px] text-biro num leading-none mt-0.5">{fmtMult(mine ? mine.multiplier : mult)}</div></div>
+          <div className="lg:hidden mt-5 flex items-center gap-4 rounded-[14px] bg-paper shadow-sm p-4">
+            <div className="shrink-0"><div className="text-[13px] text-graphite">{mine ? 'Your early call' : mult > 1 ? 'Early call now' : 'No early bonus'}</div><div className="display text-[34px] text-flare-ink num leading-none mt-0.5">{fmtMult(mine ? mine.multiplier : mult)}</div></div>
             <div className="flex-1 min-w-0 [&_button]:w-full">{action}</div>
           </div>
 
@@ -92,7 +92,7 @@ export function PlayerPage() {
                 <li key={w.gw} className="grid grid-cols-[46px_1fr_36px] items-center gap-3">
                   <span className="font-mono text-[13px] text-graphite">GW{w.gw}</span>
                   <div className="min-w-0">
-                    <div className="h-3 rounded-full bg-rule/70 overflow-hidden"><div className={cn('h-full rounded-full', w.moment ? 'bg-ink' : 'bg-biro')} style={{ width: `${(w.points / maxPts) * 100}%` }} /></div>
+                    <div className="h-3 rounded-full bg-rule/70 overflow-hidden"><div className={cn('h-full rounded-full', w.moment ? 'bg-ink' : 'bg-flare')} style={{ width: `${(w.points / maxPts) * 100}%` }} /></div>
                     <div className="mt-1 text-[13px] text-graphite truncate"><EventIcons w={w} /></div>
                   </div>
                   <span className="display text-[22px] num text-right">{w.points}</span>
@@ -107,13 +107,13 @@ export function PlayerPage() {
             <Eyebrow>Scouts with him</Eyebrow>
             <div className="mt-1 flex items-baseline gap-3"><span className="display text-[48px] num">{fmtPct(now)}</span><Delta value={now - prev} suffix="% this week" /></div>
             <OwnershipChart values={p.ownership} />
-            <div className="mt-4 rounded-[12px] bg-biro-wash px-4 py-3">
+            <div className="mt-4 rounded-lg bg-flare-tint px-4 py-3">
               <div className="text-[14px] text-ink/80">{mine ? 'Your early call, locked when you scouted him' : (mult > 1 ? 'Scout him now and every point counts' : 'Already widely scouted, so points count once. Early calls earn up to ×3.')}</div>
-              <div className="display text-[40px] text-biro num">{fmtMult(mine ? mine.multiplier : mult)}</div>
+              <div className="display text-[40px] text-flare-ink num">{fmtMult(mine ? mine.multiplier : mult)}</div>
             </div>
             <div className="mt-4 hidden lg:block">{action}</div>
           </Card>
-          <p className="text-[13px] text-graphite px-1">Points: {RULES.appearance.over60} for 60+ minutes, {RULES.goal[p.position]} a goal, {RULES.assist} an assist{RULES.cleanSheet[p.position] ? `, ${RULES.cleanSheet[p.position]} a clean sheet` : ''}, {RULES.moment} for a big moment. <Link to="/how" className="text-biro font-semibold hover:underline underline-offset-4">All rules</Link></p>
+          <p className="text-[13px] text-graphite px-1">Points: {RULES.appearance.over60} for 60+ minutes, {RULES.goal[p.position]} a goal, {RULES.assist} an assist{RULES.cleanSheet[p.position] ? `, ${RULES.cleanSheet[p.position]} a clean sheet` : ''}, {RULES.moment} for a big moment. <Link to="/how" className="text-flare-ink font-semibold hover:underline underline-offset-4">All rules</Link></p>
         </div>
       </div>
 
@@ -124,10 +124,10 @@ export function PlayerPage() {
             const clash = out.clubId !== p.clubId && picks.some((x) => x.playerId !== out.id && playerById.get(x.playerId)!.clubId === p.clubId);
             return (
               <li key={pk.playerId}>
-                <button disabled={clash} onClick={() => { const n = swap(out.id, p.id); setSwapOpen(false); if (n) nav(`/receipt/${p.id}?new=1`); }} className="press w-full flex items-center gap-3 p-3 rounded-[12px] bg-card shadow-sm text-left hover:bg-stamp/5 disabled:opacity-45">
+                <button disabled={clash} onClick={() => { const n = swap(out.id, p.id); setSwapOpen(false); if (n) nav(`/receipt/${p.id}?new=1`); }} className="press w-full flex items-center gap-3 p-3 rounded-lg bg-paper shadow-sm text-left hover:bg-flare/5 disabled:opacity-45">
                   <Monogram player={out} size={40} />
                   <span className="flex-1 min-w-0"><span className="block font-semibold truncate">{out.name}</span><span className="block text-[13px] text-graphite">{clash ? 'Club rule: keep one per club' : `Early call ${fmtMult(pk.multiplier)} is lost`}</span></span>
-                  <span className="text-[14px] font-semibold text-stamp-deep">Swap out</span>
+                  <span className="text-[14px] font-semibold text-flare-ink">Swap out</span>
                 </button>
               </li>
             );
@@ -138,14 +138,14 @@ export function PlayerPage() {
   );
 }
 
-const Note = ({ children }: { children: React.ReactNode }) => <p className="text-[15px] text-graphite border border-rule rounded-[12px] px-4 py-3 bg-paper">{children}</p>;
+const Note = ({ children }: { children: React.ReactNode }) => <p className="text-[15px] text-graphite border border-hairline rounded-lg px-4 py-3 bg-paper">{children}</p>;
 
 function OwnershipChart({ values }: { values: number[] }) {
   const w = 300, h = 90, max = Math.max(...values) * 1.1;
   const pts = values.map((v, i) => [(i / (values.length - 1)) * (w - 8) + 4, h - 16 - (v / max) * (h - 24)]);
   const d = pts.map((p, i) => `${i ? 'L' : 'M'}${p[0]},${p[1]}`).join(' ');
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="mt-3 w-full h-auto text-biro" role="img" aria-label={`Share of scouts by gameweek: ${values.map((v) => fmtPct(v)).join(', ')}`}>
+    <svg viewBox={`0 0 ${w} ${h}`} className="mt-3 w-full h-auto text-flare-ink" role="img" aria-label={`Share of scouts by gameweek: ${values.map((v) => fmtPct(v)).join(', ')}`}>
       <path d={`${d} L${pts[pts.length - 1][0]},${h - 16} L${pts[0][0]},${h - 16} Z`} fill="currentColor" opacity="0.08" />
       <path d={d} fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
       {values.map((_, i) => <text key={i} x={pts[i][0]} y={h - 2} fontSize="10" textAnchor={i === 0 ? 'start' : i === values.length - 1 ? 'end' : 'middle'} fill="#6E6A63" fontFamily="IBM Plex Mono">{i === 0 ? 'Start' : `GW${i}`}</text>)}

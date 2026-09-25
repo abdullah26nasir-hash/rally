@@ -51,8 +51,7 @@
 
 /* Brand AA rules: Flare fills carry Turnstile Black text; Flare TEXT uses the deepened AA tone (Guide: never color-only meaning, 4.5:1 floor) */
 @layer utilities {
-  .text-biro { color: #B23415; }
-  .text-stamp, .text-stamp-deep { color: #B23415; }
+  .text-flare { color: #B23415; }
 }
 
 
@@ -111,5 +110,11 @@
 
 /* Brand AA overrides - intentionally UNLAYERED so they beat Tailwind v4 native cascade layers */
 .bg-biro.text-white, .bg-stamp.text-white, .bg-biro-deep.text-white, .bg-stamp-deep.text-white { color: #0B0B0A; }
-.text-biro, .text-stamp, .text-stamp-deep { color: #B23415; }
+.text-flare { color: #B23415; }
 .bg-highlighter\/45 .text-graphite { color: #0B0B0A; }
+
+/* Receipt rule: metadata on receipt paper is ink at full strength, never grey/flare (design.md §5). */
+.receipt-paper .text-flare-ink { color: #0B0B0A; }
+
+/* 320px rule: inputs default to size=20 (min-content ~264px in the new body font) - let them shrink. */
+input, select, textarea { min-width: 0; }

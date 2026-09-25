@@ -63,14 +63,14 @@ export function ThisWeek() {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:gap-8">
       {/* gameweek pager */}
-      {mode === 'sample' && <div className="mb-4 flex items-center justify-between gap-3 rounded-[12px] bg-biro-wash px-4 py-2 text-[14px]"><span>You're trying the sample season.</span><Link to="/how" className="min-h-11 inline-flex items-center font-semibold text-biro shrink-0">Play your own</Link></div>}
+      {mode === 'sample' && <div className="mb-4 flex items-center justify-between gap-3 rounded-lg bg-flare-tint px-4 py-2 text-[14px]"><span>You're trying the sample season.</span><Link to="/how" className="min-h-11 inline-flex items-center font-semibold text-flare-ink shrink-0">Play your own</Link></div>}
       <div className="flex items-center justify-between gap-2">
-        <button onClick={() => setGw((g) => Math.max(1, g - 1))} aria-disabled={gw <= 1} className="press grid place-items-center h-11 w-11 rounded-full bg-card shadow-sm aria-disabled:opacity-40" aria-label="Previous gameweek"><ChevronLeft size={20} aria-hidden /></button>
+        <button onClick={() => setGw((g) => Math.max(1, g - 1))} aria-disabled={gw <= 1} className="press grid place-items-center h-11 w-11 rounded-full bg-paper shadow-sm aria-disabled:opacity-40" aria-label="Previous gameweek"><ChevronLeft size={20} aria-hidden /></button>
         <div className="text-center" aria-live="polite">
           <h1 className="display text-[26px] leading-none">Gameweek {gw}</h1>
           <div className="font-mono text-[12px] text-graphite mt-1">{upcoming ? `Deadline ${fmtDeadline(deadlineFor(gw))}` : gw === LAST_COMPLETE_GW ? 'Latest result' : 'Past result'}</div>
         </div>
-        <button onClick={() => setGw((g) => Math.min(NEXT_GW, g + 1))} aria-disabled={gw >= NEXT_GW} className="press grid place-items-center h-11 w-11 rounded-full bg-card shadow-sm aria-disabled:opacity-40" aria-label="Next gameweek"><ChevronRight size={20} aria-hidden /></button>
+        <button onClick={() => setGw((g) => Math.min(NEXT_GW, g + 1))} aria-disabled={gw >= NEXT_GW} className="press grid place-items-center h-11 w-11 rounded-full bg-paper shadow-sm aria-disabled:opacity-40" aria-label="Next gameweek"><ChevronRight size={20} aria-hidden /></button>
       </div>
 
       <div className="grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-6 lg:gap-8 items-start">
@@ -95,7 +95,7 @@ export function ThisWeek() {
                 const w = p.weeks.find((x) => x.gw === gw);
                 return (
                   <li key={pk.playerId}>
-                    <Link to={`/player/${p.id}`} className="grid grid-cols-[36px_1fr_auto] items-center gap-3 py-2 -mx-2 px-2 rounded-[8px] hover:bg-biro-wash/60">
+                    <Link to={`/player/${p.id}`} className="grid grid-cols-[36px_1fr_auto] items-center gap-3 py-2 -mx-2 px-2 rounded-[8px] hover:bg-well">
                       <Monogram player={p} size={36} />
                       <div className="min-w-0 font-sans">
                         <div className="font-semibold text-[15px] truncate">{p.name}</div>
@@ -122,7 +122,7 @@ export function ThisWeek() {
           <Card className="p-5 min-w-0">
             <LevelBar stamps={stamps} compact />
             <div tabIndex={0} role="region" aria-label="Recent stamps" className="mt-4 flex gap-3 overflow-x-auto focus-visible:outline-2 focus-visible:outline-biro no-scrollbar -mx-1 px-1 pb-1">{stamps.slice(0, 6).map((s) => <StampCard key={s.id} stamp={s} size="sm" />)}</div>
-            <Link to="/list#stamps" className="mt-2 inline-flex min-h-11 items-center text-[14px] font-semibold text-biro hover:underline underline-offset-4">Stamp book · {stamps.length} collected</Link>
+            <Link to="/list#stamps" className="mt-2 inline-flex min-h-11 items-center text-[14px] font-semibold text-flare-ink hover:underline underline-offset-4">Stamp book · {stamps.length} collected</Link>
           </Card>
           <Card className="p-5">
             <h2 className="display text-[26px]">Your five minutes</h2>
@@ -139,7 +139,7 @@ export function ThisWeek() {
         <div className="px-3 pt-3 pb-1"><h2 className="display text-[26px]">Breaking out</h2><p className="text-[14px] text-graphite">Biggest jump in scouts after GW{LAST_COMPLETE_GW}. Not on your list.</p></div>
         <ul className="grid grid-cols-[minmax(0,1fr)] sm:grid-cols-2">
           {breaking.map(({ p, rise }) => (
-            <li key={p.id}><Link to={`/player/${p.id}`} className="flex items-center gap-3 px-3 py-2.5 rounded-[12px] hover:bg-biro-wash/60">
+            <li key={p.id}><Link to={`/player/${p.id}`} className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-well">
               <Monogram player={p} size={40} />
               <div className="min-w-0 flex-1"><div className="font-semibold truncate text-[15px]">{p.name}</div><div className="text-[13px] text-graphite truncate">{clubOf(p).name} · {p.role}</div></div>
               <div className="text-right"><div className="font-mono text-[14px] font-semibold">{fmtPct(ownershipNow(p))}</div><Delta value={rise} suffix="%" className="text-[12px]" /></div>
@@ -159,9 +159,9 @@ const Row = ({ k, v }: { k: string; v: React.ReactNode }) => (
 function Todo({ done, label, to, action }: { done: boolean; label: string; to?: string; action?: string }) {
   return (
     <li className="flex items-center gap-3 min-h-11">
-      <span className={cn('grid place-items-center h-6 w-6 rounded-full shrink-0', done ? 'bg-biro text-white' : 'border-2 border-rule')}>{done && <Check size={14} strokeWidth={3} aria-hidden />}<span className="sr-only">{done ? 'Done:' : 'To do:'}</span></span>
+      <span className={cn('grid place-items-center h-6 w-6 rounded-full shrink-0', done ? 'bg-flare text-ink border border-ink' : 'border-2 border-hairline')}>{done && <Check size={14} strokeWidth={3} aria-hidden />}<span className="sr-only">{done ? 'Done:' : 'To do:'}</span></span>
       <span className={cn('flex-1', done && 'text-graphite')}>{label}</span>
-      {to && action && <Link to={to} className="text-[14px] font-semibold text-biro hover:underline underline-offset-4 min-h-11 min-w-11 justify-end inline-flex items-center">{action}</Link>}
+      {to && action && <Link to={to} className="text-[14px] font-semibold text-flare-ink hover:underline underline-offset-4 min-h-11 min-w-11 justify-end inline-flex items-center">{action}</Link>}
     </li>
   );
 }
@@ -169,7 +169,7 @@ function Todo({ done, label, to, action }: { done: boolean; label: string; to?: 
 function Slots({ count }: { count: number }) {
   return (
     <div className="mt-6 flex gap-2" role="img" aria-label={`${count} of ${MAX_PICKS} players scouted`}>
-      {Array.from({ length: MAX_PICKS }).map((_, i) => <span key={i} className={cn('h-2.5 flex-1 max-w-16 rounded-full', i < count ? 'bg-biro' : 'bg-rule')} />)}
+      {Array.from({ length: MAX_PICKS }).map((_, i) => <span key={i} className={cn('h-2.5 flex-1 max-w-16 rounded-full', i < count ? 'bg-flare' : 'bg-rule')} />)}
     </div>
   );
 }

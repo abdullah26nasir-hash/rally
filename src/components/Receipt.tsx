@@ -15,7 +15,7 @@ export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick
   const now = ownershipNow(p);
   const pts = pickPointsTotal(pick, p, LAST_COMPLETE_GW);
   const growth = now / Math.max(pick.ownershipAtPick, 0.1);
-  const stamp = fmtStamp(pick.scoutedAt);
+  const flare = fmtStamp(pick.scoutedAt);
   const pending = pick.gwFrom > LAST_COMPLETE_GW;
 
   return (
@@ -47,10 +47,10 @@ export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick
           )}
           <div className="mt-5 flex items-end justify-between gap-3">
             <Barcode seed={pick.receiptNo} />
-            <div className="shrink-0" style={{ transform: 'rotate(-6deg)' }}><div className={cn('border-[2.5px] border-stamp text-stamp rounded-md px-2.5 py-1.5 text-center leading-tight', animate && 'anim-stamp')} aria-label={`Scouted ${stamp.day} at ${stamp.time}`}>
+            <div className="shrink-0" style={{ transform: 'rotate(-6deg)' }}><div className={cn('border-[2.5px] border-flare text-flare rounded-md px-2.5 py-1.5 text-center leading-tight', animate && 'anim-flare')} aria-label={`Scouted ${flare.day} at ${flare.time}`}>
               <div className="text-[10px] font-semibold tracking-widest">SCOUTED</div>
-              <div className="text-[12px] font-semibold whitespace-nowrap">{stamp.day}</div>
-              <div className="display text-[22px]" style={{ fontFamily: 'var(--font-display)' }}>{stamp.time}</div>
+              <div className="text-[12px] font-semibold whitespace-nowrap">{flare.day}</div>
+              <div className="display text-[22px]" style={{ fontFamily: 'var(--font-display)' }}>{flare.time}</div>
             </div></div>
           </div>
           <div className="mt-4 text-center text-[10px] text-graphite tracking-wide">FREE TO PLAY · BRAGGING RIGHTS ONLY</div>

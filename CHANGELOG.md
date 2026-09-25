@@ -1,5 +1,13 @@
 # Rallycademy - Changelog
 
+## v6.2 (25 Sep 2026)
+Light brand application per design.md v2 ("printed matchday ephemera").
+- Full component sweep onto the v2 light tokens: Stub top band (inverted ink header, Ticket wordmark, Terrace tab pills), Ticket cards with card-edge borders and 8px radius, Terrace wells, Proof inputs (surface-2 bg, Pencil border, ink focus), Flare Tint for your-row highlight and callout panels, one-Flare-fill rule per screen, semantic deltas recolored (match/offside).
+- Buttons rebuilt to spec: primary flare fill with ink border (print-plate look), secondary ink border, ghost, ink variant; 6px radius, h-12 (44pt).
+- Receipt rule enforced: metadata on receipt paper renders in ink, never flare (axe color-contrast).
+- 320px rule: inputs/selects/textareas get min-width: 0 (new body font made default input min-content exceed small screens; was causing 2px sideways scroll on /leagues).
+- Verified: buttons 117/117, a11y 140/143 (3 known pre-existing 4-5px 320px residuals on start/player/swap-sheet), visuals on mobile/tablet/desktop, suites re-run against the deployed preview before production.
+
 ## v5.7 (25 Sep 2026)
 Renamed the app Rally -> Rallycademy.
 - Wordmark, page titles, meta, consent sheet, receipt, empty states and all user-facing copy now say Rallycademy; Receipt R mark kept (the R reads for Rallycademy).
