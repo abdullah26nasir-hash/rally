@@ -98,7 +98,7 @@ function Toggle({ label, on, set }: { label: string; on: boolean; set: (v: boole
   return (
     <button type="button" role="switch" aria-checked={on} onClick={() => set(!on)} className="flex items-center justify-between gap-4 min-h-11 text-left">
       <span className="text-[15px]">{label}</span>
-      <span className={'relative h-7 w-12 rounded-full transition-colors ' + (on ? 'bg-flare' : 'bg-ink/20')}><span className="absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition-transform" style={{ transform: on ? 'translateX(24px)' : 'translateX(4px)', transitionTimingFunction: 'cubic-bezier(.23,1,.32,1)' }} /></span>
+      <span className={'relative h-6 w-10 rounded-full transition-colors border ' + (on ? 'bg-ink border-ink' : 'bg-well border-pencil')}><span className="absolute top-[2px] left-[2px] h-[18px] w-[18px] rounded-full bg-paper border transition-transform" style={{ transform: on ? 'translateX(16px)' : 'translateX(0)', borderColor: on ? '#0B0B0A' : '#5C5B55', transitionTimingFunction: 'cubic-bezier(.23,1,.32,1)' }} /></span>
     </button>
   );
 }

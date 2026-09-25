@@ -1,5 +1,18 @@
 # Rallycademy - Changelog
 
+## v6.3 (25 Sep 2026)
+UI error-fix pass after owner review, audited against design.md v2 via the Opus design pipeline (v2.1 rules).
+- Stub rebuilt to spec: Receipt R + current screen title + WK/PREVIEW label (wordmark and stray flare dash removed from the band; wordmark bare everywhere).
+- Flare swipe highlights removed everywhere (key line is Flare Ink mono text; points are ink data-lg).
+- Consent: floating "Analytics settings" chip removed (it overlapped CTAs on every screen); settings now a row on the How screen; choice buttons equal-weight secondary, no Flare.
+- Stamp book tiles on palette (Ticket + ink border + Flare Ink number ring; locked = Stock dashed Pencil); rows scroll sideways with snap inside their card.
+- Scout position chips fit at 320px (24px pill inside a 44px control, wrap, never scroll); sort tab active underline ink.
+- Flare Tint callouts use card-edge borders; your-row "YOU" label ink; league form errors use Offside.
+- Player swap panel is Ticket not Flare Tint; multiplier ink data-lg; "No early bonus" Pencil.
+- Receipt toggle is an ink switch; destructive "Clear and start over" uses the ink Inverse variant.
+- Copy fix: "receipts, flares and leagues" -> "receipts, stamps and leagues" (rename casualty).
+- Suites on this build: buttons 117/117, a11y 141/143 (only the 2 known pre-existing 4px 320px residuals on player + swap sheet; the 5px start residual was fixed by the consent chip removal).
+
 ## v6.2 (25 Sep 2026)
 Light brand application per design.md v2 ("printed matchday ephemera").
 - Full component sweep onto the v2 light tokens: Stub top band (inverted ink header, Ticket wordmark, Terrace tab pills), Ticket cards with card-edge borders and 8px radius, Terrace wells, Proof inputs (surface-2 bg, Pencil border, ink focus), Flare Tint for your-row highlight and callout panels, one-Flare-fill rule per screen, semantic deltas recolored (match/offside).

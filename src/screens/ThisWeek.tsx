@@ -35,7 +35,7 @@ export function ThisWeek() {
         <p className="mt-2 text-graphite max-w-[52ch]">Your list starts scoring from Gameweek {NEXT_GW}. Everyone you scout before the deadline is stamped with today's numbers, so the quieter the name, the bigger your early call.</p>
         <Slots count={picks.length} />
         <Button size="lg" className="mt-6" onClick={() => nav('/scout')}>Scout {picks.length === 0 ? 'your first player' : 'the next one'}<ArrowRight size={18} aria-hidden /></Button>
-        {stamps.length > 0 && <div className="mt-10 min-w-0"><Card className="p-5 min-w-0"><LevelBar stamps={stamps} compact /><div tabIndex={0} role="region" aria-label="Recent stamps" className="mt-4 flex gap-3 overflow-x-auto focus-visible:outline-2 focus-visible:outline-biro no-scrollbar">{stamps.map((s) => <StampCard key={s.id} stamp={s} size="sm" />)}</div></Card></div>}
+        {stamps.length > 0 && <div className="mt-10 min-w-0"><Card className="p-5 min-w-0"><LevelBar stamps={stamps} compact /><div tabIndex={0} role="region" aria-label="Recent stamps" className="stamp-row mt-4">{stamps.map((s) => <StampCard key={s.id} stamp={s} size="sm" />)}</div></Card></div>}
       </div>
     );
   }
@@ -54,7 +54,6 @@ export function ThisWeek() {
   const past = history.filter((pk) => (pk.gwTo ?? 0) >= gw);
   const slip = past.length ? [...past, ...picks.filter((pk) => pk.gwFrom <= gw)] : picks;
   const mine = slip.map((pk) => ({ pk, p: playerById.get(pk.playerId)! })).map((m) => ({ ...m, pts: pickPointsForGw(m.pk, m.p, gw) }));
-  const best = Math.max(...mine.map((m) => m.pts));
   const onList = new Set(picks.map((p) => p.playerId));
   const breaking = PLAYERS.filter((p) => !onList.has(p.id)).map((p) => ({ p, rise: ownershipNow(p) - ownershipAt(p, LAST_COMPLETE_GW - 1) })).sort((a, b) => b.rise - a.rise).slice(0, 4);
   const left = swapsLeft(picks, swaps);
@@ -86,7 +85,7 @@ export function ThisWeek() {
             ) : (
               <div className="py-4 flex items-end justify-between gap-4">
                 <div><div className="text-graphite text-[11px] uppercase tracking-wide">Points</div><div className="display text-[88px] leading-[0.8] num" style={{ fontFamily: 'var(--font-display)' }}>{gwPts}</div></div>
-                <div className="text-right pb-1"><div className={cn('inline-block px-1', !rival.ahead ? '' : 'hl')}><span className="font-semibold text-[14px]">{rival.text}</span></div><div className="text-graphite mt-1">{lads ? lads.name : 'Mini-league'}</div></div>
+                <div className="text-right pb-1"><div><span className={rival.ahead ? 'receipt-keyline' : 'font-semibold text-[14px]'}>{rival.text}</span></div><div className="text-graphite mt-1">{lads ? lads.name : 'Mini-league'}</div></div>
               </div>
             )}
             <SlipRule />
@@ -101,7 +100,7 @@ export function ThisWeek() {
                         <div className="font-semibold text-[15px] truncate">{p.name}</div>
                         <div className="text-[13px] text-graphite truncate">{w && gw >= pk.gwFrom ? <EventIcons w={w} /> : gw < pk.gwFrom && !upcoming ? 'Not on your list yet' : `${clubOf(p).name} · ${fmtMult(pk.multiplier)}`}</div>
                       </div>
-                      <div className="text-right">{upcoming || gw < pk.gwFrom ? <span className="text-graphite">{fmtMult(pk.multiplier)}</span> : <><span className={cn('display text-[26px] num font-sans', pts === best && pts > 0 && 'hl')} style={{ fontFamily: 'var(--font-display)' }}>{pts}</span><div className="text-[11px] text-graphite">{w?.points ?? 0} {fmtMult(pk.multiplier)}</div></>}</div>
+                      <div className="text-right">{upcoming || gw < pk.gwFrom ? <span className="text-graphite">{fmtMult(pk.multiplier)}</span> : <><span className="display text-[26px] num font-sans" style={{ fontFamily: 'var(--font-display)' }}>{pts}</span><div className="text-[11px] text-graphite">{w?.points ?? 0} {fmtMult(pk.multiplier)}</div></>}</div>
                     </Link>
                   </li>
                 );
@@ -121,7 +120,7 @@ export function ThisWeek() {
         <div className="grid grid-cols-[minmax(0,1fr)] gap-6 min-w-0">
           <Card className="p-5 min-w-0">
             <LevelBar stamps={stamps} compact />
-            <div tabIndex={0} role="region" aria-label="Recent stamps" className="mt-4 flex gap-3 overflow-x-auto focus-visible:outline-2 focus-visible:outline-biro no-scrollbar -mx-1 px-1 pb-1">{stamps.slice(0, 6).map((s) => <StampCard key={s.id} stamp={s} size="sm" />)}</div>
+            <div tabIndex={0} role="region" aria-label="Recent stamps" className="stamp-row mt-4">{stamps.slice(0, 6).map((s) => <StampCard key={s.id} stamp={s} size="sm" />)}</div>
             <Link to="/list#stamps" className="mt-2 inline-flex min-h-11 items-center text-[14px] font-semibold text-flare-ink hover:underline underline-offset-4">Stamp book · {stamps.length} collected</Link>
           </Card>
           <Card className="p-5">

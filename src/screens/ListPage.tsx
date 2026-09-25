@@ -69,7 +69,7 @@ export function ListPage() {
             <div className="bg-paper rounded-lg border border-card-edge p-5"><LevelBar stamps={st} /></div>
             <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-5 justify-items-center sm:justify-items-start">
               {st.map((s) => <StampCard key={s.id} stamp={s} />)}
-              {missing.map((k) => <div key={k} className="grid gap-1.5 w-[140px]"><StampCard kind={k} locked /><p className="text-[13px] text-graphite leading-snug">{STAMP_INFO[k].rule}</p></div>)}
+              {missing.map((k) => <div key={k} className="grid gap-1.5 w-[76px]"><StampCard kind={k} locked /><p className="text-[13px] text-graphite leading-snug">{STAMP_INFO[k].rule}</p></div>)}
             </div>
           </div>); })()}
       </section>

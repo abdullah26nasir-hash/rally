@@ -33,9 +33,12 @@ export function How() {
           <Button variant="secondary" className="mt-4" onClick={() => (mode === 'sample' ? (reset(), nav('/start')) : setConfirm(true))}>{mode === 'sample' ? 'Start my own list' : 'Start over'}</Button>
         </Card>}
       </div>
-      <Sheet open={confirm} onOpenChange={setConfirm} title="Start over?" description="Your list, receipts, flares and leagues on this device will be cleared. This can't be undone.">
+      <div className="mt-10 border-t border-hairline pt-4">
+        <button className="inline-flex min-h-11 items-center text-[14px] text-graphite underline underline-offset-4 hover:text-ink" onClick={() => window.dispatchEvent(new Event('rally-open-consent-settings'))}>Analytics settings</button>
+      </div>
+      <Sheet open={confirm} onOpenChange={setConfirm} title="Start over?" description="Your list, receipts, stamps and leagues on this device will be cleared. This can't be undone.">
         <div className="grid gap-3 p-5 pt-2">
-          <Button className="bg-flare-ink hover:bg-flare-ink/90" onClick={() => { reset(); setConfirm(false); nav('/start'); }}>Clear and start over</Button>
+          <Button variant="ink" onClick={() => { reset(); setConfirm(false); nav('/start'); }}>Clear and start over</Button>
           <Button variant="secondary" onClick={() => setConfirm(false)}>Keep my season</Button>
         </div>
       </Sheet>

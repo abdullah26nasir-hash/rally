@@ -80,8 +80,8 @@ export function PlayerPage() {
             </div>
           </Slip>
 
-          <div className="lg:hidden mt-5 flex items-center gap-4 rounded-[14px] bg-paper shadow-sm p-4">
-            <div className="shrink-0"><div className="text-[13px] text-graphite">{mine ? 'Your early call' : mult > 1 ? 'Early call now' : 'No early bonus'}</div><div className="display text-[34px] text-flare-ink num leading-none mt-0.5">{fmtMult(mine ? mine.multiplier : mult)}</div></div>
+          <div className="lg:hidden mt-5 flex items-center gap-4 rounded-lg bg-paper border border-card-edge p-4">
+            <div className="shrink-0"><div className={cn('text-[13px]', !mine && mult <= 1 ? 'text-pencil' : 'text-graphite')}>{mine ? 'Your early call' : mult > 1 ? 'Early call now' : 'No early bonus'}</div><div className="display text-[34px] text-ink num leading-none mt-0.5">{fmtMult(mine ? mine.multiplier : mult)}</div></div>
             <div className="flex-1 min-w-0 [&_button]:w-full">{action}</div>
           </div>
 
@@ -107,7 +107,7 @@ export function PlayerPage() {
             <Eyebrow>Scouts with him</Eyebrow>
             <div className="mt-1 flex items-baseline gap-3"><span className="display text-[48px] num">{fmtPct(now)}</span><Delta value={now - prev} suffix="% this week" /></div>
             <OwnershipChart values={p.ownership} />
-            <div className="mt-4 rounded-lg bg-flare-tint px-4 py-3">
+            <div className="mt-4 rounded-lg bg-paper border border-card-edge px-4 py-3">
               <div className="text-[14px] text-ink/80">{mine ? 'Your early call, locked when you scouted him' : (mult > 1 ? 'Scout him now and every point counts' : 'Already widely scouted, so points count once. Early calls earn up to ×3.')}</div>
               <div className="display text-[40px] text-flare-ink num">{fmtMult(mine ? mine.multiplier : mult)}</div>
             </div>

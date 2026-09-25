@@ -11,8 +11,14 @@ const NAV = [
   { to: '/leagues', label: 'Leagues', icon: Trophy },
 ];
 
+const TITLES: Array<[RegExp, string]> = [
+  [/^\/$/, 'This week'], [/^\/scout/, 'Scout'], [/^\/list/, 'Your list'], [/^\/leagues/, 'Leagues'],
+  [/^\/how/, 'How scoring works'], [/^\/start/, 'Get started'], [/^\/player/, 'Scouting report'], [/^\/receipt/, 'Receipt'], [/^\/join/, 'Join league'],
+];
+
 export function Shell() {
   const { pathname } = useLocation();
+  const title = (TITLES.find(([re]) => re.test(pathname)) || [])[1] || 'This week';
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   return (
     <div className="min-h-dvh lg:grid lg:grid-cols-[232px_1fr]">
@@ -37,8 +43,11 @@ export function Shell() {
         {/* mobile top bar */}
         <header className="lg:hidden sticky top-0 z-30 bg-stub text-paper pt-safe px-safe">
           <div className="flex items-center justify-between h-14 px-4">
-            <Wordmark />
-            <NavLink to="/how" className="inline-flex min-h-11 items-center" aria-label="Preview season. How scoring works"><PreviewTag compact onStub /></NavLink>
+            <NavLink to="/" className="flex items-center gap-2.5 min-h-11 -ml-1 px-1" aria-label="Rallycademy home">
+              <svg viewBox="0 0 64 64" width="24" height="24" aria-hidden="true"><path fill="currentColor" fillRule="evenodd" clipRule="evenodd" d="M10 8H33C45.1 8 52 14.4 52 24.8C52 32.7 47.7 38 40.6 40.6L54 56H41.4L30.6 42.7H24V52H23V56H20V52H18V56H15V52H13V56H10V8ZM24 18V31H32.5C37.4 31 40 28.8 40 24.5C40 20.3 37.3 18 32.5 18H24Z"/></svg>
+              <span className="font-semibold text-[16px]">{title}</span>
+            </NavLink>
+            <NavLink to="/how" className="inline-flex min-h-11 items-center font-mono text-[11px] tracking-[0.06em] uppercase text-paper/75" aria-label="Preview season. How scoring works">WK 6 · Preview</NavLink>
           </div>
         </header>
         <main id="main" tabIndex={-1} className="outline-none flex-1 w-full max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-10 pt-5 lg:pt-10 pb-28 lg:pb-16">
@@ -70,7 +79,6 @@ export function Wordmark() {
         <svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><path fill="currentColor" fillRule="evenodd" clipRule="evenodd" d="M10 8H33C45.1 8 52 14.4 52 24.8C52 32.7 47.7 38 40.6 40.6L54 56H41.4L30.6 42.7H24V52H23V56H20V52H18V56H15V52H13V56H10V8ZM24 18V31H32.5C37.4 31 40 28.8 40 24.5C40 20.3 37.3 18 32.5 18H24Z"/></svg>
         <span className="display text-[clamp(16px,5vw,24px)] leading-none tracking-tight whitespace-nowrap">RALLYCADEMY</span>
       </span>
-      <span className="h-2 w-6 rounded-sm bg-highlighter mt-2" aria-hidden />
     </NavLink>
   );
 }

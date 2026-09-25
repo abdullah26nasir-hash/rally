@@ -37,7 +37,7 @@ export function Leagues() {
             return (
               <Link key={l.id} to={`/leagues/${l.id}`} className="block min-w-0 bg-paper rounded-lg border border-card-edge p-5 hover:bg-well transition-colors">
                 <div className="flex items-center gap-4">
-                  <span className="grid place-items-center h-11 w-11 rounded-full bg-flare-tint text-flare-ink"><Users size={20} aria-hidden /></span>
+                  <span className="grid place-items-center h-11 w-11 rounded-full bg-flare-tint text-ink"><Users size={20} aria-hidden /></span>
                   <div className="flex-1 min-w-0"><div className="font-semibold truncate">{l.name}</div><div className="text-[14px] text-graphite">{l.shared ? 'Shared league' : `${ids.length} ${ids.length === 1 ? 'member' : 'members'} · on this device`} · code <span className="font-mono">{l.code}</span></div></div>
                   <div className="text-right"><div className="display text-[32px] num">{!l.shared && ids.length > 1 && scoring ? ordinal(tab.indexOf(total) + 1) : '–'}</div><div className="text-[12px] text-graphite">{l.shared ? 'open table' : ids.length > 1 ? `of ${ids.length}` : 'waiting for mates'}</div></div>
                 </div>
@@ -54,7 +54,7 @@ export function Leagues() {
             <form className="mt-3 grid gap-3" onSubmit={async (e) => { e.preventDefault(); if (!name.trim() || busy) return; setBusy(true); setCreateErr(''); try { const remote = await createSharedLeague(name, scout, picks, history); const l = localLeague(remote); saveSharedLeague(l); track('league_created'); setName(''); nav(`/leagues/${l.id}`); } catch (x) { setCreateErr(x instanceof Error ? x.message : 'Could not create league.'); } finally { setBusy(false); } }}>
               <label className="grid gap-1.5"><span className="text-[14px] font-medium">League name</span>
                 <input value={name} onChange={(e) => setName(e.target.value)} maxLength={40} placeholder="e.g. Five-a-side Tuesdays" className="h-12 px-3.5 rounded-md bg-surface-2 border border-pencil text-[16px] focus:outline-2 focus:outline-ink" /></label>
-              {createErr && <p role="alert" className="text-[14px] text-flare-ink">{createErr}</p>}
+              {createErr && <p role="alert" className="text-[14px] text-offside">{createErr}</p>}
               <Button type="submit" disabled={!name.trim() || busy}>{busy ? 'Creating...' : 'Create league'}</Button>
             </form>
           </Card>
@@ -63,7 +63,7 @@ export function Leagues() {
             <form className="mt-3 grid gap-3" onSubmit={async (e) => { e.preventDefault(); if (busy) return; setBusy(true); setErr(''); try { if (code === 'LADS26') { const l = useGame.getState().joinLeague(code); if (l) { nav(`/leagues/${l.id}`); return; } } const { league } = await joinSharedLeague(code, scout, picks, history); const l = localLeague(league); saveSharedLeague(l); track('league_joined'); nav(`/leagues/${l.id}`); } catch (x) { setErr(x instanceof Error ? x.message : 'Could not join league.'); } finally { setBusy(false); } }}>
               <label className="grid gap-1.5"><span className="text-[14px] font-medium">League code</span>
                 <input value={code} onChange={(e) => { setCode(e.target.value.toUpperCase()); setErr(''); }} maxLength={6} placeholder="6 characters" aria-invalid={!!err} aria-describedby={err ? 'join-err' : undefined} className={cn('h-12 px-3.5 rounded-md bg-surface-2 border text-[16px] font-mono tracking-widest uppercase focus:outline-2 focus:outline-ink', err ? 'border-offside' : 'border-pencil')} /></label>
-              {err && <p id="join-err" className="text-[14px] text-flare-ink">{err}</p>}
+              {err && <p id="join-err" className="text-[14px] text-offside">{err}</p>}
               <Button type="submit" variant="secondary" disabled={code.length < 6 || busy}>{busy ? 'Joining...' : 'Join league'}</Button>
             </form>
           </Card>
@@ -89,7 +89,7 @@ export function LeagueDetail() {
     (async () => { try { await syncStandings(lg.code, scout, picks, history); const data = await getStandings(lg.code); if (active) setRemoteRows(data.members); } catch (e) { if (active) setRemoteErr(e instanceof Error ? e.message : 'Could not load league.'); } })();
     return () => { active = false; };
   }, [lg?.code, lg?.shared, scout, picks, history]);
-  if (!lg) return <div className="py-20 text-center"><h1 className="display text-[32px]">League not found</h1><Link to="/leagues" className="inline-flex mt-3 min-h-11 items-center text-flare-ink font-semibold">All leagues</Link></div>;
+  if (!lg) return <div className="py-20 text-center"><h1 className="display text-[32px]">League not found</h1><Link to="/leagues" className="inline-flex mt-3 min-h-11 items-center text-ink font-semibold">All leagues</Link></div>;
   const rows = (lg.shared ? (remoteRows || []).map((r, i) => ({ id: `member-${i}`, name: r.name, handle: r.you ? 'you' : 'scout', gw: r.gw, total: r.total, you: r.you })) : lg.members.map((m) => {
     if (m === 'you') return { id: 'you', name: 'You', handle: 'you', gw: entryGw(every, LAST_COMPLETE_GW), total: entryTotal(every), you: true };
     const r = RIVAL_ENTRIES.find((x) => x.id === m)!;
@@ -108,12 +108,12 @@ export function LeagueDetail() {
         <p role="status" className="sr-only">{copied ? 'Invite link copied' : ''}</p>
         {copyFail && <p className="text-[14px] text-graphite sm:max-w-[300px]">Couldn't copy on this browser. Send this instead: <span className="font-mono text-ink select-all break-all">{location.origin}/join/{lg.code}</span></p>}
       </div>
-      {remoteErr && <p role="alert" className="mb-4 text-flare-ink">{remoteErr}</p>}
+      {remoteErr && <p role="alert" className="mb-4 text-offside">{remoteErr}</p>}
       {lg.shared && !remoteRows && !remoteErr && <p role="status" className="mb-4 text-graphite">Loading shared table...</p>}
       {rows.length > 1 && (() => { const i = rows.findIndex((r) => r.you); const above = rows[i - 1]; const below = rows[i + 1]; return (
         <div className="mb-5 grid sm:grid-cols-2 gap-3">
-          <div className="rounded-lg bg-flare-tint border border-flare-ink p-5">
-            <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-flare-ink">{above ? 'The one to catch' : 'Top of the table'}</div>
+          <div className="rounded-lg bg-flare-tint border border-card-edge p-5">
+            <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-ink">{above ? 'The one to catch' : 'Top of the table'}</div>
             <div className="display text-[32px] mt-1 leading-none">{above ? `${above.name}, ${above.total - rows[i].total} pts ahead` : `You lead by ${rows[i].total - (below?.total ?? 0)} pts`}</div>
             <p className="mt-2 text-[14px] text-graphite">{above ? `A good week from your five and you pass ${above.name}.` : `${below?.name} is the one behind you.`}</p>
           </div>
@@ -130,7 +130,7 @@ export function LeagueDetail() {
             {rows.map((r, i) => (
               <tr key={r.id} className={cn('border-b last:border-0 border-hairline', r.you && 'bg-flare-tint shadow-[inset_2px_0_0_#FF4D22]')}>
                 <td className="pl-4 sm:pl-5 py-3.5"><div className="display text-[24px] num leading-none">{i + 1}</div>{moved(r.id, i) !== 0 && <Delta value={moved(r.id, i)} className="text-[11px]" />}</td>
-                <td className="py-3.5"><div className="font-semibold">{r.name}{r.you && <span className="ml-1.5 font-mono text-[11px] uppercase tracking-[0.06em] text-flare-ink">You</span>}<span className="sr-only">{r.you ? ' (you)' : ''}</span></div><div className="text-[13px] text-graphite font-mono">@{r.handle}</div></td>
+                <td className="py-3.5"><div className="font-semibold">{r.name}{r.you && <span className="ml-1.5 font-mono text-[11px] uppercase tracking-[0.06em] text-ink">You</span>}<span className="sr-only">{r.you ? ' (you)' : ''}</span></div><div className="text-[13px] text-graphite font-mono">@{r.handle}</div></td>
                 <td className="py-3.5 text-right font-mono num">{r.gw}</td>
                 <td className="pr-4 sm:pr-5 py-3.5 text-right display text-[26px] num">{r.total}</td>
               </tr>

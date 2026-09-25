@@ -41,7 +41,7 @@ export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick
           </div>
           <Dash />
           {!pending && growth >= 2 ? (
-            <p className="text-[13px]"><span className="hl font-semibold">{Math.round(growth)}× more scouts</span> have him now than when you called it.</p>
+            <p className="text-[13px]"><span className="font-semibold text-flare-ink">{Math.round(growth)}× more scouts</span> have him now than when you called it.</p>
           ) : (
             <p className="text-[13px] text-graphite">Kept on file. If he breaks out, this is your proof.</p>
           )}

@@ -55,8 +55,8 @@ export function Scout() {
       </PageTitle>
 
       {first && (
-        <div className="mb-4 rounded-lg bg-flare-tint border border-flare-ink p-4 flex gap-3 items-start anim-fade" role="note">
-          <span className="display text-[28px] leading-none text-highlighter">1</span>
+        <div className="mb-4 rounded-lg bg-flare-tint border border-card-edge p-4 flex gap-3 items-start anim-fade" role="note">
+          <span className="display text-[28px] leading-none text-ink">1</span>
           <p className="text-[15px]">Start with <b>Hidden gems</b>: in-form players almost nobody has yet. Tap one to see his weeks, then scout him.</p>
         </div>
       )}
@@ -67,16 +67,16 @@ export function Scout() {
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search players or clubs" className="w-full h-12 pl-10 pr-11 rounded-md bg-surface-2 border border-pencil text-[16px] placeholder:text-pencil focus:outline-2 focus:outline-ink" />
           {q && <button onClick={() => setQ('')} aria-label="Clear search" className="absolute right-1 top-1/2 -translate-y-1/2 grid place-items-center h-11 w-11 text-graphite hover:text-ink"><X size={18} /></button>}
         </label>
-        <div className="mt-3 flex gap-2 overflow-x-auto no-scrollbar" role="group" aria-label="Position">
+        <div className="mt-3 flex flex-wrap gap-x-1" role="group" aria-label="Position">
           {POSITIONS.map((p) => (
-            <button key={p} onClick={() => setPos(p)} aria-pressed={pos === p} className={cn('press shrink-0 h-11 px-4 rounded-full text-[14px] font-semibold border', pos === p ? 'bg-ink text-paper border-ink' : 'bg-well border-transparent text-graphite hover:text-ink')}>{p === 'All' ? 'All positions' : p}</button>
+            <button key={p} onClick={() => setPos(p)} aria-pressed={pos === p} className="press shrink-0 h-11 inline-flex items-center"><span className={cn('h-6 min-w-11 px-2.5 rounded-full text-[12px] font-semibold uppercase tracking-[0.05em] inline-flex items-center justify-center', pos === p ? 'bg-ink text-paper' : 'bg-well text-graphite hover:text-ink')}>{p}</span></button>
           ))}
         </div>
       </div>
 
       <div className="mt-2 flex gap-1 overflow-x-auto no-scrollbar border-b border-hairline" role="tablist" aria-label="Sort players">
         {SORTS.map((s) => (
-          <button key={s.id} role="tab" aria-selected={sort === s.id} onClick={() => setSort(s.id)} className={cn('shrink-0 h-11 px-3 text-[15px] font-semibold border-b-2 -mb-px transition-colors', sort === s.id ? 'border-flare text-ink' : 'border-transparent text-graphite hover:text-ink')}>{s.label}</button>
+          <button key={s.id} role="tab" aria-selected={sort === s.id} onClick={() => setSort(s.id)} className={cn('shrink-0 h-11 px-3 text-[15px] font-semibold border-b-2 -mb-px transition-colors', sort === s.id ? 'border-ink text-ink' : 'border-transparent text-graphite hover:text-ink')}>{s.label}</button>
         ))}
       </div>
       <p className="mt-3 text-[14px] text-graphite">{SORTS.find((s) => s.id === sort)!.hint}</p>
