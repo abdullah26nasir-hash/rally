@@ -1,4 +1,5 @@
 import { pageview } from './lib/analytics';
+import { AnalyticsConsent } from './components/AnalyticsConsent';
 import { useEffect, useRef } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { useGame } from './store';
@@ -18,6 +19,7 @@ export default function App() {
   return (
     <>
     <RouteFocus />
+    <AnalyticsConsent />
     <Routes>
       {mode === 'new' && <Route path="/" element={<Welcome />} />}
       <Route path="/start" element={<Start />} />

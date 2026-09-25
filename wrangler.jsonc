@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "rally-t9w3n6",
+  "compatibility_date": "2026-09-25",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "rally-leagues",
+      "database_id": "663fccbb-7470-4e0f-be2d-965bb6cbc66b",
+      "preview_database_id": "DB"
+    }
+  ]
+}

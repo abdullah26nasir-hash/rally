@@ -57,4 +57,5 @@ export interface League {
   members: string[]; // ScoutEntry ids
   createdAt: string;
   kind: 'private' | 'global';
+  shared?: boolean;
 }

@@ -8,6 +8,7 @@ const axeSrc = fs.readFileSync(new URL('../node_modules/axe-core/axe.min.js', im
 
 export async function sample(p) {
   await p.goto(BASE + '/', W); await p.evaluate(() => localStorage.clear()); await p.reload(W);
+  const reject = p.getByRole('button', { name: 'No thanks' }); if (await reject.isVisible().catch(() => false)) await reject.click();
   await p.getByRole('button', { name: 'Try a sample season' }).click(); await p.waitForTimeout(300);
 }
 export async function axe(p) {

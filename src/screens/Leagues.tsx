@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Users } from 'lucide-react';
 import { useGame } from '../store';
@@ -9,13 +9,16 @@ import { Card, Delta, PageTitle } from '../components/bits';
 import { Button } from '../components/Button';
 import { cn } from '../lib/cn';
 import { track } from '../lib/analytics';
+import { createSharedLeague, joinSharedLeague, localLeague, getStandings, syncStandings, type Member } from '../lib/leagues';
 
 export function Leagues() {
-  const { picks, history, leagues, createLeague, joinLeague } = useGame();
+  const { picks, history, leagues, name: scout, saveSharedLeague } = useGame();
   const nav = useNavigate();
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [err, setErr] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [createErr, setCreateErr] = useState('');
   const total = entryTotal([...picks, ...history]);
   const scoring = picks.some((p) => p.gwFrom <= LAST_COMPLETE_GW);
 
@@ -30,37 +33,38 @@ export function Leagues() {
           </Card>
           {leagues.map((l) => {
             const ids = l.members;
-            const tab = ids.map((m) => (m === 'you' ? total : entryTotal(RIVAL_ENTRIES.find((r) => r.id === m)!.picks))).sort((a, b) => b - a);
+            const tab = ids.map((m) => (m === 'you' ? total : entryTotal(RIVAL_ENTRIES.find((r) => r.id === m)?.picks || []))).sort((a, b) => b - a);
             return (
               <Link key={l.id} to={`/leagues/${l.id}`} className="block bg-card rounded-[16px] shadow-md p-5 hover:bg-biro-wash/40 transition-colors">
                 <div className="flex items-center gap-4">
                   <span className="grid place-items-center h-11 w-11 rounded-full bg-biro-wash text-biro"><Users size={20} aria-hidden /></span>
-                  <div className="flex-1 min-w-0"><div className="font-semibold truncate">{l.name}</div><div className="text-[14px] text-graphite">{ids.length} {ids.length === 1 ? 'member' : 'members'} · code <span className="font-mono">{l.code}</span></div></div>
-                  <div className="text-right"><div className="display text-[32px] num">{ids.length > 1 && scoring ? ordinal(tab.indexOf(total) + 1) : '–'}</div><div className="text-[12px] text-graphite">{ids.length > 1 ? `of ${ids.length}` : 'waiting for mates'}</div></div>
+                  <div className="flex-1 min-w-0"><div className="font-semibold truncate">{l.name}</div><div className="text-[14px] text-graphite">{l.shared ? 'Shared league' : `${ids.length} ${ids.length === 1 ? 'member' : 'members'} · on this device`} · code <span className="font-mono">{l.code}</span></div></div>
+                  <div className="text-right"><div className="display text-[32px] num">{!l.shared && ids.length > 1 && scoring ? ordinal(tab.indexOf(total) + 1) : '–'}</div><div className="text-[12px] text-graphite">{l.shared ? 'open table' : ids.length > 1 ? `of ${ids.length}` : 'waiting for mates'}</div></div>
                 </div>
               </Link>
             );
           })}
-          {!leagues.length && <p className="text-graphite text-[15px] px-1">No private leagues yet. Start one on the right, or join with a code. (Try <span className="font-mono">LADS26</span> for the demo league.)</p>}
-          <p className="text-[14px] text-graphite px-1">Preview: leagues are on this device only. Mates can't join from their own phones yet.</p>
+          {!leagues.length && <p className="text-graphite text-[15px] px-1">No private leagues yet. Start one below, or join with a code. (Try <span className="font-mono">LADS26</span> for the demo league.)</p>}
+          <p className="text-[14px] text-graphite px-1">Shared leagues let mates join from their own phones. Your list still stays on this device; clearing browser storage loses access to your leagues. Scores are a preview, not verified identities.</p>
         </div>
 
         <div className="grid gap-4">
           <Card className="p-5">
             <h2 className="display text-[26px]">Start a league</h2>
-            <form className="mt-3 grid gap-3" onSubmit={(e) => { e.preventDefault(); if (!name.trim()) return; const l = createLeague(name); setName(''); nav(`/leagues/${l.id}`); }}>
+            <form className="mt-3 grid gap-3" onSubmit={async (e) => { e.preventDefault(); if (!name.trim() || busy) return; setBusy(true); setCreateErr(''); try { const remote = await createSharedLeague(name, scout, picks, history); const l = localLeague(remote); saveSharedLeague(l); track('league_created'); setName(''); nav(`/leagues/${l.id}`); } catch (x) { setCreateErr(x instanceof Error ? x.message : 'Could not create league.'); } finally { setBusy(false); } }}>
               <label className="grid gap-1.5"><span className="text-[14px] font-medium">League name</span>
                 <input value={name} onChange={(e) => setName(e.target.value)} maxLength={40} placeholder="e.g. Five-a-side Tuesdays" className="h-12 px-3.5 rounded-[10px] bg-paper border border-rule text-[16px] focus:outline-2 focus:outline-biro" /></label>
-              <Button type="submit" disabled={!name.trim()}>Create league</Button>
+              {createErr && <p role="alert" className="text-[14px] text-stamp-deep">{createErr}</p>}
+              <Button type="submit" disabled={!name.trim() || busy}>{busy ? 'Creating...' : 'Create league'}</Button>
             </form>
           </Card>
           <Card className="p-5">
             <h2 className="display text-[26px]">Join with a code</h2>
-            <form className="mt-3 grid gap-3" onSubmit={(e) => { e.preventDefault(); const l = joinLeague(code); if (l) nav(`/leagues/${l.id}`); else setErr("We couldn't find a league with that code. Check it with whoever sent it."); }}>
+            <form className="mt-3 grid gap-3" onSubmit={async (e) => { e.preventDefault(); if (busy) return; setBusy(true); setErr(''); try { if (code === 'LADS26') { const l = useGame.getState().joinLeague(code); if (l) { nav(`/leagues/${l.id}`); return; } } const { league } = await joinSharedLeague(code, scout, picks, history); const l = localLeague(league); saveSharedLeague(l); track('league_joined'); nav(`/leagues/${l.id}`); } catch (x) { setErr(x instanceof Error ? x.message : 'Could not join league.'); } finally { setBusy(false); } }}>
               <label className="grid gap-1.5"><span className="text-[14px] font-medium">League code</span>
                 <input value={code} onChange={(e) => { setCode(e.target.value.toUpperCase()); setErr(''); }} maxLength={6} placeholder="6 characters" aria-invalid={!!err} aria-describedby={err ? 'join-err' : undefined} className={cn('h-12 px-3.5 rounded-[10px] bg-paper border text-[16px] font-mono tracking-widest uppercase focus:outline-2 focus:outline-biro', err ? 'border-stamp' : 'border-rule')} /></label>
               {err && <p id="join-err" className="text-[14px] text-stamp-deep">{err}</p>}
-              <Button type="submit" variant="secondary" disabled={code.length < 6}>Join league</Button>
+              <Button type="submit" variant="secondary" disabled={code.length < 6 || busy}>{busy ? 'Joining...' : 'Join league'}</Button>
             </form>
           </Card>
         </div>
@@ -72,17 +76,25 @@ export function Leagues() {
 export function LeagueDetail() {
   const { id = '' } = useParams();
   const nav = useNavigate();
-  const { leagues, picks, history } = useGame();
+  const { leagues, picks, history, name: scout } = useGame();
+  const [remoteRows, setRemoteRows] = useState<Member[] | null>(null);
+  const [remoteErr, setRemoteErr] = useState('');
   const every = [...picks, ...history];
   const [copied, setCopied] = useState(false);
   const [copyFail, setCopyFail] = useState(false);
   const lg = leagues.find((l) => l.id === id);
+  useEffect(() => {
+    if (!lg?.shared) return;
+    let active = true;
+    (async () => { try { await syncStandings(lg.code, scout, picks, history); const data = await getStandings(lg.code); if (active) setRemoteRows(data.members); } catch (e) { if (active) setRemoteErr(e instanceof Error ? e.message : 'Could not load league.'); } })();
+    return () => { active = false; };
+  }, [lg?.code, lg?.shared, scout, picks, history]);
   if (!lg) return <div className="py-20 text-center"><h1 className="display text-[32px]">League not found</h1><Link to="/leagues" className="inline-flex mt-3 min-h-11 items-center text-biro font-semibold">All leagues</Link></div>;
-  const rows = lg.members.map((m) => {
+  const rows = (lg.shared ? (remoteRows || []).map((r, i) => ({ id: `member-${i}`, name: r.name, handle: r.you ? 'you' : 'scout', gw: r.gw, total: r.total, you: r.you })) : lg.members.map((m) => {
     if (m === 'you') return { id: 'you', name: 'You', handle: 'you', gw: entryGw(every, LAST_COMPLETE_GW), total: entryTotal(every), you: true };
     const r = RIVAL_ENTRIES.find((x) => x.id === m)!;
     return { id: r.id, name: r.name, handle: r.handle, gw: entryGw(r.picks, LAST_COMPLETE_GW), total: entryTotal(r.picks), you: false };
-  }).sort((a, b) => b.total - a.total);
+  })).sort((a, b) => b.total - a.total);
   const prevOrder = [...rows].sort((a, b) => (b.total - b.gw) - (a.total - a.gw)).map((r) => r.id);
   const moved = (id: string, i: number) => prevOrder.indexOf(id) - i;
   const copy = async () => { try { await navigator.clipboard.writeText(`Join my Rally league "${lg.name}": ${location.origin}/join/${lg.code}`); setCopied(true); track('invite_copied'); setTimeout(() => setCopied(false), 2000); } catch { setCopyFail(true); } };
@@ -96,6 +108,8 @@ export function LeagueDetail() {
         <p role="status" className="sr-only">{copied ? 'Invite link copied' : ''}</p>
         {copyFail && <p className="text-[14px] text-graphite sm:max-w-[300px]">Couldn't copy on this browser. Send this instead: <span className="font-mono text-ink select-all break-all">{location.origin}/join/{lg.code}</span></p>}
       </div>
+      {remoteErr && <p role="alert" className="mb-4 text-stamp-deep">{remoteErr}</p>}
+      {lg.shared && !remoteRows && !remoteErr && <p role="status" className="mb-4 text-graphite">Loading shared table...</p>}
       {rows.length > 1 && (() => { const i = rows.findIndex((r) => r.you); const above = rows[i - 1]; const below = rows[i + 1]; return (
         <div className="mb-5 grid sm:grid-cols-2 gap-3">
           <div className="rounded-[16px] bg-ink text-white p-5">
@@ -124,8 +138,8 @@ export function LeagueDetail() {
           </tbody>
         </table>
       </Card>
-      {rows.length === 1 && <p className="mt-4 text-graphite">Just you so far.</p>}
-      <p className="mt-4 text-[14px] text-graphite">Preview: leagues are on this device only, so an invite opened on another phone starts a separate copy. Shared leagues arrive with sign-in.</p>
+      {rows.length === 1 && <p className="mt-4 text-graphite">Just you so far. Share the code for mates to join.</p>}
+      <p className="mt-4 text-[14px] text-graphite">{lg.shared ? "Shared preview: anyone with the code can join. No login, so scout names and lists aren't verified. This browser holds your identity." : "Older leagues and the demo stay on this device. Make a new shared league to invite mates."}</p>
     </div>
   );
 }

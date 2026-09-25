@@ -1,5 +1,12 @@
 # Rally - Changelog
 
+## v5.4 (25 Sep 2026, commit cf8f984 content)
+Shared leagues live (D1-backed) + opt-in analytics consent.
+- Shared leagues: Cloudflare Pages Function (functions/api) on D1 rally-leagues; create, invite-code join (100 cap), standings, score sync; membership bound to a per-browser device secret (no accounts); league codes are bearer invitations; old local leagues not migrated; fictional preview fixtures.
+- Consent: opt-in analytics banner; zero PostHog calls before choice or after reject; storage cleared on revoke; EU ingestion; invite codes never in events.
+- Deploy: source-root Wrangler Pages deploy with Functions bundle; D1 provisioned (free tier), migration 0001 applied, DB binding on production + preview. Deployed from a scoped API token (D1:Edit + Pages:Edit) created for this rollout.
+- Verified live on production: security 24/24, edge 26/27 (the without-D1 case cannot trigger once D1 is bound), a11y 143/143, buttons 116/116, two-device create/join/standings, nonmember 403, zero pre-consent PostHog calls, noindex header intact.
+
 ## v5.3 (25 Sep 2026, commit 6800f26 content)
 PostHog analytics live.
 - PostHog wired (pageviews, player_scouted/swapped/released, league_created/joined/join_failed, invite_copied, slip_viewed, receipt_viewed/shared, season_started/reset, autocapture); EU host eu.i.posthog.com; key via build var only, never in repo; app='rally' super-property.

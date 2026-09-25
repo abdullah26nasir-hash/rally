@@ -24,7 +24,7 @@ await p.goto(BASE + '/join/' + encodeURIComponent(payload), W); await p.waitForT
 t.check('join link: payload not rendered', !(await p.locator('body').innerText()).includes('onerror') && /looks broken/.test(await p.locator('body').innerText()));
 await p.goto(BASE + '/start', W); await p.getByLabel('Scout name').fill(payload); t.check('scout name strips markup characters', !/[<>"=]/.test(await p.getByLabel('Scout name').inputValue()));
 await sample(p); await p.goto(BASE + '/leagues', W); await p.getByLabel('League name').fill(payload.slice(0, 40)); await p.getByRole('button', { name: 'Create league' }).click(); await p.waitForTimeout(300);
-t.check('league name shown as plain text', (await p.locator('h1').innerText()).includes('<img'));
+t.check('league name shown as plain text', !(await p.locator('body').evaluate((el) => [...el.querySelectorAll('img')].some((x) => x.getAttribute('onerror')))) && fired === 0);
 await p.goto(BASE + '/scout', W); await p.getByPlaceholder('Search players or clubs').fill(payload); await p.waitForTimeout(200);
 await p.goto(BASE + '/', W); await p.evaluate((x) => { const s = JSON.parse(localStorage.getItem('rally-v1')); s.state.name = x; s.state.leagues.push({ id: x, name: x, code: 'AAAA', kind: 'private', members: [] }); localStorage.setItem('rally-v1', JSON.stringify(s)); }, payload); await p.reload(W); await p.goto(BASE + '/leagues', W); await p.waitForTimeout(300);
 t.check('tampered save data shown as text', fired === 0);

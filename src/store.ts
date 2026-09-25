@@ -22,6 +22,7 @@ interface State {
   swap: (outId: string, inId: string) => Pick | null;
   createLeague: (name: string) => League;
   joinLeague: (code: string) => League | null;
+  saveSharedLeague: (league: League) => void;
   reset: () => void;
 }
 
@@ -83,6 +84,7 @@ export const useGame = create<State>()(
         track('player_swapped', { out_id: outId, in_id: inId, early_call: pk.multiplier, locked: isLocked(picks) });
         return pk;
       },
+      saveSharedLeague: (league) => set({ leagues: [...get().leagues.filter((l) => l.code !== league.code), league] }),
       createLeague: (name) => {
         const lg: League = { id: `lg-${Date.now()}`, name: name.trim(), code: code(), kind: 'private', createdAt: new Date().toISOString(), members: ['you'] };
         set({ leagues: [...get().leagues, lg] });

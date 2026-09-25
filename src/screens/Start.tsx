@@ -7,6 +7,8 @@ import { Wordmark } from '../components/Shell';
 import { StampCard } from '../components/StampCard';
 import { EARLY_CALL_TIERS, fmtMult } from '../game/scoring';
 import { cn } from '../lib/cn';
+import { joinSharedLeague, localLeague } from '../lib/leagues';
+import { track } from '../lib/analytics';
 
 /** First-run journey: who you are, how it works, then straight into your first call. */
 export function Start() {
@@ -29,7 +31,7 @@ export function Start() {
             <p className="mt-3 text-[17px] text-ink/80">What should your receipts say?</p>
             <label className="mt-6 grid gap-1.5"><span className="text-[14px] font-medium">Scout name</span>
               <input autoFocus value={name} onChange={(e) => setName(e.target.value.replace(/[^\w .-]/g, ''))} maxLength={20} placeholder="e.g. Abdullah" autoComplete="nickname" className="h-13 px-4 rounded-[12px] bg-card shadow-sm text-[18px] focus:outline-2 focus:outline-biro" /></label>
-            <p className="mt-3 text-[14px] text-graphite">In the full game you'll sign in with Google, Apple or email so your list and leagues follow you to any device. This preview keeps everything on this device, no account needed.</p>
+            <p className="mt-3 text-[14px] text-graphite">No account needed in this preview. Your list stays on this device; shared leagues let mates join with a code from their own phones.</p>
             <div className="mt-auto pt-8 sm:mt-10 sm:pt-0"><Button size="lg" className="w-full" type="submit" disabled={!valid}>Continue</Button></div>
           </form>
         )}
@@ -61,14 +63,21 @@ export function Start() {
 
 export function Join() {
   const nav = useNavigate();
-  const { mode, joinLeague } = useGame();
+  const { mode, joinLeague, saveSharedLeague } = useGame();
+  const [scoutName, setScoutName] = useState('');
   const raw = (location.pathname.split('/').pop() ?? '').toUpperCase();
   const code = /^[A-Z0-9]{4,8}$/.test(raw) ? raw : '';
   const [err, setErr] = useState('');
-  const go = () => {
-    if (mode === 'new') { useGame.getState().startSample(); }
-    const l = joinLeague(code);
-    if (l) nav(`/leagues/${l.id}`, { replace: true }); else setErr(`Couldn't find league ${code}. In this preview, leagues only live on the phone that made them, so a friend's league won't show up here yet. Try the demo league: LADS26.`);
+  const [busy, setBusy] = useState(false);
+  const go = async () => {
+    if (busy || !code) return; setBusy(true); setErr('');
+    try {
+      if (mode === 'new') { if (scoutName.trim().length < 2) { setErr('Enter a scout name to join.'); return; } useGame.getState().startOwn(scoutName); }
+      const state = useGame.getState();
+      if (code === 'LADS26') { const demo = joinLeague(code); if (demo) { nav(`/leagues/${demo.id}`, { replace: true }); return; } }
+      const { league } = await joinSharedLeague(code, state.name, state.picks, state.history);
+      const l = localLeague(league); saveSharedLeague(l); track('league_joined'); nav(`/leagues/${l.id}`, { replace: true });
+    } catch (x) { setErr(x instanceof Error ? x.message : 'Could not join league.'); } finally { setBusy(false); }
   };
   return (
     <div className="min-h-dvh grid place-items-center px-5">
@@ -76,7 +85,9 @@ export function Join() {
         <Wordmark />
         <h1 className="display text-[44px] mt-8 leading-[0.9]">You've been invited to a league</h1>
         <p className="mt-3 text-graphite">{code ? <>Code <span className="font-mono font-semibold text-ink">{code}</span>. One tap and you're in.</> : "This invite link looks broken. Ask whoever sent it for the league code."}</p>
-        <Button size="lg" className="w-full mt-8" onClick={go} disabled={!code}>Join league</Button>
+        {mode === 'new' && <label className="mt-5 grid gap-1 text-left text-[14px] font-medium">Scout name<input value={scoutName} onChange={(e) => setScoutName(e.target.value.replace(/[^\w .-]/g, ''))} maxLength={20} placeholder="e.g. Sam" className="h-12 px-3 rounded-[10px] bg-card border border-rule text-[16px]" /></label>}
+        <p className="mt-3 text-[14px] text-graphite">Your league starts with an empty list. Scout your five after joining.</p>
+        <Button size="lg" className="w-full mt-8" onClick={go} disabled={!code || busy || (mode === 'new' && scoutName.trim().length < 2)}>{busy ? 'Joining...' : 'Join league'}</Button>
         {err && <p role="alert" className="mt-4 text-stamp-deep">{err}</p>}
       </div>
     </div>

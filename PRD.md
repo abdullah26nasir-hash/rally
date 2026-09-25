@@ -104,3 +104,6 @@ Practices folded in from spec-driven development research (GitHub Spec Kit, Sept
 4. **Verification gates.** Every build passes an every-button interaction crawl (mobile + desktop), zero-console-error check, and a pen test before any preview link ships. Preview links are unguessable, noindexed, unlisted.
 5. **Sequencing.** Function and full testing first; branding deep-dive last.
 6. **Free tiers only.** Anything that could bill gets flagged before use; platforms chosen for hard quota stops, not billing alerts.
+
+## v5.4 - Shared leagues (25 Sep 2026)
+Leagues are now shared across devices: one person creates a league, gets a code, mates join from their own phones and see the same standings. Runs on a Cloudflare Pages Function backed by D1 (rally-leagues). No accounts: membership is a per-browser device secret; clearing site data loses membership. League codes are bearer invitations, send only to intended mates. Existing pre-D1 leagues stay local and are not migrated. Scores come from the fixed fictional preview fixtures; no trusted identity or anti-cheat yet. Analytics are opt-in via a consent banner (PostHog stays fully off until allowed, storage cleared on revoke, EU host, codes stripped). Route stays noindex; demo code LADS26 remains local-only.

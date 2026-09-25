@@ -7,8 +7,8 @@ const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, acceptDo
 await ctx.addInitScript(() => { navigator.canShare = () => true; navigator.share = async () => { window.__shared = 1; }; });
 const p = await ctx.newPage(); const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => m.type() === 'error' && errs.push(m.text().slice(0, 120)));
 await sample(p); const snap = await p.evaluate(() => localStorage.getItem('rally-v1'));
-const sel = 'button:visible, a:visible:not([href="#main"]), [role=switch]:visible'; // skip link is covered in edge.mjs
-const open = async (r) => { await p.evaluate((s) => { localStorage.clear(); localStorage.setItem('rally-v1', s); }, snap); await p.goto(BASE + r, W); await p.waitForTimeout(r.startsWith('/receipt') ? 1500 : 250); };
+const sel = 'button:visible:not(:has-text("Analytics settings")), a:visible:not([href="#main"]), [role=switch]:visible'; // skip link is covered in edge.mjs
+const open = async (r) => { await p.evaluate((s) => { localStorage.clear(); localStorage.setItem('rally-v1', s); localStorage.setItem('rally-analytics-consent', 'no'); }, snap); await p.goto(BASE + r, W); await p.waitForTimeout(r.startsWith('/receipt') ? 1500 : 250); };
 const state = () => p.evaluate(() => [location.href, document.body.innerText, window.__shared || 0, document.querySelectorAll('[aria-checked=true],[aria-expanded=true],[role=dialog]').length, scrollY, document.activeElement?.id].join('|'));
 for (const r of routes) {
   await open(r);
