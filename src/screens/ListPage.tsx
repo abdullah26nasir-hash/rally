@@ -31,7 +31,7 @@ export function ListPage() {
           const pts = pickPointsTotal(pk, p, LAST_COMPLETE_GW);
           const now = ownershipNow(p);
           return (
-            <li key={pk.playerId} className="bg-card rounded-[16px] shadow-md p-4 flex flex-col">
+            <li key={pk.playerId} className="min-w-0 bg-card rounded-[16px] shadow-md p-4 flex flex-col">
               <Link to={`/player/${p.id}`} className="flex items-center gap-3 rounded-[10px] -m-1 p-1 hover:bg-biro-wash/50">
                 <Monogram player={p} size={52} />
                 <div className="min-w-0 flex-1">
@@ -40,7 +40,7 @@ export function ListPage() {
                 </div>
                 <div className="text-right"><div className="display text-[32px] num">{pk.gwFrom > LAST_COMPLETE_GW ? '–' : pts}</div><div className="text-[12px] text-graphite">{pk.gwFrom > LAST_COMPLETE_GW ? `from GW${pk.gwFrom}` : 'your pts'}</div></div>
               </Link>
-              <dl className="mt-4 grid grid-cols-3 gap-2 font-mono text-[13px]">
+              <dl className="mt-4 grid grid-cols-2 min-[400px]:grid-cols-3 gap-2 font-mono text-[12px] min-[400px]:text-[13px]">
                 <div><dt className="text-graphite">Scouted</dt><dd className="font-semibold">{fmtDate(pk.scoutedAt)}</dd></div>
                 <div><dt className="text-graphite">Then → now</dt><dd className="font-semibold num">{fmtPct(pk.ownershipAtPick)} → {fmtPct(now)}</dd></div>
                 <div><dt className="text-graphite">Early call</dt><dd className="font-semibold">{fmtMult(pk.multiplier)}</dd></div>

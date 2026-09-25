@@ -29,7 +29,7 @@ export const Receipt = forwardRef<HTMLDivElement, Props>(function Receipt({ pick
           <div className="text-[11px] text-graphite uppercase tracking-wide">Scouting receipt · {SEASON}</div>
           <Dash />
           <div className="text-[11px] uppercase tracking-wide text-graphite">Scouted</div>
-          <div className={cn('display text-[40px] leading-[0.95] mt-1', animate && 'anim-stage-1')} style={{ fontFamily: 'var(--font-display)' }}>{p.name.toUpperCase()}</div>
+          <div className={cn('display text-[clamp(24px,9.5vw,40px)] leading-[0.95] mt-1 break-words', animate && 'anim-stage-1')} style={{ fontFamily: 'var(--font-display)' }}>{p.name.toUpperCase()}</div>
           <div className={cn('mt-1.5', animate && 'anim-stage-1')}>{p.role} · {club.name} · Age {p.age}</div>
           <Dash />
           <div className={cn(animate && 'anim-stage-2')}>

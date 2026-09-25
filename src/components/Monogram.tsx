@@ -18,7 +18,7 @@ export function Monogram({ player, size = 44, className }: { player: Player; siz
         <path d="M13 5 L8 7 L2 13 L6 19 L9 17 L9 36 L31 36 L31 17 L34 19 L38 13 L32 7 L27 5 C26 8 23.5 9.5 20 9.5 C16.5 9.5 14 8 13 5 Z" fill={a} stroke="rgba(15,23,41,.28)" strokeWidth="1" strokeLinejoin="round" />
         <path d="M13 5 C14 8 16.5 9.5 20 9.5 C23.5 9.5 26 8 27 5" fill="none" stroke={b} strokeWidth="2.2" />
         <path d="M2 13 L6 19 L9 17 L8.2 11.6 Z M38 13 L34 19 L31 17 L31.8 11.6 Z" fill={b} opacity="0.9" />
-        <text x="20" y="29" textAnchor="middle" fontFamily="Big Shoulders Display Variable, sans-serif" fontWeight="800" fontSize="15" fill={numColor}>{shirtNumber(player)}</text>
+        <text x="20" y="29" textAnchor="middle" fontFamily="Archivo Black, sans-serif" fontWeight="800" fontSize="15" fill={numColor}>{shirtNumber(player)}</text>
       </svg>
     </span>
   );

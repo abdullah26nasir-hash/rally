@@ -148,7 +148,7 @@ function OwnershipChart({ values }: { values: number[] }) {
     <svg viewBox={`0 0 ${w} ${h}`} className="mt-3 w-full h-auto text-biro" role="img" aria-label={`Share of scouts by gameweek: ${values.map((v) => fmtPct(v)).join(', ')}`}>
       <path d={`${d} L${pts[pts.length - 1][0]},${h - 16} L${pts[0][0]},${h - 16} Z`} fill="currentColor" opacity="0.08" />
       <path d={d} fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-      {values.map((_, i) => <text key={i} x={pts[i][0]} y={h - 2} fontSize="10" textAnchor={i === 0 ? 'start' : i === values.length - 1 ? 'end' : 'middle'} fill="#5B6474" fontFamily="Spline Sans Mono">{i === 0 ? 'Start' : `GW${i}`}</text>)}
+      {values.map((_, i) => <text key={i} x={pts[i][0]} y={h - 2} fontSize="10" textAnchor={i === 0 ? 'start' : i === values.length - 1 ? 'end' : 'middle'} fill="#6E6A63" fontFamily="IBM Plex Mono">{i === 0 ? 'Start' : `GW${i}`}</text>)}
     </svg>
   );
 }

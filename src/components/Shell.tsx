@@ -66,7 +66,10 @@ export function Shell() {
 export function Wordmark() {
   return (
     <NavLink to="/" className="inline-flex min-h-11 items-center gap-2" aria-label="Rally home">
-      <span className="display text-[28px] leading-none tracking-tight">RALLY</span>
+      <span className="flex items-center gap-2.5">
+        <svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><path fill="#0B0B0A" fillRule="evenodd" clipRule="evenodd" d="M10 8H33C45.1 8 52 14.4 52 24.8C52 32.7 47.7 38 40.6 40.6L54 56H41.4L30.6 42.7H24V52H23V56H20V52H18V56H15V52H13V56H10V8ZM24 18V31H32.5C37.4 31 40 28.8 40 24.5C40 20.3 37.3 18 32.5 18H24Z"/></svg>
+        <span className="display text-[24px] leading-none tracking-tight">RALLY</span>
+      </span>
       <span className="h-2 w-6 rounded-sm bg-highlighter mt-2" aria-hidden />
     </NavLink>
   );

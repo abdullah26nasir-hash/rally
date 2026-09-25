@@ -1,25 +1,26 @@
 @import "tailwindcss";
-@import "@fontsource-variable/big-shoulders-display";
-@import "@fontsource-variable/instrument-sans";
-@import "@fontsource/spline-sans-mono/400.css";
-@import "@fontsource/spline-sans-mono/600.css";
+@import "@fontsource/archivo-black";
+@import "@fontsource-variable/inter";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/600.css";
 
 @theme {
-  --color-paper: #F7F8F5;
-  --color-ink: #0F1729;
-  --color-biro: #2A3FE0;
-  --color-biro-deep: #1F30B8;
-  --color-biro-wash: #EEF0FD;
-  --color-highlighter: #E8FF59;
-  --color-stamp: #E5402B;
-  --color-stamp-deep: #C2311F;
-  --color-graphite: #5B6474;
-  --color-rule: #E3E6EC;
-  --color-card: #FFFFFF;
+  /* Rally Brand Foundation v0.1: Turnstile Black / Ticket / Flare */
+  --color-paper: #F1EFE7;
+  --color-ink: #0B0B0A;
+  --color-biro: #FF4D22;
+  --color-biro-deep: #FF6B4A;  /* hover: lighter, keeps ink text AA on flare */
+  --color-biro-wash: #FBE7DF;
+  --color-highlighter: #FF4D22;
+  --color-stamp: #FF4D22;
+  --color-stamp-deep: #FF6B4A;
+  --color-graphite: #6E6A63;
+  --color-rule: #DDD8CE;
+  --color-card: #FAF8F3;
 
-  --font-display: "Big Shoulders Display Variable", "Arial Narrow", sans-serif;
-  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Spline Sans Mono", ui-monospace, monospace;
+  --font-display: "Archivo Black", "Arial Narrow", sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
   --radius-control: 10px;
   --radius-card: 16px;
@@ -31,6 +32,14 @@
   --ease-out-soft: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
+
+
+/* Brand AA rules: Flare fills carry Turnstile Black text; Flare TEXT uses the deepened AA tone (Guide: never color-only meaning, 4.5:1 floor) */
+@layer utilities {
+  .text-biro { color: #B23415; }
+  .text-stamp, .text-stamp-deep { color: #B23415; }
+}
+
 
 @layer base {
   html { background: var(--color-paper); color: var(--color-ink); -webkit-text-size-adjust: 100%; }
@@ -84,3 +93,8 @@
   -webkit-mask: linear-gradient(#000 0 0) content-box, radial-gradient(circle 3.5px, #0000 96%, #000 100%) -5px -5px / 10px 10px round;
   mask: linear-gradient(#000 0 0) content-box, radial-gradient(circle 3.5px, #0000 96%, #000 100%) -5px -5px / 10px 10px round;
 }
+
+/* Brand AA overrides - intentionally UNLAYERED so they beat Tailwind v4 native cascade layers */
+.bg-biro.text-white, .bg-stamp.text-white, .bg-biro-deep.text-white, .bg-stamp-deep.text-white { color: #0B0B0A; }
+.text-biro, .text-stamp, .text-stamp-deep { color: #B23415; }
+.bg-highlighter\/45 .text-graphite { color: #0B0B0A; }

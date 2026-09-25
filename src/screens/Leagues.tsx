@@ -35,7 +35,7 @@ export function Leagues() {
             const ids = l.members;
             const tab = ids.map((m) => (m === 'you' ? total : entryTotal(RIVAL_ENTRIES.find((r) => r.id === m)?.picks || []))).sort((a, b) => b - a);
             return (
-              <Link key={l.id} to={`/leagues/${l.id}`} className="block bg-card rounded-[16px] shadow-md p-5 hover:bg-biro-wash/40 transition-colors">
+              <Link key={l.id} to={`/leagues/${l.id}`} className="block min-w-0 bg-card rounded-[16px] shadow-md p-5 hover:bg-biro-wash/40 transition-colors">
                 <div className="flex items-center gap-4">
                   <span className="grid place-items-center h-11 w-11 rounded-full bg-biro-wash text-biro"><Users size={20} aria-hidden /></span>
                   <div className="flex-1 min-w-0"><div className="font-semibold truncate">{l.name}</div><div className="text-[14px] text-graphite">{l.shared ? 'Shared league' : `${ids.length} ${ids.length === 1 ? 'member' : 'members'} · on this device`} · code <span className="font-mono">{l.code}</span></div></div>
