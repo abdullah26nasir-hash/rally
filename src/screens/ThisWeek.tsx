@@ -124,7 +124,7 @@ export function ThisWeek() {
             <div className="mt-2 flex items-baseline gap-2"><Link to="/list#stamps" className="inline-flex min-h-11 items-center text-[14px] font-semibold text-ink underline decoration-1 underline-offset-[3px] hover:decoration-2">Stamp book</Link><span className="font-mono text-[11px] uppercase text-pencil">{stamps.length} collected</span></div>
           </Card>
           <Card className="p-5">
-            <h2 className="display text-[26px]">Your five minutes</h2>
+            <h2 className="display text-[26px] section-rule">Your five minutes</h2>
             <ul className="mt-2 grid gap-1">
               <Todo done label={`Checked your GW${LAST_COMPLETE_GW} slip`} />
               <Todo done={left === 0} label={left === Infinity ? 'Changes are free until the deadline' : left ? '1 swap left this week' : 'Swap used this week'} to={left ? '/scout' : undefined} action="Find a swap" />

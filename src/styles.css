@@ -129,3 +129,25 @@ input, select, textarea { min-width: 0; }
 .stamp-row::-webkit-scrollbar { display: none; }
 .stamp-row > * { scroll-snap-align: start; }
 .stamp-row:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
+
+/* design.md v2.2 texture pass: per-material grain + paper-on-board depth (unlayered to beat Tailwind v4 layers) */
+:root {
+  --grain-ink-2: url(/grain/ink-2.png);
+  --grain-ink-3: url(/grain/ink-3.png);
+  --grain-ink-4: url(/grain/ink-4.png);
+  --grain-paper-3: url(/grain/paper-3.png);
+}
+body { background-image: var(--grain-ink-4); background-color: #E5E2D8; }
+.bg-paper { background-image: var(--grain-ink-2); }
+.bg-flare-tint { background-image: var(--grain-ink-2); }
+.bg-stub { background-image: var(--grain-paper-3); }
+.bg-well { border-top: 1px solid rgba(11,11,10,0.16); }
+.bg-paper.rounded-lg { box-shadow: var(--shadow-sm); }
+.btn-primary-grain { background-image: var(--grain-ink-3); }
+.btn-primary-grain:disabled { background-image: none; }
+@media (prefers-contrast: more), (forced-colors: active) {
+  body, .bg-paper, .bg-flare-tint, .bg-stub, .btn-primary-grain { background-image: none; }
+}
+.tabbar-shadow { box-shadow: 0 -1px 2px rgba(11,11,10,0.08); }
+.section-rule { border-top: 3px double #0B0B0A; padding-top: 14px; }
+.league-cols th+th, .league-cols td+td { border-left: 1px solid var(--color-hairline); }

@@ -86,7 +86,7 @@ export function PlayerPage() {
           </div>
 
           <Card className="mt-6 p-5">
-            <h2 className="display text-[26px]">Week by week</h2>
+            <h2 className="display text-[26px] section-rule">Week by week</h2>
             <ol className="mt-4 grid gap-2.5">
               {p.weeks.map((w) => (
                 <li key={w.gw} className="grid grid-cols-[46px_1fr_36px] items-center gap-3">

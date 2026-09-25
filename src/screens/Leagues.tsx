@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, Users } from 'lucide-react';
+import { ChevronLeft, Copy, Users } from 'lucide-react';
 import { useGame } from '../store';
 import { entryGw, entryTotal, overallRank, RIVAL_ENTRIES } from '../data/scouts';
 import { LAST_COMPLETE_GW, TOTAL_SCOUTS } from '../data/source';
@@ -101,7 +101,7 @@ export function LeagueDetail() {
 
   return (
     <div>
-      <button onClick={() => nav('/leagues')} className="inline-flex items-center gap-1.5 min-h-11 -ml-1 px-1 font-semibold text-graphite hover:text-ink"><ArrowLeft size={18} aria-hidden />Leagues</button>
+      <button onClick={() => nav('/leagues')} className="inline-flex items-center gap-1 min-h-11 -ml-1 px-1 font-medium text-[15px] text-ink"><ChevronLeft size={20} aria-hidden />Leagues</button>
       <div className="mt-2 flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
         <div><h1 className="display text-[40px] lg:text-[56px]">{lg.name}</h1><div className="mt-2 text-[15px] text-graphite">Private league · after GW{LAST_COMPLETE_GW}</div></div>
         <Button variant="secondary" onClick={copy}><Copy size={17} aria-hidden />{copied ? 'Invite link copied' : `Copy invite link · ${lg.code}`}</Button>
@@ -123,7 +123,8 @@ export function LeagueDetail() {
           </div>
         </div>); })()}
       <Card className="overflow-hidden">
-        <table className="w-full text-left">
+        <div className="h-10 px-4 sm:px-5 flex items-center bg-[#D9D6CA] border-b border-ink text-[12px] font-semibold uppercase tracking-[0.05em] text-ink">Table</div>
+        <table className="w-full text-left league-cols">
           <caption className="sr-only">{lg.name} table</caption>
           <thead><tr className="border-b border-hairline font-mono text-[12px] uppercase tracking-wide text-graphite"><th scope="col" className="font-normal pl-4 sm:pl-5 py-3 w-12">#</th><th scope="col" className="font-normal py-3">Scout</th><th scope="col" className="font-normal py-3 text-right">GW{LAST_COMPLETE_GW}</th><th scope="col" className="font-normal pr-4 sm:pr-5 py-3 text-right">Total</th></tr></thead>
           <tbody>

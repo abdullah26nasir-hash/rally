@@ -62,7 +62,7 @@ export function ListPage() {
       </ul>
 
       <section id="stamps" className="mt-12">
-        <h2 className="display text-[36px] lg:text-[44px]">Stamp book</h2>
+        <h2 className="display text-[36px] lg:text-[44px] section-rule">Stamp book</h2>
         <p className="text-graphite mt-1">Every stamp is proof of a call you made. They're yours even if you swap the player out.</p>
         {(() => { const st = stampsFor([...picks, ...history]); const have = new Set(st.map((s) => s.kind)); const missing = (Object.keys(STAMP_INFO) as StampKind[]).filter((k) => !have.has(k)); return (
           <div className="mt-5 grid lg:grid-cols-[320px_1fr] gap-6 items-start">

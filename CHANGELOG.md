@@ -72,3 +72,11 @@ Big-audit fix pass (57-page matrix: 12 routes x 3 breakpoints x fresh/sampled st
 
 ## v6.4.1 - 25 Sep 2026
 - Stamp tiles: GW labels clipped at the tile's bottom edge (his screenshot). Reverted the tile label to the v2.1 spec - number ring + "WK 06" week line (mono 500 11px ink); title+GW label was an off-doc invention that overflowed the 90px tile.
+
+## v6.5 - 25 Sep 2026
+Texture and depth pass (design.md v2.2, Opus-ruled). He asked for more texture/depth across the app.
+- Grain per material from pre-baked 256px tiles: Stock page 4% ink, Ticket panels/cards/tab bar 2%, Flare Tint 2%, Stub 3% paper, primary Flare button 3% (uneven print density). Terrace/Proof/anything <48px stay 0%. Removed under prefers-contrast. No blend modes, no feTurbulence, background-attachment scroll. New ban: fake print misregistration.
+- Depth: every Ticket object gets --card-edge AND shadow-sm at rest; Stub header + tab bar shadows toggle via IntersectionObserver sentinels only when content scrolls under; Terrace wells press into the board (top border, no shadow). Buttons/chips/inputs/rows never get shadows.
+- Printed details: 3px double ink rule above app section headings (Your five minutes, Stamp book, Week by week), Terrace header band on the league table panel, 1px hairline column rules in the league table.
+- Missed back link on league detail swept to the chevron + ink convention.
+- Suites: buttons 117/117, a11y 143/143 (still fully green after texture).
